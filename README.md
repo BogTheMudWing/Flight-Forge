@@ -2,7 +2,7 @@
 
 A guided Wings of Fire character generator.
 
-Flight Forge will eventually be a web program that guides you through the process of creating a Wings of Fire character.
+Flight Forge **is not currently but will eventually be** a web program that guides you through the process of creating a Wings of Fire character.
 
 ## Run it Locally
 
