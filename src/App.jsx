@@ -50,7 +50,14 @@ function App() {
     ) {
       console.log("Cannot continue. End of list.");
     } else {
-      setIndex(index + 1);
+      setIndex(next);
+    }
+  };
+
+  function back() {
+    let previous = index - 1;
+    if (previous > -1) {
+      setIndex(previous)
     }
   };
 
@@ -58,6 +65,10 @@ function App() {
     <>
       <h1>{allTitles[index].title}</h1>
       <p>{allDescriptions[index].content}</p>
+      <div className='navigation'>
+        <button className='back-button' onClick={back}>Back</button>
+      </div>
+      <br></br>
       <div className='suggested-options'>
         {allOptions[index].map((option) => (
           <button onClick={next} key={option.id}>{option.name}</button>
