@@ -1,0 +1,13 @@
+.header-container {
+      background: #e8d5ffFF;
+      width: 100%;
+}
+
+.text-container {
+      margin: 10px;
+      font-weight: bold;
+}
+
+h2, p {
+      margin: 0;
+}
