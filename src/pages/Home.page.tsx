@@ -3,8 +3,15 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 /* import all the icons in Free Solid, Free Regular, and Brands styles */
 import {
+  faBan,
   faBars,
+  faCheck,
   faCircleInfo,
+  faClone,
+  faCode,
+  faDownload,
+  faEllipsis,
+  faFileExport,
   faFloppyDisk,
   faFolderOpen,
   faMoon,
@@ -28,6 +35,7 @@ import {
   Flex,
   Group,
   Image,
+  JsonInput,
   Menu,
   Modal,
   SimpleGrid,
@@ -49,6 +57,7 @@ library.add(fas, fab);
 
 export function HomePage() {
   const { setColorScheme } = useMantineColorScheme();
+  const [jsonModalOpened, { open: openJsonModal, close: closeJsonModal }] = useDisclosure(false);
   const [welcomeModalOpened, { open: openWelcomeModal, close: closeWelcomeModal }] =
     useDisclosure(true);
   const [aboutModalOpened, { open: openAboutModal, close: closeAboutModal }] = useDisclosure(false);
@@ -280,6 +289,8 @@ export function HomePage() {
 
   const [dragon, setDragon] = useState<Dragon>(emptyDragon);
 
+  const [json, setJson] = useState<string>('{"error":"This should not be empty!!"}');
+
   function loadBog() {
     setDragon(exampleDragon);
     closeWelcomeModal();
@@ -295,9 +306,53 @@ export function HomePage() {
     setConfiguratorPage(0);
   }
 
+  function openJson() {
+    setJson(JSON.stringify(dragon, null, 2));
+    openJsonModal();
+  }
+
+  function applyJson() {
+    setDragon(JSON.parse(json));
+    closeJsonModal();
+  }
+
   return (
     <>
       <Notifications />
+
+      <Modal opened={jsonModalOpened} onClose={closeJsonModal} centered size="lg" title="JSON Data">
+        <Stack>
+          <JsonInput
+            id="json-input"
+            aria-label="JSON data input"
+            placeholder="There's nothing here"
+            validationError="Invalid JSON"
+            formatOnBlur
+            autosize
+            minRows={4}
+            value={json}
+            onChange={setJson}
+            maxRows={20}
+            styles={{
+              input: {
+                overflow: 'scroll',
+              },
+            }}
+          />
+          <Group justify="space-between">
+            <Button
+              leftSection={<FontAwesomeIcon icon={faBan} />}
+              onClick={closeJsonModal}
+              variant="light"
+            >
+              Discard changes
+            </Button>
+            <Button leftSection={<FontAwesomeIcon icon={faCheck} />} onClick={applyJson}>
+              Apply changes
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
 
       <Modal
         opened={welcomeModalOpened}
@@ -335,15 +390,36 @@ export function HomePage() {
                 <Button onClick={loadBog} fullWidth variant="light">
                   Open
                 </Button>
-                <ActionIcon
-                  onClick={notImplemented}
-                  aria-label="Delete"
-                  color="red"
-                  variant="light"
-                  size={36}
+                <Menu
+                  shadow="md"
+                  width={200}
+                  transitionProps={{ transition: 'pop', duration: 200 }}
                 >
-                  <FontAwesomeIcon icon={faTrash} />
-                </ActionIcon>
+                  <Menu.Target>
+                    <ActionIcon
+                      aria-label="Options"
+                      variant="light"
+                      size={36}
+                    >
+                      <FontAwesomeIcon icon={faEllipsis} />
+                    </ActionIcon>
+                  </Menu.Target>
+
+                  <Menu.Dropdown>
+                    <Menu.Item
+                      onClick={notImplemented}
+                      leftSection={<FontAwesomeIcon icon={faClone} size="sm" />}
+                    >
+                      Duplicate
+                    </Menu.Item>
+                    <Menu.Item
+                      onClick={notImplemented}
+                      leftSection={<FontAwesomeIcon icon={faTrash} size="sm" />}
+                    >
+                      Delete
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
               </Flex>
             </Card>
             <Card shadow="sm" withBorder>
@@ -351,18 +427,13 @@ export function HomePage() {
                 <Container h={160} />
               </Card.Section>
 
-              <Group justify="space-between" mt="md" mb="xs">
-                <Text fw={500}>Create New</Text>
-              </Group>
+              <Text mt="md" mb="xs" fw={500}>
+                Create New
+              </Text>
 
-              <Tooltip
-                label="Disables all input restrictions. This may cause problems."
-                openDelay={500}
-              >
-                <div>
-                  <Switch label="Disable restrictions" />
-                </div>
-              </Tooltip>
+              <Text size="sm" c="dimmed">
+                Start from scratch
+              </Text>
 
               <Button
                 onClick={loadNew}
@@ -379,7 +450,7 @@ export function HomePage() {
             <Button onClick={notImplemented} leftSection={<FontAwesomeIcon icon={faUpload} />}>
               Open Collection
             </Button>
-            <Button onClick={notImplemented} leftSection={<FontAwesomeIcon icon={faFloppyDisk} />}>
+            <Button onClick={notImplemented} leftSection={<FontAwesomeIcon icon={faDownload} />}>
               Save Collection
             </Button>
           </Group>
@@ -457,6 +528,12 @@ export function HomePage() {
                     New
                   </Menu.Item>
                   <Menu.Item
+                    onClick={openJson}
+                    leftSection={<FontAwesomeIcon icon={faCode} size="sm" />}
+                  >
+                    Raw data
+                  </Menu.Item>
+                  <Menu.Item
                     onClick={openAboutModal}
                     leftSection={<FontAwesomeIcon icon={faCircleInfo} size="sm" />}
                   >
@@ -464,13 +541,28 @@ export function HomePage() {
                   </Menu.Item>
                 </Menu.Dropdown>
               </Menu>
-              <Button
-                variant="light"
-                onClick={notImplemented}
-                leftSection={<FontAwesomeIcon icon={faFloppyDisk} />}
-              >
-                Save
-              </Button>
+              <Menu shadow="md" width={200} transitionProps={{ transition: 'pop', duration: 200 }}>
+                <Menu.Target>
+                  <Button variant="light" leftSection={<FontAwesomeIcon icon={faFloppyDisk} />}>
+                    Save
+                  </Button>
+                </Menu.Target>
+
+                <Menu.Dropdown>
+                  <Menu.Item
+                    onClick={notImplemented}
+                    leftSection={<FontAwesomeIcon icon={faDownload} size="sm" />}
+                  >
+                    Download
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={notImplemented}
+                    leftSection={<FontAwesomeIcon icon={faFileExport} size="sm" />}
+                  >
+                    Export
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
               <Space h="md" />
             </Group>
           </Group>
