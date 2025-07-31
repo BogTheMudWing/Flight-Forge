@@ -1,26 +1,24 @@
-import { React, useState } from 'react';
+import { useState } from 'react';
 
-import notImplemented from '../AppUtils.jsx'
+import notImplemented from '../AppUtils/AppUtils'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { fas } from '@fortawesome/free-solid-svg-icons'
+import { faAddressCard, faArrowLeft, faArrowRight, faChartPie, faCode, faDice, faFloppyDisk, faHeartPulse, faInfo, faMap, faPalette, faPeopleGroup, faPlus, faRing, fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
+
+import Dragon from '../Dragon/Dragon';
 
 library.add(fas, far)
 
 import { Stepper, Stack, Title, Text, Group, Button, MultiSelect, NumberInput, TextInput, ColorInput, Switch, Select, Slider, Flex, SimpleGrid, Rating, Fieldset } from '@mantine/core'
+import { JSX } from 'react/jsx-runtime';
 
-import "./Configurator.css"
-
-Configurator.propTypes = {
-  dragon: PropTypes.string.isRequired
-}
-export default function Configurator({dragon}) {
+export default function Configurator({dragon}: {dragon: Dragon}) {
 
   function relations() {
 
-    var elements = [];
+    const elements: JSX.Element[] = [];
 
     dragon.relations.forEach((relation) => {
       elements.push(
@@ -31,10 +29,8 @@ export default function Configurator({dragon}) {
             <Button color='red' variant='light' onClick={notImplemented}>Delete</Button>
           </Stack>
         </Fieldset>
-      )
+      );
     });
-
-    console.log(elements);
 
     return elements;
   }
@@ -47,21 +43,21 @@ export default function Configurator({dragon}) {
 
   const progressButtons = (
     <Group>
-      <Button onClick={prevStep} leftSection={<FontAwesomeIcon icon="fa-solid fa-arrow-left" />} disabled={active == 0}>Back</Button>
-      <Button onclick={notImplemented} leftSection={<FontAwesomeIcon icon="fa-solid fa-dice" />}>Randomize</Button>
-      <Button onClick={nextStep} rightSection={<FontAwesomeIcon icon="fa-solid fa-arrow-right" />}>Next</Button>
+      <Button onClick={prevStep} leftSection={<FontAwesomeIcon icon={faArrowLeft} />} disabled={active === 0}>Back</Button>
+      <Button onClick={notImplemented} leftSection={<FontAwesomeIcon icon={faDice} />}>Randomize</Button>
+      <Button onClick={nextStep} rightSection={<FontAwesomeIcon icon={faArrowRight} />}>Next</Button>
     </Group>
   )
 
   const finishedButtons = (
     <Group>
-      <Button onClick={prevStep} variant='light' leftSection={<FontAwesomeIcon icon="fa-solid fa-plus" />}>New</Button>
-      <Button onClick={nextStep} variant='light' leftSection={<FontAwesomeIcon icon="fa-solid fa-floppy-disk" />}>Save</Button>
+      <Button onClick={prevStep} variant='light' leftSection={<FontAwesomeIcon icon={faPlus} />}>New</Button>
+      <Button onClick={nextStep} variant='light' leftSection={<FontAwesomeIcon icon={faFloppyDisk} />}>Save</Button>
     </Group>
   )
 
   function actionButtons() {
-    if (active == 9) return finishedButtons;
+    if (active === 9) {return finishedButtons;}
     return progressButtons;
   }
 
@@ -69,7 +65,7 @@ export default function Configurator({dragon}) {
     <Flex
       gap="md"
       direction="column"
-      h={'100%'}
+      h="100%"
     >
       <Stepper
         flex={1}
@@ -89,8 +85,8 @@ export default function Configurator({dragon}) {
       >
 
         <Stepper.Step
-          icon={<FontAwesomeIcon icon='fa-info' />}
-          completedIcon={<FontAwesomeIcon icon='fa-info' />}
+          icon={<FontAwesomeIcon icon={faInfo} />}
+          completedIcon={<FontAwesomeIcon icon={faInfo} />}
         >
           <Stack>
             <Title order={2}>Basic Information</Title>
@@ -125,8 +121,8 @@ export default function Configurator({dragon}) {
         </Stepper.Step>
 
         <Stepper.Step
-          icon={<FontAwesomeIcon icon="fa-solid fa-palette" />}
-          completedIcon={<FontAwesomeIcon icon="fa-solid fa-palette" />}
+          icon={<FontAwesomeIcon icon={faPalette} />}
+          completedIcon={<FontAwesomeIcon icon={faPalette} />}
         >
           <Stack>
             <Title order={2}>Colors</Title>
@@ -200,8 +196,8 @@ export default function Configurator({dragon}) {
         </Stepper.Step>
 
         <Stepper.Step
-          icon={<FontAwesomeIcon icon="fa-solid fa-address-card" />}
-          completedIcon={<FontAwesomeIcon icon="fa-solid fa-address-card" />}
+          icon={<FontAwesomeIcon icon={faAddressCard} />}
+          completedIcon={<FontAwesomeIcon icon={faAddressCard} />}
         >
           <Stack>
             <Title order={2}>Identification</Title>
@@ -220,8 +216,8 @@ export default function Configurator({dragon}) {
         </Stepper.Step>
 
         <Stepper.Step
-          icon={<FontAwesomeIcon icon="fa-solid fa-people-group" />}
-          completedIcon={<FontAwesomeIcon icon="fa-solid fa-people-group" />}
+          icon={<FontAwesomeIcon icon={faPeopleGroup} />}
+          completedIcon={<FontAwesomeIcon icon={faPeopleGroup} />}
         >
           <Stack>
             <Stack>
@@ -253,8 +249,8 @@ export default function Configurator({dragon}) {
         </Stepper.Step>
 
         <Stepper.Step
-          icon={<FontAwesomeIcon icon="fa-solid fa-map" />}
-          completedIcon={<FontAwesomeIcon icon="fa-solid fa-map" />}
+          icon={<FontAwesomeIcon icon={faMap} />}
+          completedIcon={<FontAwesomeIcon icon={faMap} />}
         >
           <Stack>
             <Stack>
@@ -264,18 +260,23 @@ export default function Configurator({dragon}) {
             <SimpleGrid cols={2}>
               <TextInput
                 label="Hatching location"
+                // This line below finds the location with identifier "Hatching location" and gets its value
+                defaultValue={dragon.locations.find((location) => location.identifier === "Hatching location")?.name}
               // TODO: Display random placeholder
               />
               <TextInput
                 label="Growing up location"
+                defaultValue={dragon.locations.find((location) => location.identifier === "Growing up location")?.name}
               // TODO: Display random placeholder
               />
               <TextInput
                 label="Home location"
+                defaultValue={dragon.locations.find((location) => location.identifier === "Home location")?.name}
               // TODO: Display random placeholder
               />
               <TextInput
                 label="Current location"
+                defaultValue={dragon.locations.find((location) => location.identifier === "Current location")?.name}
               // TODO: Display random placeholder
               />
             </SimpleGrid>
@@ -284,8 +285,8 @@ export default function Configurator({dragon}) {
         </Stepper.Step>
 
         <Stepper.Step
-          icon={<FontAwesomeIcon icon="fa-solid fa-chart-pie" />}
-          completedIcon={<FontAwesomeIcon icon="fa-solid fa-chart-pie" />}
+          icon={<FontAwesomeIcon icon={faChartPie} />}
+          completedIcon={<FontAwesomeIcon icon={faChartPie} />}
         >
           <Stack>
             <Title order={2}>Traits</Title>
@@ -298,8 +299,8 @@ export default function Configurator({dragon}) {
                 direction="row"
                 wrap="nowrap"
               >
-                <Text size='sm' fw={'bold'}>Intelligence</Text>
-                <Rating fractions={2} />
+                <Text size='sm' fw="bold">Intelligence</Text>
+                <Rating fractions={2} defaultValue={dragon.traits.find((trait) => trait.name === "Intelligence")?.rating} />
               </Flex>
               <Flex
                 gap="md"
@@ -308,8 +309,8 @@ export default function Configurator({dragon}) {
                 direction="row"
                 wrap="nowrap"
               >
-                <Text size='sm' fw={'bold'}>Perception</Text>
-                <Rating fractions={2} />
+                <Text size='sm' fw="bold">Perception</Text>
+                <Rating fractions={2} defaultValue={dragon.traits.find((trait) => trait.name === "Perception")?.rating} />
               </Flex>
               <Flex
                 gap="md"
@@ -318,8 +319,8 @@ export default function Configurator({dragon}) {
                 direction="row"
                 wrap="nowrap"
               >
-                <Text size='sm' fw={'bold'}>Charisma</Text>
-                <Rating fractions={2} />
+                <Text size='sm' fw="bold">Charisma</Text>
+                <Rating fractions={2} defaultValue={dragon.traits.find((trait) => trait.name === "Charisma")?.rating} />
               </Flex>
               <Flex
                 gap="md"
@@ -328,8 +329,8 @@ export default function Configurator({dragon}) {
                 direction="row"
                 wrap="nowrap"
               >
-                <Text size='sm' fw={'bold'}>Stealth</Text>
-                <Rating fractions={2} />
+                <Text size='sm' fw="bold">Stealth</Text>
+                <Rating fractions={2} defaultValue={dragon.traits.find((trait) => trait.name === "Stealth")?.rating} />
               </Flex>
               <Flex
                 gap="md"
@@ -338,8 +339,8 @@ export default function Configurator({dragon}) {
                 direction="row"
                 wrap="nowrap"
               >
-                <Text size='sm' fw={'bold'}>Speed</Text>
-                <Rating fractions={2} />
+                <Text size='sm' fw="bold">Speed</Text>
+                <Rating fractions={2} defaultValue={dragon.traits.find((trait) => trait.name === "Speed")?.rating} />
               </Flex>
               <Flex
                 gap="md"
@@ -348,8 +349,8 @@ export default function Configurator({dragon}) {
                 direction="row"
                 wrap="nowrap"
               >
-                <Text size='sm' fw={'bold'}>Agility</Text>
-                <Rating fractions={2} />
+                <Text size='sm' fw="bold">Agility</Text>
+                <Rating fractions={2} defaultValue={dragon.traits.find((trait) => trait.name === "Agility")?.rating} />
               </Flex>
               <Flex
                 gap="md"
@@ -358,8 +359,8 @@ export default function Configurator({dragon}) {
                 direction="row"
                 wrap="nowrap"
               >
-                <Text size='sm' fw={'bold'}>Strength</Text>
-                <Rating fractions={2} />
+                <Text size='sm' fw="bold">Strength</Text>
+                <Rating fractions={2} defaultValue={dragon.traits.find((trait) => trait.name === "Strength")?.rating} />
               </Flex>
               <Flex
                 gap="md"
@@ -368,8 +369,8 @@ export default function Configurator({dragon}) {
                 direction="row"
                 wrap="nowrap"
               >
-                <Text size='sm' fw={'bold'}>Leadership</Text>
-                <Rating fractions={2} />
+                <Text size='sm' fw="bold">Leadership</Text>
+                <Rating fractions={2} defaultValue={dragon.traits.find((trait) => trait.name === "Leadership")?.rating} />
               </Flex>
               <Flex
                 gap="md"
@@ -378,8 +379,8 @@ export default function Configurator({dragon}) {
                 direction="row"
                 wrap="nowrap"
               >
-                <Text size='sm' fw={'bold'}>Teamwork</Text>
-                <Rating fractions={2} />
+                <Text size='sm' fw="bold">Teamwork</Text>
+                <Rating fractions={2} defaultValue={dragon.traits.find((trait) => trait.name === "Teamwork")?.rating} />
               </Flex>
               <Flex
                 gap="md"
@@ -388,8 +389,8 @@ export default function Configurator({dragon}) {
                 direction="row"
                 wrap="nowrap"
               >
-                <Text size='sm' fw={'bold'}>Independence</Text>
-                <Rating fractions={2} />
+                <Text size='sm' fw="bold">Independence</Text>
+                <Rating fractions={2} defaultValue={dragon.traits.find((trait) => trait.name === "Independence")?.rating} />
               </Flex>
               <Flex
                 gap="md"
@@ -398,8 +399,8 @@ export default function Configurator({dragon}) {
                 direction="row"
                 wrap="nowrap"
               >
-                <Text size='sm' fw={'bold'}>Organization</Text>
-                <Rating fractions={2} />
+                <Text size='sm' fw="bold">Organization</Text>
+                <Rating fractions={2} defaultValue={dragon.traits.find((trait) => trait.name === "Organization")?.rating} />
               </Flex>
               <Flex
                 gap="md"
@@ -408,16 +409,16 @@ export default function Configurator({dragon}) {
                 direction="row"
                 wrap="nowrap"
               >
-                <Text size='sm' fw={'bold'}>Empathy</Text>
-                <Rating fractions={2} />
+                <Text size='sm' fw="bold">Empathy</Text>
+                <Rating fractions={2} defaultValue={dragon.traits.find((trait) => trait.name === "Empathy")?.rating} />
               </Flex>
             </SimpleGrid>
           </Stack>
         </Stepper.Step>
 
         <Stepper.Step
-          icon={<FontAwesomeIcon icon="fa-solid fa-heart-pulse" />}
-          completedIcon={<FontAwesomeIcon icon="fa-solid fa-heart-pulse" />}
+          icon={<FontAwesomeIcon icon={faHeartPulse} />}
+          completedIcon={<FontAwesomeIcon icon={faHeartPulse} />}
         >
           <Stack>
             <Stack>
@@ -430,9 +431,11 @@ export default function Configurator({dragon}) {
                 placeholder="Pick value"
                 data={['Well', 'Injured', 'Deteriorating', 'Ill', 'Dying']}
                 searchable
+                defaultValue={dragon.health}
               />
               <TextInput
                 label="Occupation"
+                defaultValue={dragon.occupation}
               // TODO: Display random placeholder
               />
             </SimpleGrid>
@@ -441,17 +444,17 @@ export default function Configurator({dragon}) {
         </Stepper.Step>
 
         <Stepper.Step
-          icon={<FontAwesomeIcon icon="fa-solid fa-ring" />}
-          completedIcon={<FontAwesomeIcon icon="fa-solid fa-ring" />}
+          icon={<FontAwesomeIcon icon={faRing} />}
+          completedIcon={<FontAwesomeIcon icon={faRing} />}
         >
           <Stack>
             <Stack>
               <Title order={2}>Appearance</Title>
               <Text>Customize! Accessorize! Decorate!</Text>
             </Stack>
-            <Text size="sm" fw={'bold'}>Size</Text>
+            <Text size="sm" fw="bold">Size</Text>
             <Slider
-              defaultValue={50}
+              defaultValue={dragon.size}
               marks={[
                 { value: 25, label: '25%' },
                 { value: 50, label: '50%' },
@@ -462,42 +465,55 @@ export default function Configurator({dragon}) {
             <SimpleGrid cols={2}>
               <Switch
                 label="Left arm"
+                defaultChecked={dragon.injuries.leftArm}
               />
               <Switch
                 label="Right arm"
+                defaultChecked={dragon.injuries.rightArm}
               />
               <Switch
                 label="Left leg"
+                defaultChecked={dragon.injuries.leftLeg}
               />
               <Switch
                 label="Right leg"
+                defaultChecked={dragon.injuries.rightLeg}
               />
               <Switch
                 label="Left wing"
+                defaultChecked={dragon.injuries.leftWing}
               />
               <Switch
                 label="Right wing"
+                defaultChecked={dragon.injuries.rightWing}
               />
               <Switch
                 label="Left eye"
+                defaultChecked={dragon.injuries.leftEye}
               />
               <Switch
                 label="Right eye"
+                defaultChecked={dragon.injuries.rightEye}
               />
               <Switch
                 label="Left horn"
+                defaultChecked={dragon.injuries.leftHorn}
               />
               <Switch
                 label="Right horn"
+                defaultChecked={dragon.injuries.rightHorn}
               />
               <Switch
                 label="Left ear"
+                defaultChecked={dragon.injuries.leftEar}
               />
               <Switch
                 label="Right ear"
+                defaultChecked={dragon.injuries.rightEar}
               />
               <Switch
                 label="Tail"
+                defaultChecked={dragon.injuries.tail}
               />
             </SimpleGrid>
 
@@ -505,8 +521,8 @@ export default function Configurator({dragon}) {
         </Stepper.Step>
 
         <Stepper.Step
-          icon={<FontAwesomeIcon icon="fa-solid fa-code" />}
-          completedIcon={<FontAwesomeIcon icon="fa-solid fa-code" />}
+          icon={<FontAwesomeIcon icon={faCode} />}
+          completedIcon={<FontAwesomeIcon icon={faCode} />}
         >
           <Stack>
             <Title order={2}>Metadata</Title>
@@ -516,10 +532,12 @@ export default function Configurator({dragon}) {
             <TextInput
               label="Creator"
               description="The original creator of this character"
+              defaultValue={dragon.creator}
             />
             <TextInput
               label="Builder"
               description="The individual who built this in Flight Forge (YOU)"
+              defaultValue={dragon.builder}
             />
           </SimpleGrid>
         </Stepper.Step>
