@@ -13,11 +13,10 @@ import {
   faEllipsis,
   faFileExport,
   faFolderOpen,
-  faMoon,
+  faGear,
   faPlus,
   faRotateLeft,
   fas,
-  faSun,
   faTrash,
   faUpload,
 } from '@fortawesome/free-solid-svg-icons';
@@ -56,6 +55,7 @@ library.add(fas, fab);
 
 export function HomePage() {
   const { setColorScheme } = useMantineColorScheme();
+  const [settingsModalOpened, { open: openSettingsModal, close: closeSettingsModal }] = useDisclosure(false);
   const [jsonModalOpened, { open: openJsonModal, close: closeJsonModal }] = useDisclosure(false);
   const [welcomeModalOpened, { open: openWelcomeModal, close: closeWelcomeModal }] =
     useDisclosure(true);
@@ -347,6 +347,24 @@ export function HomePage() {
     <>
       <Notifications />
 
+      <Modal opened={settingsModalOpened} onClose={closeSettingsModal} centered size="auto" title="App Settings">
+        <Stack>
+          <Switch
+                checked={useMantineColorScheme().colorScheme === 'light'}
+                onChange={(event) => {
+                  const light: boolean = event.currentTarget.checked;
+                  if (light) {
+                    setColorScheme('light');
+                  } else {
+                    setColorScheme('dark');
+                  }
+                }}
+                label="Use light theme"
+                description="If disabled, the app will use the dark theme."
+              />
+        </Stack>
+      </Modal>
+
       <Modal opened={jsonModalOpened} onClose={closeJsonModal} centered size="lg" title="JSON Data">
         <Stack>
           <JsonInput
@@ -511,20 +529,6 @@ export function HomePage() {
               </Anchor>
             </Stack>
             <Group>
-              <Switch
-                size="lg"
-                onLabel={<FontAwesomeIcon icon={faSun} />}
-                offLabel={<FontAwesomeIcon icon={faMoon} />}
-                checked={useMantineColorScheme().colorScheme === 'light'}
-                onChange={(event) => {
-                  const light: boolean = event.currentTarget.checked;
-                  if (light) {
-                    setColorScheme('light');
-                  } else {
-                    setColorScheme('dark');
-                  }
-                }}
-              />
               <Tooltip label={history.length > 0 ? 'Undo' : 'No undo steps'}>
                 <ActionIcon
                   variant="subtle"
@@ -570,6 +574,12 @@ export function HomePage() {
                     leftSection={<FontAwesomeIcon icon={faCode} size="sm" />}
                   >
                     Raw data
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={openSettingsModal}
+                    leftSection={<FontAwesomeIcon icon={faGear} size="sm" />}
+                  >
+                    Settings
                   </Menu.Item>
                   <Menu.Item
                     onClick={openAboutModal}
