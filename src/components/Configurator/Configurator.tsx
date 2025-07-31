@@ -155,12 +155,11 @@ export default function Configurator({ dragon, setDragon, page, setPage }: Confi
             <MultiSelect
               label="Tribe"
               description="The tribe(s) of the character"
-              placeholder="Select up to two"
+              placeholder="Select any"
               data={['Hive', 'Ice', 'Leaf', 'Mud', 'Night', 'Rain', 'Sand', 'Sea', 'Silk', 'Sky']}
               clearable
               searchable
               nothingFoundMessage="Nothing found..."
-              maxValues={2}
               value={dragon.tribe}
               comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
               onChange={(newTribes) => {
@@ -186,6 +185,16 @@ export default function Configurator({ dragon, setDragon, page, setPage }: Confi
                 }}
               />
             </Group>
+            <Stack style={dragon.tribe.length > 1 ? { display: 'block' } : { display: 'none' }}>
+              <Text>Choose which body parts to use.</Text>
+              <SimpleGrid cols={2}>
+                <Select label="Head" data={dragon.tribe} />
+                <Select label="Body" data={dragon.tribe} />
+                <Select label="Wings" data={dragon.tribe} />
+                <Select label="Legs" data={dragon.tribe} />
+                <Select label="Tails" data={dragon.tribe} />
+              </SimpleGrid>
+            </Stack>
           </Stack>
         </Stepper.Step>
 
@@ -201,7 +210,7 @@ export default function Configurator({ dragon, setDragon, page, setPage }: Confi
               <ColorInput
                 label="Primary"
                 value={dragon.primaryColor}
-                onChange={(newColor) => {
+                onChangeEnd={(newColor) => {
                   setDragon((prev) => ({ ...prev, primaryColor: newColor }));
                 }}
                 description="Primary scales color"
@@ -227,7 +236,7 @@ export default function Configurator({ dragon, setDragon, page, setPage }: Confi
               <ColorInput
                 label="Secondary"
                 value={dragon.secondaryColor}
-                onChange={(newColor) => {
+                onChangeEnd={(newColor) => {
                   setDragon((prev) => ({ ...prev, secondaryColor: newColor }));
                 }}
                 description="Secondary scales color"
@@ -253,7 +262,7 @@ export default function Configurator({ dragon, setDragon, page, setPage }: Confi
               <ColorInput
                 label="Underscales"
                 value={dragon.underscalesColor}
-                onChange={(newColor) => {
+                onChangeEnd={(newColor) => {
                   setDragon((prev) => ({ ...prev, underscalesColor: newColor }));
                 }}
                 description="Underscales color"
@@ -282,7 +291,7 @@ export default function Configurator({ dragon, setDragon, page, setPage }: Confi
               <ColorInput
                 label="Start Color"
                 value={dragon.membraneColor1}
-                onChange={(newColor) => {
+                onChangeEnd={(newColor) => {
                   setDragon((prev) => ({ ...prev, membraneColor1: newColor }));
                 }}
                 popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
@@ -307,7 +316,7 @@ export default function Configurator({ dragon, setDragon, page, setPage }: Confi
               <ColorInput
                 label="End Color"
                 value={dragon.membraneColor2}
-                onChange={(newColor) => {
+                onChangeEnd={(newColor) => {
                   setDragon((prev) => ({ ...prev, membraneColor2: newColor }));
                 }}
                 popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
@@ -335,7 +344,7 @@ export default function Configurator({ dragon, setDragon, page, setPage }: Confi
               <ColorInput
                 label="Eyes"
                 value={dragon.eyeColor}
-                onChange={(newColor) => {
+                onChangeEnd={(newColor) => {
                   setDragon((prev) => ({ ...prev, eyeColor: newColor }));
                 }}
                 description="Eye color"
@@ -361,7 +370,7 @@ export default function Configurator({ dragon, setDragon, page, setPage }: Confi
               <ColorInput
                 label="Spikes"
                 value={dragon.spikesColor}
-                onChange={(newColor) => {
+                onChangeEnd={(newColor) => {
                   setDragon((prev) => ({ ...prev, spikesColor: newColor }));
                 }}
                 description="Spikes and talons"

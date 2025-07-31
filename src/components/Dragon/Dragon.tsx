@@ -1,5 +1,6 @@
 export default interface Dragon {
   tribe: string[];
+  bodyParts: BodyParts;
   age?: number;
   gender: string;
   primaryColor: string;
@@ -12,7 +13,7 @@ export default interface Dragon {
   name: string;
   pronouns: string;
   relations: Relation[];
-  locations: Location[]
+  locations: Location[];
   traits: Trait[];
   health: string;
   occupation: string;
@@ -25,6 +26,14 @@ export default interface Dragon {
   builder: string;
   // The art style to render as
   style: string;
+}
+
+export interface BodyParts {
+  head: string;
+  body: string;
+  wings: string;
+  legs: string;
+  tail: string;
 }
 
 interface Relation {

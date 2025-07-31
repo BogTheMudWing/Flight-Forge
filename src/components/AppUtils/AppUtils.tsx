@@ -5,11 +5,11 @@ export default function notImplemented() {
     color: 'red',
     withBorder: true,
     title: 'That is not implemented yet.',
-    message: 'If this is a production instance, report this as a bug.'
-  })
+    message: 'If this is a production instance, report this as a bug.',
+  });
 }
 
-export function myJoin(array: string[], separator=',') {
+export function myJoin(array: string[], separator = ',') {
   let str = '';
   for (let i = 0; i < array.length; i++) {
     if (array[i] !== null && array[i] !== undefined) {

@@ -12,6 +12,13 @@ export const defaultCollection: Collection = {
   dragons: [
     {
       tribe: ['Mud'],
+      bodyParts: {
+        head: 'Mud',
+        body: 'Mud',
+        wings: 'Mud',
+        legs: 'Mud',
+        tail: 'Mud',
+      },
       age: 153,
       gender: 'Male',
       primaryColor: '#E36C2A',

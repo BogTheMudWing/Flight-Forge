@@ -12,7 +12,6 @@ import {
   faDownload,
   faEllipsis,
   faFileExport,
-  faFolderOpen,
   faGear,
   faHome,
   faPlus,
@@ -48,6 +47,7 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Notifications } from '@mantine/notifications';
+import ImagePreview from '@/components/ImagePreview/ImagePreview';
 import notImplemented, { myJoin } from '../components/AppUtils/AppUtils';
 import { Collection, defaultCollection } from '../components/Collection/Collection';
 import Configurator from '../components/Configurator/Configurator';
@@ -68,6 +68,13 @@ export function HomePage() {
 
   const emptyDragon: Dragon = {
     tribe: [],
+    bodyParts: {
+      head: '',
+      body: '',
+      wings: '',
+      legs: '',
+      tail: '',
+    },
     age: undefined,
     gender: '',
     primaryColor: '',
@@ -219,77 +226,80 @@ export function HomePage() {
     const elements: JSX.Element[] = [];
 
     collection.dragons.forEach((dragonInCollection: Dragon) => {
-
       let name: string = dragonInCollection.name;
       if (name === undefined || name === null || name === '') {
-        name = "Unnamed";
+        name = 'Unnamed';
       }
 
       const age: number | undefined = dragonInCollection.age;
       let ageString: string;
       if (age === undefined || age === null || age < 0) {
-        ageString = "";
-      } else {ageString = age.toString().concat("-year-old ");}
+        ageString = '';
+      } else {
+        ageString = age.toString().concat('-year-old ');
+      }
 
       let gender: string = dragonInCollection.gender;
       if (name === undefined || name === null || name === '') {
-        gender = "";
-      } else {gender = gender.concat(" ")}
+        gender = '';
+      } else {
+        gender = gender.concat(' ');
+      }
 
       const tribes: string[] = dragonInCollection.tribe;
       let tribeString: string;
       if (tribes === undefined || tribes === null || tribes.length === 0) {
-        tribeString = "Dragon";
-      } else {tribeString = myJoin(tribes, '/').concat("Wing");}
+        tribeString = 'Dragon';
+      } else {
+        tribeString = myJoin(tribes, '/').concat('Wing');
+      }
 
       elements.push(
         <Card shadow="sm" withBorder>
-              <Card.Section>
-                <Image
-                  src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png"
-                  height={160}
-                  alt="Norway"
-                />
-              </Card.Section>
+          <Card.Section>
+            <Image
+              src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png"
+              height={160}
+              alt="Norway"
+            />
+          </Card.Section>
 
-              <Text mt="md" mb="xs" fw={500}>{name}</Text>
+          <Text mt="md" mb="xs" fw={500}>
+            {name}
+          </Text>
 
-              <Text size="sm" c="dimmed">
-                {ageString.concat(gender).concat(tribeString)}
-              </Text>
+          <Text size="sm" c="dimmed">
+            {ageString.concat(gender).concat(tribeString)}
+          </Text>
 
-              <Flex mt="md" gap="md">
-                <Button onClick={loadDragon} fullWidth variant="light">
-                  Open
-                </Button>
-                <Menu
-                  shadow="md"
-                  width={200}
-                  transitionProps={{ transition: 'pop', duration: 200 }}
+          <Flex mt="md" gap="md">
+            <Button onClick={loadDragon} fullWidth variant="light">
+              Open
+            </Button>
+            <Menu shadow="md" width={200} transitionProps={{ transition: 'pop', duration: 200 }}>
+              <Menu.Target>
+                <ActionIcon aria-label="Options" variant="light" size={36}>
+                  <FontAwesomeIcon icon={faEllipsis} />
+                </ActionIcon>
+              </Menu.Target>
+
+              <Menu.Dropdown>
+                <Menu.Item
+                  onClick={notImplemented}
+                  leftSection={<FontAwesomeIcon icon={faClone} size="sm" />}
                 >
-                  <Menu.Target>
-                    <ActionIcon aria-label="Options" variant="light" size={36}>
-                      <FontAwesomeIcon icon={faEllipsis} />
-                    </ActionIcon>
-                  </Menu.Target>
-
-                  <Menu.Dropdown>
-                    <Menu.Item
-                      onClick={notImplemented}
-                      leftSection={<FontAwesomeIcon icon={faClone} size="sm" />}
-                    >
-                      Duplicate
-                    </Menu.Item>
-                    <Menu.Item
-                      onClick={notImplemented}
-                      leftSection={<FontAwesomeIcon icon={faTrash} size="sm" />}
-                    >
-                      Delete
-                    </Menu.Item>
-                  </Menu.Dropdown>
-                </Menu>
-              </Flex>
-            </Card>
+                  Duplicate
+                </Menu.Item>
+                <Menu.Item
+                  onClick={notImplemented}
+                  leftSection={<FontAwesomeIcon icon={faTrash} size="sm" />}
+                >
+                  Delete
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+          </Flex>
+        </Card>
       );
     });
 
@@ -506,14 +516,9 @@ export function HomePage() {
         </AppShell.Header>
 
         <AppShell.Main>
-          <SimpleGrid cols={{ base: 1, md: 2 }}>
+          <SimpleGrid w="100%" cols={{ base: 1, md: 2 }}>
             <Center>
-              <Stack>
-                <Image
-                  radius="md"
-                  src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-7.png"
-                />
-              </Stack>
+              <ImagePreview dragon={dragon} page={configuratorPage} />
             </Center>
             <Container w="100%" h="100%" mah={500}>
               <Configurator
@@ -529,7 +534,6 @@ export function HomePage() {
     </>
   );
 }
-function loadDragon(event: MouseEvent<HTMLButtonElement, MouseEvent>): void {
+function loadDragon(): void {
   notImplemented();
 }
-
