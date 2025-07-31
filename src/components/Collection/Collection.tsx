@@ -137,4 +137,5 @@ export const defaultCollection: Collection = {
       style: 'Pixel',
     },
   ],
+  version: 1,
 };
