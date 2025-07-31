@@ -1,9 +1,20 @@
 import { useState } from 'react';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
-import { far } from '@fortawesome/free-regular-svg-icons';
 /* import all the icons in Free Solid, Free Regular, and Brands styles */
-import { faBars, faCircleInfo, faFolderOpen, faPlus, faRotateLeft, fas } from '@fortawesome/free-solid-svg-icons';
+import {
+  faBars,
+  faCircleInfo,
+  faFloppyDisk,
+  faFolderOpen,
+  faMoon,
+  faPlus,
+  faRotateLeft,
+  fas,
+  faSun,
+  faTrash,
+  faUpload,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   ActionIcon,
@@ -14,6 +25,7 @@ import {
   Card,
   Center,
   Container,
+  Flex,
   Group,
   Image,
   Menu,
@@ -21,9 +33,11 @@ import {
   SimpleGrid,
   Space,
   Stack,
+  Switch,
   Text,
   Title,
   Tooltip,
+  useMantineColorScheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Notifications } from '@mantine/notifications';
@@ -31,12 +45,14 @@ import notImplemented from '../components/AppUtils/AppUtils';
 import Configurator from '../components/Configurator/Configurator';
 import Dragon from '../components/Dragon/Dragon';
 
-library.add(fas, far, fab);
+library.add(fas, fab);
 
 export function HomePage() {
+  const { setColorScheme } = useMantineColorScheme();
   const [welcomeModalOpened, { open: openWelcomeModal, close: closeWelcomeModal }] =
     useDisclosure(true);
   const [aboutModalOpened, { open: openAboutModal, close: closeAboutModal }] = useDisclosure(false);
+  const [configuratorPage, setConfiguratorPage] = useState(0);
 
   const emptyDragon: Dragon = {
     tribe: [],
@@ -105,7 +121,7 @@ export function HomePage() {
     ],
     health: '',
     occupation: '',
-    size: 0.5,
+    size: 50,
     injuries: {
       leftArm: false,
       rightArm: false,
@@ -262,7 +278,7 @@ export function HomePage() {
     builder: 'Bog The MudWing',
   };
 
-  const [dragon, setDragon] = useState<Dragon>(exampleDragon);
+  const [dragon, setDragon] = useState<Dragon>(emptyDragon);
 
   function loadBog() {
     setDragon(exampleDragon);
@@ -276,6 +292,7 @@ export function HomePage() {
 
   function reset() {
     setDragon(emptyDragon);
+    setConfiguratorPage(0);
   }
 
   return (
@@ -314,26 +331,58 @@ export function HomePage() {
                 153-year-old Male MudWing
               </Text>
 
-              <Button onClick={loadNew} fullWidth mt="md">Open</Button>
+              <Flex mt="md" gap="md">
+                <Button onClick={loadBog} fullWidth variant="light">
+                  Open
+                </Button>
+                <ActionIcon
+                  onClick={notImplemented}
+                  aria-label="Delete"
+                  color="red"
+                  variant="light"
+                  size={36}
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </ActionIcon>
+              </Flex>
             </Card>
             <Card shadow="sm" withBorder>
               <Card.Section>
-                <Image
-                  height={160}
-                />
+                <Container h={160} />
               </Card.Section>
 
               <Group justify="space-between" mt="md" mb="xs">
                 <Text fw={500}>Create New</Text>
               </Group>
 
-              <Text size="sm" c="dimmed">
-                Build a new dragon
-              </Text>
+              <Tooltip
+                label="Disables all input restrictions. This may cause problems."
+                openDelay={500}
+              >
+                <div>
+                  <Switch label="Disable restrictions" />
+                </div>
+              </Tooltip>
 
-              <Button onClick={loadBog} fullWidth mt="md" leftSection={<FontAwesomeIcon icon={faPlus}/>}>New</Button>
+              <Button
+                onClick={loadNew}
+                mt="md"
+                fullWidth
+                leftSection={<FontAwesomeIcon icon={faPlus} />}
+                variant="light"
+              >
+                New
+              </Button>
             </Card>
           </SimpleGrid>
+          <Group>
+            <Button onClick={notImplemented} leftSection={<FontAwesomeIcon icon={faUpload} />}>
+              Open Collection
+            </Button>
+            <Button onClick={notImplemented} leftSection={<FontAwesomeIcon icon={faFloppyDisk} />}>
+              Save Collection
+            </Button>
+          </Group>
         </Stack>
       </Modal>
 
@@ -368,8 +417,22 @@ export function HomePage() {
               </Anchor>
             </Stack>
             <Group>
-              <Tooltip label="Undo">
-                <ActionIcon variant="subtle" aria-label="Undo" onClick={notImplemented}>
+              <Switch
+                size="lg"
+                onLabel={<FontAwesomeIcon icon={faSun} />}
+                offLabel={<FontAwesomeIcon icon={faMoon} />}
+                checked={useMantineColorScheme().colorScheme === 'light'}
+                onChange={(event) => {
+                  const light: boolean = event.currentTarget.checked;
+                  if (light) {
+                    setColorScheme('light');
+                  } else {
+                    setColorScheme('dark');
+                  }
+                }}
+              />
+              <Tooltip label="No undo steps">
+                <ActionIcon variant="subtle" aria-label="Undo" onClick={notImplemented} disabled>
                   <FontAwesomeIcon icon={faRotateLeft} />
                 </ActionIcon>
               </Tooltip>
@@ -401,6 +464,13 @@ export function HomePage() {
                   </Menu.Item>
                 </Menu.Dropdown>
               </Menu>
+              <Button
+                variant="light"
+                onClick={notImplemented}
+                leftSection={<FontAwesomeIcon icon={faFloppyDisk} />}
+              >
+                Save
+              </Button>
               <Space h="md" />
             </Group>
           </Group>
@@ -417,7 +487,12 @@ export function HomePage() {
               </Stack>
             </Center>
             <Container w="100%" h="100%" mah={500}>
-              <Configurator dragon={dragon} />
+              <Configurator
+                dragon={dragon}
+                setDragon={setDragon}
+                page={configuratorPage}
+                setPage={setConfiguratorPage}
+              />
             </Container>
           </SimpleGrid>
         </AppShell.Main>

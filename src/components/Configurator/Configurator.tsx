@@ -1,32 +1,52 @@
-import { useState } from 'react';
 
 import notImplemented from '../AppUtils/AppUtils'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faAddressCard, faArrowLeft, faArrowRight, faChartPie, faCode, faDice, faFloppyDisk, faHeartPulse, faInfo, faMap, faPalette, faPeopleGroup, faPlus, faRing, fas } from '@fortawesome/free-solid-svg-icons'
-import { far } from '@fortawesome/free-regular-svg-icons'
+import { faAddressCard, faArrowLeft, faArrowRight, faChartPie, faCode, faDice, faFloppyDisk, faGlasses, faHeartPulse, faInfo, faLocationDot, faPalette, faPeopleGroup, fas } from '@fortawesome/free-solid-svg-icons'
 
 import Dragon from '../Dragon/Dragon';
 
-library.add(fas, far)
+library.add(fas)
 
 import { Stepper, Stack, Title, Text, Group, Button, MultiSelect, NumberInput, TextInput, ColorInput, Switch, Select, Slider, Flex, SimpleGrid, Rating, Fieldset } from '@mantine/core'
 import { JSX } from 'react/jsx-runtime';
 
-export default function Configurator({dragon}: {dragon: Dragon}) {
+type ConfiguratorProps = {
+  dragon: Dragon;
+  setDragon: React.Dispatch<React.SetStateAction<Dragon>>;
+  page: number;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+};
+
+export default function Configurator({dragon, setDragon, page, setPage}: ConfiguratorProps) {
 
   function relations() {
 
     const elements: JSX.Element[] = [];
 
+    
+
     dragon.relations.forEach((relation) => {
       elements.push(
         <Fieldset legend={relation.relation}>
           <Stack>
-            <TextInput label="Name" defaultValue={relation.name} />
-            <Select label="Status" defaultValue={relation.status} data={relationStatus} />
-            <Button color='red' variant='light' onClick={notImplemented}>Delete</Button>
+            <TextInput
+              label="Name"
+              value={relation.name}
+            />
+            <Select
+              label="Status"
+              value={relation.status}
+              data={relationStatus}
+            />
+            <Button
+              color='red'
+              variant='light'
+              onClick={notImplemented}
+            >
+              Delete
+            </Button>
           </Stack>
         </Fieldset>
       );
@@ -35,15 +55,14 @@ export default function Configurator({dragon}: {dragon: Dragon}) {
     return elements;
   }
 
-  const [active, setActive] = useState(0);
-  const nextStep = () => setActive((current) => (current < 9 ? current + 1 : current));
-  const prevStep = () => setActive((current) => (current > 0 ? current - 1 : current));
+  const nextStep = () => setPage((current: number) => (current < 9 ? current + 1 : current));
+  const prevStep = () => setPage((current: number) => (current > 0 ? current - 1 : current));
 
   const relationStatus = ['Good', 'Estranged', 'Deceased', 'Lost', 'Unknown'];
 
   const progressButtons = (
     <Group>
-      <Button onClick={prevStep} leftSection={<FontAwesomeIcon icon={faArrowLeft} />} disabled={active === 0}>Back</Button>
+      <Button onClick={prevStep} leftSection={<FontAwesomeIcon icon={faArrowLeft} />} disabled={page === 0}>Back</Button>
       <Button onClick={notImplemented} leftSection={<FontAwesomeIcon icon={faDice} />}>Randomize</Button>
       <Button onClick={nextStep} rightSection={<FontAwesomeIcon icon={faArrowRight} />}>Next</Button>
     </Group>
@@ -51,13 +70,12 @@ export default function Configurator({dragon}: {dragon: Dragon}) {
 
   const finishedButtons = (
     <Group>
-      <Button onClick={prevStep} variant='light' leftSection={<FontAwesomeIcon icon={faPlus} />}>New</Button>
-      <Button onClick={nextStep} variant='light' leftSection={<FontAwesomeIcon icon={faFloppyDisk} />}>Save</Button>
+      <Button onClick={notImplemented} leftSection={<FontAwesomeIcon icon={faFloppyDisk} />}>Save</Button>
     </Group>
   )
 
   function actionButtons() {
-    if (active === 9) {return finishedButtons;}
+    if (page === 9) {return finishedButtons;}
     return progressButtons;
   }
 
@@ -69,8 +87,8 @@ export default function Configurator({dragon}: {dragon: Dragon}) {
     >
       <Stepper
         flex={1}
-        active={active}
-        onStepClick={setActive}
+        active={page}
+        onStepClick={setPage}
         styles={{
           content: {
             height: '70vh',
@@ -100,20 +118,29 @@ export default function Configurator({dragon}: {dragon: Dragon}) {
               searchable
               nothingFoundMessage="Nothing found..."
               maxValues={2}
-              defaultValue={dragon.tribe}
+              value={dragon.tribe}
               comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
+              onChange={(newTribes) => {
+                setDragon((prev) => ({ ...prev, tribe: newTribes}))
+              }}
             />
             <Group grow>
               <NumberInput
                 label="Age"
                 description="The age of the character"
                 placeholder="Mature at age 6"
-                defaultValue={dragon.age}
+                value={dragon.age}
+                onChange={(newAge) => {
+                  setDragon((prev) => ({ ...prev, age: Number(newAge)}))
+                }}
               />
               <TextInput
                 label="Gender"
                 description="The gender of the character"
-                defaultValue={dragon.gender}
+                value={dragon.gender}
+                onChange={(event) => {
+                  setDragon((prev) => ({ ...prev, gender: event.currentTarget.value}))
+                }}
               />
             </Group>
 
@@ -131,7 +158,10 @@ export default function Configurator({dragon}: {dragon: Dragon}) {
             <SimpleGrid cols={2}>
               <ColorInput
                 label="Primary"
-                defaultValue={dragon.primaryColor}
+                value={dragon.primaryColor}
+                onChange={(newColor) => {
+                  setDragon((prev) => ({ ...prev, primaryColor: newColor}))
+                }}
                 description="Primary scales color"
                 popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
                 swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}
@@ -139,7 +169,10 @@ export default function Configurator({dragon}: {dragon: Dragon}) {
               />
               <ColorInput
                 label="Secondary"
-                defaultValue={dragon.secondaryColor}
+                value={dragon.secondaryColor}
+                onChange={(newColor) => {
+                  setDragon((prev) => ({ ...prev, secondaryColor: newColor}))
+                }}
                 description="Secondary scales color"
                 popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
                 swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}
@@ -147,7 +180,10 @@ export default function Configurator({dragon}: {dragon: Dragon}) {
               />
               <ColorInput
                 label="Underscales"
-                defaultValue={dragon.underscalesColor}
+                value={dragon.underscalesColor}
+                onChange={(newColor) => {
+                  setDragon((prev) => ({ ...prev, underscalesColor: newColor}))
+                }}
                 description="Underscales color"
                 popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
                 swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}
@@ -158,14 +194,20 @@ export default function Configurator({dragon}: {dragon: Dragon}) {
             <SimpleGrid cols={2}>
               <ColorInput
                 label="Start Color"
-                defaultValue={dragon.membraneColor1}
+                value={dragon.membraneColor1}
+                onChange={(newColor) => {
+                  setDragon((prev) => ({ ...prev, membraneColor1: newColor}))
+                }}
                 popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
                 swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}
               // TODO: Dyanmically change swatches based on tribe
               />
               <ColorInput
                 label="End Color"
-                defaultValue={dragon.membraneColor2}
+                value={dragon.membraneColor2}
+                onChange={(newColor) => {
+                  setDragon((prev) => ({ ...prev, membraneColor2: newColor}))
+                }}
                 popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
                 swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}
               // TODO: Dyanmically change swatches based on tribe
@@ -175,7 +217,10 @@ export default function Configurator({dragon}: {dragon: Dragon}) {
             <SimpleGrid cols={2}>
               <ColorInput
                 label="Eyes"
-                defaultValue={dragon.eyeColor}
+                value={dragon.eyeColor}
+                onChange={(newColor) => {
+                  setDragon((prev) => ({ ...prev, eyeColor: newColor}))
+                }}
                 description="Eye color"
                 popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
                 swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}
@@ -183,7 +228,10 @@ export default function Configurator({dragon}: {dragon: Dragon}) {
               />
               <ColorInput
                 label="Spikes"
-                defaultValue={dragon.spikesColor}
+                value={dragon.spikesColor}
+                onChange={(newColor) => {
+                  setDragon((prev) => ({ ...prev, spikesColor: newColor}))
+                }}
                 description="Spikes and talons"
                 popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
                 swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}
@@ -205,11 +253,17 @@ export default function Configurator({dragon}: {dragon: Dragon}) {
             <SimpleGrid cols={2}>
               <TextInput
                 label="Name"
-                defaultValue={dragon.name}
+                value={dragon.name}
+                onChange={(event) => {
+                  setDragon((prev) => ({ ...prev, name: event.target.value}))
+                }}
               />
               <TextInput
                 label="Pronouns"
-                defaultValue={dragon.pronouns}
+                value={dragon.pronouns}
+                onChange={(event) => {
+                  setDragon((prev) => ({ ...prev, pronouns: event.target.value}))
+                }}
               />
             </SimpleGrid>
           </Stack>
@@ -249,8 +303,8 @@ export default function Configurator({dragon}: {dragon: Dragon}) {
         </Stepper.Step>
 
         <Stepper.Step
-          icon={<FontAwesomeIcon icon={faMap} />}
-          completedIcon={<FontAwesomeIcon icon={faMap} />}
+          icon={<FontAwesomeIcon icon={faLocationDot} />}
+          completedIcon={<FontAwesomeIcon icon={faLocationDot} />}
         >
           <Stack>
             <Stack>
@@ -444,8 +498,8 @@ export default function Configurator({dragon}: {dragon: Dragon}) {
         </Stepper.Step>
 
         <Stepper.Step
-          icon={<FontAwesomeIcon icon={faRing} />}
-          completedIcon={<FontAwesomeIcon icon={faRing} />}
+          icon={<FontAwesomeIcon icon={faGlasses} />}
+          completedIcon={<FontAwesomeIcon icon={faGlasses} />}
         >
           <Stack>
             <Stack>
