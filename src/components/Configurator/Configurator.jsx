@@ -1,18 +1,43 @@
-import { useState } from 'react';
+import { React, useState } from 'react';
+
+import notImplemented from '../AppUtils.jsx'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
-import { fab } from '@fortawesome/free-brands-svg-icons'
 
-library.add(fas, far, fab)
+library.add(fas, far)
 
-import { Modal, Stepper, Stack, Title, Text, Group, Button, MultiSelect, NumberInput, TextInput, ColorInput, Switch, Select, Slider, Flex, SimpleGrid, Rating, ScrollArea } from '@mantine/core'
+import { Stepper, Stack, Title, Text, Group, Button, MultiSelect, NumberInput, TextInput, ColorInput, Switch, Select, Slider, Flex, SimpleGrid, Rating, Fieldset } from '@mantine/core'
 
 import "./Configurator.css"
 
-const Configurator = () => {
+Configurator.propTypes = {
+  dragon: PropTypes.string.isRequired
+}
+export default function Configurator({dragon}) {
+
+  function relations() {
+
+    var elements = [];
+
+    dragon.relations.forEach((relation) => {
+      elements.push(
+        <Fieldset legend={relation.relation}>
+          <Stack>
+            <TextInput label="Name" defaultValue={relation.name} />
+            <Select label="Status" defaultValue={relation.status} data={relationStatus} />
+            <Button color='red' variant='light' onClick={notImplemented}>Delete</Button>
+          </Stack>
+        </Fieldset>
+      )
+    });
+
+    console.log(elements);
+
+    return elements;
+  }
 
   const [active, setActive] = useState(0);
   const nextStep = () => setActive((current) => (current < 9 ? current + 1 : current));
@@ -23,7 +48,7 @@ const Configurator = () => {
   const progressButtons = (
     <Group>
       <Button onClick={prevStep} leftSection={<FontAwesomeIcon icon="fa-solid fa-arrow-left" />} disabled={active == 0}>Back</Button>
-      <Button leftSection={<FontAwesomeIcon icon="fa-solid fa-dice" />}>Randomize</Button>
+      <Button onclick={notImplemented} leftSection={<FontAwesomeIcon icon="fa-solid fa-dice" />}>Randomize</Button>
       <Button onClick={nextStep} rightSection={<FontAwesomeIcon icon="fa-solid fa-arrow-right" />}>Next</Button>
     </Group>
   )
@@ -79,6 +104,7 @@ const Configurator = () => {
               searchable
               nothingFoundMessage="Nothing found..."
               maxValues={2}
+              defaultValue={dragon.tribe}
               comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
             />
             <Group grow>
@@ -86,10 +112,12 @@ const Configurator = () => {
                 label="Age"
                 description="The age of the character"
                 placeholder="Mature at age 6"
+                defaultValue={dragon.age}
               />
               <TextInput
                 label="Gender"
                 description="The gender of the character"
+                defaultValue={dragon.gender}
               />
             </Group>
 
@@ -104,49 +132,69 @@ const Configurator = () => {
             <Title order={2}>Colors</Title>
             <Text>Choose the colors for this dragon.</Text>
             <Title order={3}>Scales</Title>
-            <Group grow>
+            <SimpleGrid cols={2}>
               <ColorInput
-                label="Base scales"
+                label="Primary"
+                defaultValue={dragon.primaryColor}
                 description="Primary scales color"
                 popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
                 swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}
               // TODO: Dyanmically change swatches based on tribe
               />
               <ColorInput
-                label="Underscales"
+                label="Secondary"
+                defaultValue={dragon.secondaryColor}
                 description="Secondary scales color"
                 popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
                 swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}
               // TODO: Dyanmically change swatches based on tribe
               />
-            </Group>
+              <ColorInput
+                label="Underscales"
+                defaultValue={dragon.underscalesColor}
+                description="Underscales color"
+                popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
+                swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}
+              // TODO: Dyanmically change swatches based on tribe
+              />
+            </SimpleGrid>
             <Title order={3}>Membrane</Title>
-            <Switch
-              label="Gradient"
-            />
-            <Group grow>
+            <SimpleGrid cols={2}>
               <ColorInput
                 label="Start Color"
+                defaultValue={dragon.membraneColor1}
                 popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
                 swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}
               // TODO: Dyanmically change swatches based on tribe
               />
               <ColorInput
-                hidden={true}
                 label="End Color"
+                defaultValue={dragon.membraneColor2}
                 popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
                 swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}
               // TODO: Dyanmically change swatches based on tribe
               />
-            </Group>
-            <Title order={3}>Spikes</Title>
-            <ColorInput
-              label="Spikes"
-              description="Spikes and talons"
-              popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-              swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}
-            // TODO: Dyanmically change swatches based on tribe
-            />
+            </SimpleGrid>
+            <Title order={3}>Other</Title>
+            <SimpleGrid cols={2}>
+              <ColorInput
+                label="Eyes"
+                defaultValue={dragon.eyeColor}
+                description="Eye color"
+                popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
+                swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}
+              // TODO: Dyanmically change swatches based on tribe
+              />
+              <ColorInput
+                label="Spikes"
+                defaultValue={dragon.spikesColor}
+                description="Spikes and talons"
+                popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
+                swatches={['#2e2e2e', '#868e96', '#fa5252', '#e64980', '#be4bdb', '#7950f2', '#4c6ef5', '#228be6', '#15aabf', '#12b886', '#40c057', '#82c91e', '#fab005', '#fd7e14']}
+              // TODO: Dyanmically change swatches based on tribe
+              />
+            </SimpleGrid>
+
           </Stack>
 
         </Stepper.Step>
@@ -161,9 +209,11 @@ const Configurator = () => {
             <SimpleGrid cols={2}>
               <TextInput
                 label="Name"
+                defaultValue={dragon.name}
               />
               <TextInput
                 label="Pronouns"
+                defaultValue={dragon.pronouns}
               />
             </SimpleGrid>
           </Stack>
@@ -178,31 +228,6 @@ const Configurator = () => {
               <Title order={2}>Relations</Title>
               <Text>Dragons are social creatures!</Text>
             </Stack>
-            <Group grow>
-              <Stack>
-                <Title order={3}>Mother</Title>
-                <TextInput
-                  label="Name"
-                />
-                <Select
-                  label="Status"
-                  placeholder="Pick value"
-                  data={relationStatus}
-                />
-              </Stack>
-              <Stack>
-                <Title order={3}>Father</Title>
-                <TextInput
-                  label="Name"
-                />
-                <Select
-                  grow
-                  label="Status"
-                  placeholder="Pick value"
-                  data={relationStatus}
-                />
-              </Stack>
-            </Group>
             <Flex
               gap="md"
               justify="flex-start"
@@ -214,11 +239,15 @@ const Configurator = () => {
                 flex={1}
                 label="Add relation"
                 placeholder="Pick value"
-                data={['Guardian', 'Grandmother', 'Grandfather', 'Adoptive Mother', 'Adoptive Father', 'Biological Mother', 'Biological Father', 'Stepmother', 'Stepfather', 'Sibling', 'Sister', 'Brother', 'Friend', 'Mentor', 'Ex-partner', 'Dragonet']}
+                data={['Mother', 'Father', 'Guardian', 'Grandmother', 'Grandfather', 'Adoptive Mother', 'Adoptive Father', 'Biological Mother', 'Biological Father', 'Stepmother', 'Stepfather', 'Sibling', 'Sister', 'Brother', 'Friend', 'Mentor', 'Ex-partner', 'Dragonet']}
                 searchable
               />
-              <Button>Add</Button>
+              <Button onClick={notImplemented}>Add</Button>
             </Flex>
+
+            <SimpleGrid cols={2}>
+              {relations()}
+            </SimpleGrid>
 
           </Stack>
         </Stepper.Step>
@@ -406,10 +435,6 @@ const Configurator = () => {
                 label="Occupation"
               // TODO: Display random placeholder
               />
-              <TextInput
-                label="Home location"
-              // TODO: Display random placeholder
-              />
             </SimpleGrid>
 
           </Stack>
@@ -509,5 +534,3 @@ const Configurator = () => {
     </Flex>
   );
 }
-
-export default Configurator;
