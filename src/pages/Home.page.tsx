@@ -14,6 +14,7 @@ import {
   faFileExport,
   faFolderOpen,
   faGear,
+  faHome,
   faPlus,
   faRotateLeft,
   fas,
@@ -459,20 +460,19 @@ export function HomePage() {
                   <FontAwesomeIcon icon={faDownload} />
                 </ActionIcon>
               </Tooltip>
+              <Tooltip label="Home">
+                <ActionIcon onClick={openWelcomeModal} variant="subtle" aria-label="Home">
+                  <FontAwesomeIcon icon={faHome} />
+                </ActionIcon>
+              </Tooltip>
               <Menu shadow="md" width={200} transitionProps={{ transition: 'pop', duration: 200 }}>
                 <Menu.Target>
                   <ActionIcon variant="subtle" aria-label="Menu">
                     <FontAwesomeIcon icon={faBars} />
                   </ActionIcon>
                 </Menu.Target>
-
                 <Menu.Dropdown>
-                  <Menu.Item
-                    onClick={openWelcomeModal}
-                    leftSection={<FontAwesomeIcon icon={faFolderOpen} size="sm" />}
-                  >
-                    Load
-                  </Menu.Item>
+                  <Menu.Label>Editor</Menu.Label>
                   <Menu.Item
                     onClick={reset}
                     leftSection={<FontAwesomeIcon icon={faPlus} size="sm" />}
@@ -485,6 +485,7 @@ export function HomePage() {
                   >
                     Raw data
                   </Menu.Item>
+                  <Menu.Label>App</Menu.Label>
                   <Menu.Item
                     onClick={openSettingsModal}
                     leftSection={<FontAwesomeIcon icon={faGear} size="sm" />}
