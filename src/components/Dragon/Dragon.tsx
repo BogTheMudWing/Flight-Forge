@@ -19,8 +19,12 @@ export default interface Dragon {
   size: number;
   injuries: Injuries;
   accessories: Accessories;
+  // The original creator of the character
   creator: string;
+  // The user who built the dragon
   builder: string;
+  // The art style to render as
+  style: string;
 }
 
 interface Relation {

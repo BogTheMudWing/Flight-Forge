@@ -12,7 +12,6 @@ import {
   faDownload,
   faEllipsis,
   faFileExport,
-  faFloppyDisk,
   faFolderOpen,
   faMoon,
   faPlus,
@@ -159,6 +158,7 @@ export function HomePage() {
     },
     creator: '',
     builder: '',
+    style: 'Pixel',
   };
 
   const exampleDragon: Dragon = {
@@ -285,14 +285,41 @@ export function HomePage() {
     },
     creator: 'Bog The MudWing',
     builder: 'Bog The MudWing',
+    style: 'Pixel',
   };
 
   const [dragon, setDragon] = useState<Dragon>(emptyDragon);
+  const [history, setHistory] = useState<Dragon[]>([]);
+
+  const setDragonWithHistory: React.Dispatch<React.SetStateAction<Dragon>> = (newDragon) => {
+    setDragon((prevDragon) => {
+      const resolvedNewDragon =
+        typeof newDragon === 'function'
+          ? (newDragon as (prev: Dragon) => Dragon)(prevDragon)
+          : newDragon;
+
+      setHistory((prevHistory) => [...prevHistory, prevDragon]);
+      return resolvedNewDragon;
+    });
+  };
+
+  function undo() {
+    setHistory((prevHistory) => {
+      if (prevHistory.length === 0) {
+        return prevHistory;
+      }
+
+      const newHistory = [...prevHistory];
+      const lastDragon = newHistory.pop()!;
+      setDragon(lastDragon);
+      return newHistory;
+    });
+  }
 
   const [json, setJson] = useState<string>('{"error":"This should not be empty!!"}');
 
   function loadBog() {
-    setDragon(exampleDragon);
+    setDragonWithHistory(exampleDragon);
     closeWelcomeModal();
   }
 
@@ -302,7 +329,7 @@ export function HomePage() {
   }
 
   function reset() {
-    setDragon(emptyDragon);
+    setDragonWithHistory(emptyDragon);
     setConfiguratorPage(0);
   }
 
@@ -312,7 +339,7 @@ export function HomePage() {
   }
 
   function applyJson() {
-    setDragon(JSON.parse(json));
+    setDragonWithHistory(JSON.parse(json));
     closeJsonModal();
   }
 
@@ -396,11 +423,7 @@ export function HomePage() {
                   transitionProps={{ transition: 'pop', duration: 200 }}
                 >
                   <Menu.Target>
-                    <ActionIcon
-                      aria-label="Options"
-                      variant="light"
-                      size={36}
-                    >
+                    <ActionIcon aria-label="Options" variant="light" size={36}>
                       <FontAwesomeIcon icon={faEllipsis} />
                     </ActionIcon>
                   </Menu.Target>
@@ -502,9 +525,24 @@ export function HomePage() {
                   }
                 }}
               />
-              <Tooltip label="No undo steps">
-                <ActionIcon variant="subtle" aria-label="Undo" onClick={notImplemented} disabled>
+              <Tooltip label={history.length > 0 ? 'Undo' : 'No undo steps'}>
+                <ActionIcon
+                  variant="subtle"
+                  aria-label="Undo"
+                  onClick={undo}
+                  disabled={history.length === 0}
+                >
                   <FontAwesomeIcon icon={faRotateLeft} />
+                </ActionIcon>
+              </Tooltip>
+              <Tooltip label="Export">
+                <ActionIcon onClick={notImplemented} variant="subtle" aria-label="Export">
+                  <FontAwesomeIcon icon={faFileExport} />
+                </ActionIcon>
+              </Tooltip>
+              <Tooltip label="Download">
+                <ActionIcon onClick={notImplemented} variant="subtle" aria-label="Download">
+                  <FontAwesomeIcon icon={faDownload} />
                 </ActionIcon>
               </Tooltip>
               <Menu shadow="md" width={200} transitionProps={{ transition: 'pop', duration: 200 }}>
@@ -541,28 +579,6 @@ export function HomePage() {
                   </Menu.Item>
                 </Menu.Dropdown>
               </Menu>
-              <Menu shadow="md" width={200} transitionProps={{ transition: 'pop', duration: 200 }}>
-                <Menu.Target>
-                  <Button variant="light" leftSection={<FontAwesomeIcon icon={faFloppyDisk} />}>
-                    Save
-                  </Button>
-                </Menu.Target>
-
-                <Menu.Dropdown>
-                  <Menu.Item
-                    onClick={notImplemented}
-                    leftSection={<FontAwesomeIcon icon={faDownload} size="sm" />}
-                  >
-                    Download
-                  </Menu.Item>
-                  <Menu.Item
-                    onClick={notImplemented}
-                    leftSection={<FontAwesomeIcon icon={faFileExport} size="sm" />}
-                  >
-                    Export
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
               <Space h="md" />
             </Group>
           </Group>
@@ -581,7 +597,7 @@ export function HomePage() {
             <Container w="100%" h="100%" mah={500}>
               <Configurator
                 dragon={dragon}
-                setDragon={setDragon}
+                setDragon={setDragonWithHistory}
                 page={configuratorPage}
                 setPage={setConfiguratorPage}
               />
