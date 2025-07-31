@@ -8,3 +8,17 @@ export default function notImplemented() {
     message: 'If this is a production instance, report this as a bug.'
   })
 }
+
+export function myJoin(array: string[], separator=',') {
+  let str = '';
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] !== null && array[i] !== undefined) {
+      str += array[i];
+    }
+    if (i < array.length - 1) {
+      str += separator;
+    }
+  }
+
+  return str;
+}

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 /* import all the icons in Free Solid, Free Regular, and Brands styles */
@@ -25,7 +25,6 @@ import {
   ActionIcon,
   Anchor,
   AppShell,
-  Badge,
   Button,
   Card,
   Center,
@@ -41,13 +40,15 @@ import {
   Stack,
   Switch,
   Text,
+  TextInput,
   Title,
   Tooltip,
   useMantineColorScheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Notifications } from '@mantine/notifications';
-import notImplemented from '../components/AppUtils/AppUtils';
+import notImplemented, { myJoin } from '../components/AppUtils/AppUtils';
+import { Collection, defaultCollection } from '../components/Collection/Collection';
 import Configurator from '../components/Configurator/Configurator';
 import Dragon from '../components/Dragon/Dragon';
 
@@ -55,12 +56,14 @@ library.add(fas, fab);
 
 export function HomePage() {
   const { setColorScheme } = useMantineColorScheme();
-  const [settingsModalOpened, { open: openSettingsModal, close: closeSettingsModal }] = useDisclosure(false);
+  const [settingsModalOpened, { open: openSettingsModal, close: closeSettingsModal }] =
+    useDisclosure(false);
   const [jsonModalOpened, { open: openJsonModal, close: closeJsonModal }] = useDisclosure(false);
   const [welcomeModalOpened, { open: openWelcomeModal, close: closeWelcomeModal }] =
     useDisclosure(true);
   const [aboutModalOpened, { open: openAboutModal, close: closeAboutModal }] = useDisclosure(false);
-  const [configuratorPage, setConfiguratorPage] = useState(0);
+  const [configuratorPage, setConfiguratorPage] = useState<number>(0);
+  const [collection, setCollection] = useState<Collection>(defaultCollection);
 
   const emptyDragon: Dragon = {
     tribe: [],
@@ -161,133 +164,6 @@ export function HomePage() {
     style: 'Pixel',
   };
 
-  const exampleDragon: Dragon = {
-    tribe: ['Mud'],
-    age: 153,
-    gender: 'Male',
-    primaryColor: '#E36C2A',
-    secondaryColor: '#513119',
-    underscalesColor: '#D99A5B',
-    membraneColor1: '#E5A168',
-    membraneColor2: '#E5A168',
-    eyeColor: '#269FE4',
-    spikesColor: '#000000',
-    name: 'Bog',
-    pronouns: 'he/him',
-    relations: [
-      {
-        relation: 'Sister',
-        name: 'Siltstorm',
-        status: 'Deceased',
-      },
-      {
-        relation: 'Sister',
-        name: 'Maple',
-        status: 'Deceased',
-      },
-    ],
-    locations: [
-      {
-        identifier: 'Hatching location',
-        name: "Catamont's Claw",
-      },
-      {
-        identifier: 'Home location',
-        name: "Tail's End Village",
-      },
-      {
-        identifier: 'Current location',
-        name: "Tail's End Village",
-      },
-    ],
-    traits: [
-      {
-        name: 'Intelligence',
-        rating: 3.5,
-      },
-      {
-        name: 'Charisma',
-        rating: 2,
-      },
-      {
-        name: 'Speed',
-        rating: 1.5,
-      },
-      {
-        name: 'Strength',
-        rating: 4,
-      },
-      {
-        name: 'Teamwork',
-        rating: 4,
-      },
-      {
-        name: 'Organization',
-        rating: 2.5,
-      },
-      {
-        name: 'Perception',
-        rating: 3,
-      },
-      {
-        name: 'Stealth',
-        rating: 1,
-      },
-      {
-        name: 'Agility',
-        rating: 1,
-      },
-      {
-        name: 'Leadership',
-        rating: 4.5,
-      },
-      {
-        name: 'Independence',
-        rating: 3.5,
-      },
-      {
-        name: 'Empathy',
-        rating: 4.5,
-      },
-    ],
-    health: 'Well',
-    occupation: 'Retired',
-    size: 80,
-    injuries: {
-      leftArm: false,
-      rightArm: false,
-      leftLeg: false,
-      rightLeg: false,
-      leftWing: false,
-      rightWing: false,
-      leftEye: false,
-      rightEye: false,
-      leftHorn: false,
-      rightHorn: false,
-      rigthEar: false,
-      leftEar: false,
-      rightEar: false,
-      tail: false,
-    },
-    accessories: {
-      leftArmBand: {
-        color: '#ffe5a8',
-      },
-      rightArmBand: undefined,
-      leftEarring: undefined,
-      rightEarring: undefined,
-      noseRing: undefined,
-      chestplate: undefined,
-      glasses: undefined,
-      necklace: {
-        color: '#ffe5a8',
-      },
-    },
-    creator: 'Bog The MudWing',
-    builder: 'Bog The MudWing',
-    style: 'Pixel',
-  };
-
   const [dragon, setDragon] = useState<Dragon>(emptyDragon);
   const [history, setHistory] = useState<Dragon[]>([]);
 
@@ -303,7 +179,7 @@ export function HomePage() {
     });
   };
 
-  function undo() {
+  function undo(): void {
     setHistory((prevHistory) => {
       if (prevHistory.length === 0) {
         return prevHistory;
@@ -318,50 +194,132 @@ export function HomePage() {
 
   const [json, setJson] = useState<string>('{"error":"This should not be empty!!"}');
 
-  function loadBog() {
-    setDragonWithHistory(exampleDragon);
-    closeWelcomeModal();
-  }
-
-  function loadNew() {
+  function loadNew(): void {
     reset();
     closeWelcomeModal();
   }
 
-  function reset() {
+  function reset(): void {
     setDragonWithHistory(emptyDragon);
     setConfiguratorPage(0);
   }
 
-  function openJson() {
+  function openJson(): void {
     setJson(JSON.stringify(dragon, null, 2));
     openJsonModal();
   }
 
-  function applyJson() {
+  function applyJson(): void {
     setDragonWithHistory(JSON.parse(json));
     closeJsonModal();
+  }
+
+  function generateCards(): JSX.Element[] {
+    const elements: JSX.Element[] = [];
+
+    collection.dragons.forEach((dragonInCollection: Dragon) => {
+
+      let name: string = dragonInCollection.name;
+      if (name === undefined || name === null || name === '') {
+        name = "Unnamed";
+      }
+
+      const age: number | undefined = dragonInCollection.age;
+      let ageString: string;
+      if (age === undefined || age === null || age < 0) {
+        ageString = "";
+      } else {ageString = age.toString().concat("-year-old ");}
+
+      let gender: string = dragonInCollection.gender;
+      if (name === undefined || name === null || name === '') {
+        gender = "";
+      } else {gender = gender.concat(" ")}
+
+      const tribes: string[] = dragonInCollection.tribe;
+      let tribeString: string;
+      if (tribes === undefined || tribes === null || tribes.length === 0) {
+        tribeString = "Dragon";
+      } else {tribeString = myJoin(tribes, '/').concat("Wing");}
+
+      elements.push(
+        <Card shadow="sm" withBorder>
+              <Card.Section>
+                <Image
+                  src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png"
+                  height={160}
+                  alt="Norway"
+                />
+              </Card.Section>
+
+              <Text mt="md" mb="xs" fw={500}>{name}</Text>
+
+              <Text size="sm" c="dimmed">
+                {ageString.concat(gender).concat(tribeString)}
+              </Text>
+
+              <Flex mt="md" gap="md">
+                <Button onClick={loadDragon} fullWidth variant="light">
+                  Open
+                </Button>
+                <Menu
+                  shadow="md"
+                  width={200}
+                  transitionProps={{ transition: 'pop', duration: 200 }}
+                >
+                  <Menu.Target>
+                    <ActionIcon aria-label="Options" variant="light" size={36}>
+                      <FontAwesomeIcon icon={faEllipsis} />
+                    </ActionIcon>
+                  </Menu.Target>
+
+                  <Menu.Dropdown>
+                    <Menu.Item
+                      onClick={notImplemented}
+                      leftSection={<FontAwesomeIcon icon={faClone} size="sm" />}
+                    >
+                      Duplicate
+                    </Menu.Item>
+                    <Menu.Item
+                      onClick={notImplemented}
+                      leftSection={<FontAwesomeIcon icon={faTrash} size="sm" />}
+                    >
+                      Delete
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+              </Flex>
+            </Card>
+      );
+    });
+
+    return elements;
   }
 
   return (
     <>
       <Notifications />
 
-      <Modal opened={settingsModalOpened} onClose={closeSettingsModal} centered size="auto" title="App Settings">
+      <Modal
+        opened={settingsModalOpened}
+        onClose={closeSettingsModal}
+        centered
+        size="auto"
+        title="App Settings"
+      >
         <Stack>
           <Switch
-                checked={useMantineColorScheme().colorScheme === 'light'}
-                onChange={(event) => {
-                  const light: boolean = event.currentTarget.checked;
-                  if (light) {
-                    setColorScheme('light');
-                  } else {
-                    setColorScheme('dark');
-                  }
-                }}
-                label="Use light theme"
-                description="If disabled, the app will use the dark theme."
-              />
+            checked={useMantineColorScheme().colorScheme === 'light'}
+            onChange={(event) => {
+              const light: boolean = event.currentTarget.checked;
+              if (light) {
+                setColorScheme('light');
+              } else {
+                setColorScheme('dark');
+              }
+            }}
+            label="Use light theme"
+            description="If disabled, the app will use the dark theme."
+          />
         </Stack>
       </Modal>
 
@@ -413,56 +371,7 @@ export function HomePage() {
             Fire in a step-by-step guided form.
           </Text>
           <SimpleGrid cols={{ base: 1, sm: 3 }}>
-            <Card shadow="sm" withBorder>
-              <Card.Section>
-                <Image
-                  src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png"
-                  height={160}
-                  alt="Norway"
-                />
-              </Card.Section>
-
-              <Group justify="space-between" mt="md" mb="xs">
-                <Text fw={500}>Bog</Text>
-                <Badge color="orange">Mud</Badge>
-              </Group>
-
-              <Text size="sm" c="dimmed">
-                153-year-old Male MudWing
-              </Text>
-
-              <Flex mt="md" gap="md">
-                <Button onClick={loadBog} fullWidth variant="light">
-                  Open
-                </Button>
-                <Menu
-                  shadow="md"
-                  width={200}
-                  transitionProps={{ transition: 'pop', duration: 200 }}
-                >
-                  <Menu.Target>
-                    <ActionIcon aria-label="Options" variant="light" size={36}>
-                      <FontAwesomeIcon icon={faEllipsis} />
-                    </ActionIcon>
-                  </Menu.Target>
-
-                  <Menu.Dropdown>
-                    <Menu.Item
-                      onClick={notImplemented}
-                      leftSection={<FontAwesomeIcon icon={faClone} size="sm" />}
-                    >
-                      Duplicate
-                    </Menu.Item>
-                    <Menu.Item
-                      onClick={notImplemented}
-                      leftSection={<FontAwesomeIcon icon={faTrash} size="sm" />}
-                    >
-                      Delete
-                    </Menu.Item>
-                  </Menu.Dropdown>
-                </Menu>
-              </Flex>
-            </Card>
+            {generateCards()}
             <Card shadow="sm" withBorder>
               <Card.Section>
                 <Container h={160} />
@@ -487,14 +396,15 @@ export function HomePage() {
               </Button>
             </Card>
           </SimpleGrid>
-          <Group>
+          <Flex gap="md" align="flex-end">
+            <TextInput label="Collection name" variant="filled" defaultValue={collection.name} />
             <Button onClick={notImplemented} leftSection={<FontAwesomeIcon icon={faUpload} />}>
               Open Collection
             </Button>
             <Button onClick={notImplemented} leftSection={<FontAwesomeIcon icon={faDownload} />}>
               Save Collection
             </Button>
-          </Group>
+          </Flex>
         </Stack>
       </Modal>
 
@@ -618,3 +528,7 @@ export function HomePage() {
     </>
   );
 }
+function loadDragon(event: MouseEvent<HTMLButtonElement, MouseEvent>): void {
+  notImplemented();
+}
+
