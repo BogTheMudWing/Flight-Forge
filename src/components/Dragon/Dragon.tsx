@@ -1,85 +1,88 @@
-export default interface Dragon {
-  tribe: string[];
-  bodyParts: BodyParts;
-  age?: number;
-  gender: string;
-  primaryColor: string;
-  secondaryColor: string;
-  underscalesColor: string;
-  membraneColor1: string;
-  membraneColor2: string;
-  eyeColor: string;
-  spikesColor: string;
-  name: string;
-  pronouns: string;
-  relations: Relation[];
-  locations: Location[];
-  traits: Trait[];
-  health: string;
-  occupation: string;
-  size: number;
-  injuries: Injuries;
-  accessories: Accessories;
+import * as t from 'io-ts'
+
+export const BodyParts = t.type({
+  head: t.string,
+  body: t.string,
+  wings: t.string,
+  legs: t.string,
+  tail: t.string,
+})
+
+const Relation = t.type({
+  relation: t.string,
+  name: t.string,
+  status: t.string,
+})
+
+const Location = t.type({
+  identifier: t.string,
+  name: t.string,
+})
+
+const Trait = t.type({
+  name: t.string,
+  rating: t.number,
+})
+
+const Injuries = t.type({
+  leftArm: t.boolean,
+  rightArm: t.boolean,
+  leftLeg: t.boolean,
+  rightLeg: t.boolean,
+  leftWing: t.boolean,
+  rightWing: t.boolean,
+  leftEye: t.boolean,
+  rightEye: t.boolean,
+  leftHorn: t.boolean,
+  rightHorn: t.boolean,
+  leftEar: t.boolean,
+  rightEar: t.boolean,
+  rigthEar: t.boolean,
+  tail: t.boolean,
+})
+
+const Accessory = t.type({
+  color: t.string,
+})
+
+const Accessories = t.partial({
+  leftArmBand: Accessory,
+  rightArmBand: Accessory,
+  leftEarring: Accessory,
+  rightEarring: Accessory,
+  noseRing: Accessory,
+  chestplate: Accessory,
+  glasses: Accessory,
+  necklace: Accessory,
+})
+
+
+export const Dragon = t.type({
+  tribe: t.array(t.string),
+  bodyParts: BodyParts,
+  age: t.number,
+  gender: t.string,
+  primaryColor: t.string,
+  secondaryColor: t.string,
+  underscalesColor: t.string,
+  membraneColor1: t.string,
+  membraneColor2: t.string,
+  eyeColor: t.string,
+  spikesColor: t.string,
+  name: t.string,
+  pronouns: t.string,
+  relations: t.array(Relation),
+  locations: t.array(Location),
+  traits: t.array(Trait),
+  health: t.string,
+  occupation: t.string,
+  size: t.number,
+  injuries: Injuries,
+  accessories: Accessories,
   // The original creator of the character
-  creator: string;
+  creator: t.string,
   // The user who built the dragon
-  builder: string;
+  builder: t.string,
   // The art style to render as
-  style: string;
-}
-
-export interface BodyParts {
-  head: string;
-  body: string;
-  wings: string;
-  legs: string;
-  tail: string;
-}
-
-interface Relation {
-  relation: string;
-  name: string;
-  status: string;
-}
-
-interface Location {
-  identifier: string;
-  name: string;
-}
-
-interface Trait {
-  name: string;
-  rating: number;
-}
-
-interface Injuries {
-  leftArm: boolean;
-  rightArm: boolean;
-  leftLeg: boolean;
-  rightLeg: boolean;
-  leftWing: boolean;
-  rightWing: boolean;
-  leftEye: boolean;
-  rightEye: boolean;
-  leftHorn: boolean;
-  rightHorn: boolean;
-  leftEar: boolean;
-  rightEar: boolean;
-  rigthEar: boolean;
-  tail: boolean;
-}
-
-interface Accessories {
-  leftArmBand?: Accessory;
-  rightArmBand?: Accessory;
-  leftEarring?: Accessory;
-  rightEarring?: Accessory;
-  noseRing?: Accessory;
-  chestplate?: Accessory;
-  glasses?: Accessory;
-  necklace?: Accessory;
-}
-
-interface Accessory {
-  color: string;
-}
+  style: t.string,
+})

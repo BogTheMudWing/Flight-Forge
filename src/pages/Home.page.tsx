@@ -1,4 +1,4 @@
-import { JSX, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 /* import all the icons in Free Solid, Free Regular, and Brands styles */
@@ -29,6 +29,7 @@ import {
   Card,
   Center,
   Container,
+  FileButton,
   Flex,
   Group,
   Image,
@@ -46,12 +47,16 @@ import {
   useMantineColorScheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { Notifications } from '@mantine/notifications';
+import { notifications, Notifications } from '@mantine/notifications';
 import ImagePreview from '@/components/ImagePreview/ImagePreview';
 import notImplemented, { myJoin } from '../components/AppUtils/AppUtils';
 import { Collection, defaultCollection } from '../components/Collection/Collection';
 import Configurator from '../components/Configurator/Configurator';
-import Dragon from '../components/Dragon/Dragon';
+import { Dragon } from '../components/Dragon/Dragon';
+import * as t from 'io-ts'
+import { isLeft } from 'fp-ts/lib/Either';
+import { PathReporter } from "io-ts/PathReporter";
+
 
 library.add(fas, fab);
 
@@ -64,9 +69,41 @@ export function HomePage() {
     useDisclosure(true);
   const [aboutModalOpened, { open: openAboutModal, close: closeAboutModal }] = useDisclosure(false);
   const [configuratorPage, setConfiguratorPage] = useState<number>(0);
-  const [collection, setCollection] = useState<Collection>(defaultCollection);
+  const [collectionFile, setCollectionFile] = useState<File | null>(null);
+  const [collection, setCollection] = useState<t.TypeOf<typeof Collection>>(defaultCollection);
+  const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(collection, null, 2))}`;
 
-  const emptyDragon: Dragon = {
+  useEffect(() => {
+    if (collectionFile) {
+      const fileReader = new FileReader();
+      fileReader.onload = () => {
+        const fileContent: string = fileReader.result as string;
+        const jsonData: JSON = JSON.parse(fileContent);
+        const decoded = Collection.decode(jsonData);
+        if (isLeft(decoded)) {
+          notifications.show({
+            color: 'red',
+            withBorder: true,
+            title: 'There was a problem opening that file.',
+            message: 'Could not validate data: '.concat(PathReporter.report(decoded).join("\n")),
+          })
+        } else {
+          const decodedCollection: t.TypeOf<typeof Collection> = decoded.right;
+          setCollection(decodedCollection);
+          notifications.show({
+            color: 'green',
+            withBorder: true,
+            title: 'Collection opened',
+            message: null,
+          })
+        }
+      };
+      fileReader.readAsText(collectionFile);
+    }
+    
+  }, [collectionFile])
+
+  const emptyDragon: t.TypeOf<typeof Dragon> = {
     tribe: [],
     bodyParts: {
       head: '',
@@ -75,7 +112,7 @@ export function HomePage() {
       legs: '',
       tail: '',
     },
-    age: undefined,
+    age: -1,
     gender: '',
     primaryColor: '#ffffff',
     secondaryColor: '#ffffff',
@@ -172,14 +209,14 @@ export function HomePage() {
     style: 'Pixel',
   };
 
-  const [dragon, setDragon] = useState<Dragon>(emptyDragon);
-  const [history, setHistory] = useState<Dragon[]>([]);
+  const [dragon, setDragon] = useState<t.TypeOf<typeof Dragon>>(emptyDragon);
+  const [history, setHistory] = useState<t.TypeOf<typeof Dragon>[]>([]);
 
-  const setDragonWithHistory: React.Dispatch<React.SetStateAction<Dragon>> = (newDragon) => {
-    setDragon((prevDragon) => {
+  const setDragonWithHistory: React.Dispatch<React.SetStateAction<t.TypeOf<typeof Dragon>>> = (newDragon) => {
+    setDragon((prevDragon: t.TypeOf<typeof Dragon>) => {
       const resolvedNewDragon =
         typeof newDragon === 'function'
-          ? (newDragon as (prev: Dragon) => Dragon)(prevDragon)
+          ? (newDragon as (prev: t.TypeOf<typeof Dragon>) => t.TypeOf<typeof Dragon>)(prevDragon)
           : newDragon;
 
       setHistory((prevHistory) => [...prevHistory, prevDragon]);
@@ -222,10 +259,15 @@ export function HomePage() {
     closeJsonModal();
   }
 
+  function loadDragon(dragonToLoad: t.TypeOf<typeof Dragon>): void {
+    setDragonWithHistory(dragonToLoad);
+    closeWelcomeModal();
+  }
+
   function generateCards(): JSX.Element[] {
     const elements: JSX.Element[] = [];
 
-    collection.dragons.forEach((dragonInCollection: Dragon) => {
+    collection.dragons.forEach((dragonInCollection: t.TypeOf<typeof Dragon>) => {
       let name: string = dragonInCollection.name;
       if (name === undefined || name === null || name === '') {
         name = 'Unnamed';
@@ -273,7 +315,7 @@ export function HomePage() {
           </Text>
 
           <Flex mt="md" gap="md">
-            <Button onClick={loadDragon} fullWidth variant="light">
+            <Button onClick={() => loadDragon(dragonInCollection)} fullWidth variant="light">
               Open
             </Button>
             <Menu shadow="md" width={200} transitionProps={{ transition: 'pop', duration: 200 }}>
@@ -408,13 +450,15 @@ export function HomePage() {
             </Card>
           </SimpleGrid>
           <Flex gap="md" align="flex-end">
-            <TextInput label="Collection name" variant="filled" defaultValue={collection.name} />
-            <Button onClick={notImplemented} leftSection={<FontAwesomeIcon icon={faUpload} />}>
-              Open Collection
-            </Button>
-            <Button onClick={notImplemented} leftSection={<FontAwesomeIcon icon={faDownload} />}>
-              Save Collection
-            </Button>
+            <TextInput label="Collection name" variant="filled" value={collection.name} onChange={(newName) => {
+                setCollection((prev) => ({...prev, name: String(newName)}))
+              }} />
+            <FileButton onChange={setCollectionFile} accept='application/json'>
+              {(props) => <Button {...props} leftSection={<FontAwesomeIcon icon={faUpload} />}>Open Collection</Button>}
+            </FileButton>
+            <Anchor href={dataStr} download={collection.name.concat('.json')}>
+              <Button leftSection={<FontAwesomeIcon icon={faDownload} />}>Save Collection</Button>
+            </Anchor>
           </Flex>
         </Stack>
       </Modal>
@@ -466,9 +510,11 @@ export function HomePage() {
                 </ActionIcon>
               </Tooltip>
               <Tooltip label="Download">
-                <ActionIcon onClick={notImplemented} variant="subtle" aria-label="Download">
-                  <FontAwesomeIcon icon={faDownload} />
-                </ActionIcon>
+                <Anchor href={dataStr} download={collection.name.concat('.json')}>
+                  <ActionIcon variant="subtle" aria-label="Download">
+                    <FontAwesomeIcon icon={faDownload} />
+                  </ActionIcon>
+                </Anchor>
               </Tooltip>
               <Tooltip label="Home">
                 <ActionIcon onClick={openWelcomeModal} variant="subtle" aria-label="Home">
@@ -524,6 +570,8 @@ export function HomePage() {
               <Configurator
                 dragon={dragon}
                 setDragon={setDragonWithHistory}
+                collection={collection}
+                dataStr={dataStr}
                 page={configuratorPage}
                 setPage={setConfiguratorPage}
               />
@@ -533,7 +581,4 @@ export function HomePage() {
       </AppShell>
     </>
   );
-}
-function loadDragon(): void {
-  notImplemented();
 }

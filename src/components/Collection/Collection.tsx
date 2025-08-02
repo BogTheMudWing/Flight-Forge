@@ -1,13 +1,14 @@
-import Dragon from '../Dragon/Dragon';
+import { Dragon } from '../Dragon/Dragon';
+import * as t from 'io-ts'
 
-export interface Collection {
-  name: string;
-  dragons: Dragon[];
+export const Collection = t.type({
+  name: t.string,
+  dragons: t.array(Dragon),
   // Data version for future changes
-  version: number;
-}
+  version: t.number,
+})
 
-export const defaultCollection: Collection = {
+export const defaultCollection: t.TypeOf<typeof Collection> = {
   name: 'Default',
   dragons: [
     {

@@ -20,6 +20,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { JSX } from 'react/jsx-runtime';
 import {
+  Anchor,
   Button,
   ColorInput,
   Fieldset,
@@ -40,18 +41,29 @@ import {
   Title,
 } from '@mantine/core';
 import notImplemented from '../AppUtils/AppUtils';
-import Dragon from '../Dragon/Dragon';
+import { Collection } from '../Collection/Collection';
+import { Dragon } from '../Dragon/Dragon';
+import * as t from 'io-ts';
 
 library.add(fas);
 
 type ConfiguratorProps = {
-  dragon: Dragon;
-  setDragon: React.Dispatch<React.SetStateAction<Dragon>>;
+  dragon: t.TypeOf<typeof Dragon>;
+  setDragon: React.Dispatch<React.SetStateAction<t.TypeOf<typeof Dragon>>>;
+  collection: t.TypeOf<typeof Collection>;
+  dataStr: string;
   page: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export default function Configurator({ dragon, setDragon, page, setPage }: ConfiguratorProps) {
+export default function Configurator({
+  dragon,
+  collection,
+  dataStr,
+  setDragon,
+  page,
+  setPage,
+}: ConfiguratorProps) {
   function relations() {
     const elements: JSX.Element[] = [];
 
@@ -103,12 +115,13 @@ export default function Configurator({ dragon, setDragon, page, setPage }: Confi
         </Menu.Target>
 
         <Menu.Dropdown>
-          <Menu.Item
-            onClick={notImplemented}
-            leftSection={<FontAwesomeIcon icon={faDownload} size="sm" />}
-          >
-            Download
-          </Menu.Item>
+          <Anchor href={dataStr} download={collection.name.concat('.json')}>
+            <Menu.Item
+              leftSection={<FontAwesomeIcon icon={faDownload} size="sm" />}
+            >
+              Download
+            </Menu.Item>
+          </Anchor>
           <Menu.Item
             onClick={notImplemented}
             leftSection={<FontAwesomeIcon icon={faFileExport} size="sm" />}
