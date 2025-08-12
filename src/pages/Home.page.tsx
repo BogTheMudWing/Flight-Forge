@@ -2,50 +2,12 @@ import { JSX, useEffect, useState } from 'react';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 /* import all the icons in Free Solid, Free Regular, and Brands styles */
-import {
-  faBan,
-  faBars,
-  faCheck,
-  faCircleInfo,
-  faClone,
-  faCode,
-  faDownload,
-  faEllipsis,
-  faFileExport,
-  faGear,
-  faHome,
-  faPlus,
-  faRotateLeft,
-  fas,
-  faTrash,
-  faUpload,
-} from '@fortawesome/free-solid-svg-icons';
+import { faBan, faBars, faCheck, faCircleInfo, faClone, faCode, faDownload, faEllipsis, faFileExport, faGear, faHome, faPlus, faRotateLeft, fas, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  ActionIcon,
-  Anchor,
-  AppShell,
-  Button,
-  Card,
-  Center,
-  Container,
-  FileButton,
-  Flex,
-  Group,
-  Image,
-  JsonInput,
-  Menu,
-  Modal,
-  SimpleGrid,
-  Space,
-  Stack,
-  Switch,
-  Text,
-  TextInput,
-  Title,
-  Tooltip,
-  useMantineColorScheme,
-} from '@mantine/core';
+import { isLeft } from 'fp-ts/lib/Either';
+import * as t from 'io-ts';
+import { PathReporter } from 'io-ts/PathReporter';
+import { ActionIcon, Anchor, AppShell, Button, Card, Center, Container, FileButton, Flex, Group, Image, JsonInput, Menu, Modal, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications, Notifications } from '@mantine/notifications';
 import ImagePreview from '@/components/ImagePreview/ImagePreview';
@@ -53,9 +15,6 @@ import notImplemented, { myJoin } from '../components/AppUtils/AppUtils';
 import { Collection, defaultCollection } from '../components/Collection/Collection';
 import Configurator from '../components/Configurator/Configurator';
 import { Dragon } from '../components/Dragon/Dragon';
-import * as t from 'io-ts'
-import { isLeft } from 'fp-ts/lib/Either';
-import { PathReporter } from "io-ts/PathReporter";
 
 
 library.add(fas, fab);
@@ -85,8 +44,8 @@ export function HomePage() {
             color: 'red',
             withBorder: true,
             title: 'There was a problem opening that file.',
-            message: 'Could not validate data: '.concat(PathReporter.report(decoded).join("\n")),
-          })
+            message: 'Could not validate data: '.concat(PathReporter.report(decoded).join('\n')),
+          });
         } else {
           const decodedCollection: t.TypeOf<typeof Collection> = decoded.right;
           setCollection(decodedCollection);
@@ -94,14 +53,15 @@ export function HomePage() {
             color: 'green',
             withBorder: true,
             title: 'Collection opened',
-            message: null,
-          })
+            message: 'Opened collection with '
+              .concat(decodedCollection.dragons.length.toString())
+              .concat(' dragons.'),
+          });
         }
       };
       fileReader.readAsText(collectionFile);
     }
-    
-  }, [collectionFile])
+  }, [collectionFile]);
 
   const emptyDragon: t.TypeOf<typeof Dragon> = {
     tribe: [],
@@ -212,7 +172,9 @@ export function HomePage() {
   const [dragon, setDragon] = useState<t.TypeOf<typeof Dragon>>(emptyDragon);
   const [history, setHistory] = useState<t.TypeOf<typeof Dragon>[]>([]);
 
-  const setDragonWithHistory: React.Dispatch<React.SetStateAction<t.TypeOf<typeof Dragon>>> = (newDragon) => {
+  const setDragonWithHistory: React.Dispatch<React.SetStateAction<t.TypeOf<typeof Dragon>>> = (
+    newDragon
+  ) => {
     setDragon((prevDragon: t.TypeOf<typeof Dragon>) => {
       const resolvedNewDragon =
         typeof newDragon === 'function'
@@ -262,6 +224,39 @@ export function HomePage() {
   function loadDragon(dragonToLoad: t.TypeOf<typeof Dragon>): void {
     setDragonWithHistory(dragonToLoad);
     closeWelcomeModal();
+  }
+
+  function deleteDragon(dragonToDelete: t.TypeOf<typeof Dragon>): void {
+    const index: number = collection.dragons.indexOf(dragonToDelete);
+    if (index === -1) {
+      notifications.show({
+        color: 'red',
+        title: 'Error',
+        message: 'That dragon was not found in the collection.',
+      });
+    } else {
+      setCollection((prev) => ({
+        ...prev,
+        dragons: collection.dragons.filter((item) => item.name !== dragonToDelete.name),
+      }));
+    }
+  }
+
+  function duplicateDragon(dragonToDuplicate: t.TypeOf<typeof Dragon>): void {
+    const index: number = collection.dragons.indexOf(dragonToDuplicate);
+    const newDragon = structuredClone(dragonToDuplicate);
+    newDragon.name = newDragon.name.concat(' copy');
+    if (index === -1) {
+      notifications.show({
+        color: 'red',
+        title: 'Error',
+        message: 'That dragon was not found in the collection.',
+      });
+    } else {
+      const newItems = collection.dragons;
+      newItems.splice(index + 1, 0, newDragon);
+      setCollection((prev) => ({ ...prev, dragons: newItems }));
+    }
   }
 
   function generateCards(): JSX.Element[] {
@@ -327,13 +322,13 @@ export function HomePage() {
 
               <Menu.Dropdown>
                 <Menu.Item
-                  onClick={notImplemented}
+                  onClick={() => duplicateDragon(dragonInCollection)}
                   leftSection={<FontAwesomeIcon icon={faClone} size="sm" />}
                 >
                   Duplicate
                 </Menu.Item>
                 <Menu.Item
-                  onClick={notImplemented}
+                  onClick={() => deleteDragon(dragonInCollection)}
                   leftSection={<FontAwesomeIcon icon={faTrash} size="sm" />}
                 >
                   Delete
@@ -415,7 +410,7 @@ export function HomePage() {
         onClose={closeWelcomeModal}
         centered
         withCloseButton={false}
-        size="auto"
+        size="100%"
       >
         <Stack>
           <Title order={1}>Welcome to Flight Forge!</Title>
@@ -450,11 +445,20 @@ export function HomePage() {
             </Card>
           </SimpleGrid>
           <Flex gap="md" align="flex-end">
-            <TextInput label="Collection name" variant="filled" value={collection.name} onChange={(newName) => {
-                setCollection((prev) => ({...prev, name: String(newName)}))
-              }} />
-            <FileButton onChange={setCollectionFile} accept='application/json'>
-              {(props) => <Button {...props} leftSection={<FontAwesomeIcon icon={faUpload} />}>Open Collection</Button>}
+            <TextInput
+              label="Collection name"
+              variant="filled"
+              value={collection.name}
+              onChange={(newName) => {
+                setCollection((prev) => ({ ...prev, name: String(newName) }));
+              }}
+            />
+            <FileButton onChange={setCollectionFile} accept="application/json">
+              {(props) => (
+                <Button {...props} leftSection={<FontAwesomeIcon icon={faUpload} />}>
+                  Open Collection
+                </Button>
+              )}
             </FileButton>
             <Anchor href={dataStr} download={collection.name.concat('.json')}>
               <Button leftSection={<FontAwesomeIcon icon={faDownload} />}>Save Collection</Button>
@@ -467,11 +471,24 @@ export function HomePage() {
         <Stack>
           <Text>Flight Forge Version DEV-1</Text>
           <Text>
-            Built by <Anchor href="https://blog.macver.org/about-me">Bog The MudWing</Anchor>.
+            Built by <Anchor href="https://blog.macver.org/about-me" target='new'>Bog The MudWing</Anchor>.
           </Text>
           <Text>
             This is free and open source software licensed MIT and available on{' '}
-            <Anchor href="https://github.com/BogTheMudWing/Flight-Forge">GitHub</Anchor>.
+            <Anchor href="https://github.com/BogTheMudWing/Flight-Forge" target='new'>GitHub</Anchor>.
+          </Text>
+          <Text>
+            Images are licensed <Anchor href='https://creativecommons.org/publicdomain/zero/1.0/' target='new'>CC0 1.0</Anchor> and can be used for any purpose without attribution.
+            <img
+              src="https://mirrors.creativecommons.org/presskit/icons/cc.svg"
+              alt=""
+              style={{ maxWidth: '1em', maxHeight: '1em', marginLeft: '.2em' }}
+            />
+            <img
+              src="https://mirrors.creativecommons.org/presskit/icons/zero.svg"
+              alt=""
+              style={{ maxWidth: '1em', maxHeight: '1em', marginLeft: '.2em' }}
+            />
           </Text>
           <Image src="https://blog.macver.org/content/images/size/w1600/2025/06/Wordmark-Color-5.png" />
         </Stack>
