@@ -1,20 +1,29 @@
-import Dragon, { BodyParts } from '../Dragon/Dragon';
+import {Dragon,  BodyParts } from '../Dragon/Dragon';
 
 import './ImagePreview.css';
 
 import { JSX } from 'react';
 import Background from '@/images/render/debug/background/white.png';
-import { imageAssets, ImageLayer, ImageType } from './ImageAssets';
+// import { imageAssets, ImageLayer, ImageType } from './ImageAssets';
+import { imageAssets, ImageLayer, ImageType } from './ImageLoader';
 import convert from 'color-convert';
 
+import * as t from 'io-ts';
+
 type ImagePreviewProps = {
-  dragon: Dragon;
+  dragon: t.TypeOf<typeof Dragon>;
   page: number;
 };
 
 export default function ImagePreview({ dragon, page }: ImagePreviewProps) {
 
-  function getLayerStyle(type: ImageLayer['type'], tribe: string, bodyPart: string, dragon: Dragon): React.CSSProperties {
+  /**
+   * Get CSS properties for a given image part
+   * @param type the color layer (primary, secondary, etc.)
+   * @param dragon the dragon config to pull data from
+   * @returns 
+   */
+  function getLayerStyle(type: ImageLayer['type'], dragon: t.TypeOf<typeof Dragon>): React.CSSProperties {
     switch (type) {
       case 'primary':
         return { filter: `hue-rotate(${convert.hex.hsl(dragon.primaryColor)[0]}deg) saturate(${convert.hex.hsl(dragon.primaryColor)[1]}%) brightness(${convert.hex.hsl(dragon.primaryColor)[2]/50})` };
@@ -37,6 +46,12 @@ export default function ImagePreview({ dragon, page }: ImagePreviewProps) {
     }
   }
 
+  /**
+   * Get the image element of a given tribe and body part
+   * @param tribe the tribe
+   * @param bodyPart the bodypart
+   * @returns the element
+   */
   function renderPart(tribe: keyof typeof imageAssets, bodyPart: keyof (typeof imageAssets)['Hive']): JSX.Element[] {
     const layers = imageAssets[tribe]?.[bodyPart];
     if (!layers) {
@@ -44,7 +59,7 @@ export default function ImagePreview({ dragon, page }: ImagePreviewProps) {
     }
 
   return layers.map(({ src, type }: { src: string; type: ImageType }, i: number) => {
-    const style = getLayerStyle(type, tribe, bodyPart, dragon);
+    const style = getLayerStyle(type, dragon);
 
     if (type === 'membrane-gradient') {
       return (
@@ -73,7 +88,7 @@ export default function ImagePreview({ dragon, page }: ImagePreviewProps) {
   });
   }
 
-  const getTribePart = (part: keyof BodyParts): keyof typeof imageAssets => {
+  const getTribePart = (part: keyof t.TypeOf<typeof BodyParts>): keyof typeof imageAssets => {
     return dragon.tribe.length === 1 ? dragon.tribe[0] as keyof typeof imageAssets : dragon.bodyParts[part] as keyof typeof imageAssets;
   };
 

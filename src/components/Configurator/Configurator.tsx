@@ -18,6 +18,7 @@ import {
   fas,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import * as t from 'io-ts';
 import { JSX } from 'react/jsx-runtime';
 import {
   Anchor,
@@ -43,7 +44,6 @@ import {
 import notImplemented from '../AppUtils/AppUtils';
 import { Collection } from '../Collection/Collection';
 import { Dragon } from '../Dragon/Dragon';
-import * as t from 'io-ts';
 
 library.add(fas);
 
@@ -64,6 +64,10 @@ export default function Configurator({
   page,
   setPage,
 }: ConfiguratorProps) {
+  /**
+   * Generate the elements for viewing and editing relations.
+   * @returns elements for viewing and editing relations
+   */
   function relations() {
     const elements: JSX.Element[] = [];
 
@@ -89,6 +93,9 @@ export default function Configurator({
 
   const relationStatus = ['Good', 'Estranged', 'Deceased', 'Lost', 'Unknown'];
 
+  /**
+   * Back, Randomize, and Next buttons
+   */
   const progressButtons = (
     <Group>
       <Button
@@ -107,6 +114,9 @@ export default function Configurator({
     </Group>
   );
 
+  /**
+   * The Save button which allows Download or Export at the end of the configurator.
+   */
   const finishedButtons = (
     <Group>
       <Menu shadow="md" width={200} transitionProps={{ transition: 'pop', duration: 200 }}>
@@ -116,9 +126,7 @@ export default function Configurator({
 
         <Menu.Dropdown>
           <Anchor href={dataStr} download={collection.name.concat('.json')}>
-            <Menu.Item
-              leftSection={<FontAwesomeIcon icon={faDownload} size="sm" />}
-            >
+            <Menu.Item leftSection={<FontAwesomeIcon icon={faDownload} size="sm" />}>
               Download
             </Menu.Item>
           </Anchor>
@@ -133,6 +141,10 @@ export default function Configurator({
     </Group>
   );
 
+  /**
+   * Get the action buttons to show at the bottom
+   * @returns the correct action buttons at the bottom of the configurator
+   */
   function actionButtons() {
     if (page === 9) {
       return finishedButtons;
@@ -158,6 +170,7 @@ export default function Configurator({
           },
         }}
       >
+        {/* Step 1: Basic Information */}
         <Stepper.Step
           icon={<FontAwesomeIcon icon={faInfo} />}
           completedIcon={<FontAwesomeIcon icon={faInfo} />}
@@ -211,6 +224,7 @@ export default function Configurator({
           </Stack>
         </Stepper.Step>
 
+        {/* Step 2: Colors */}
         <Stepper.Step
           icon={<FontAwesomeIcon icon={faPalette} />}
           completedIcon={<FontAwesomeIcon icon={faPalette} />}
@@ -410,6 +424,7 @@ export default function Configurator({
           </Stack>
         </Stepper.Step>
 
+        {/* Step 3: Identification */}
         <Stepper.Step
           icon={<FontAwesomeIcon icon={faAddressCard} />}
           completedIcon={<FontAwesomeIcon icon={faAddressCard} />}
@@ -436,6 +451,7 @@ export default function Configurator({
           </Stack>
         </Stepper.Step>
 
+        {/* Step 4: Relations */}
         <Stepper.Step
           icon={<FontAwesomeIcon icon={faPeopleGroup} />}
           completedIcon={<FontAwesomeIcon icon={faPeopleGroup} />}
@@ -479,6 +495,7 @@ export default function Configurator({
           </Stack>
         </Stepper.Step>
 
+        {/* Step 5: Locations */}
         <Stepper.Step
           icon={<FontAwesomeIcon icon={faLocationDot} />}
           completedIcon={<FontAwesomeIcon icon={faLocationDot} />}
@@ -525,6 +542,7 @@ export default function Configurator({
           </Stack>
         </Stepper.Step>
 
+        {/* Step 6: Traits */}
         <Stepper.Step
           icon={<FontAwesomeIcon icon={faChartPie} />}
           completedIcon={<FontAwesomeIcon icon={faChartPie} />}
@@ -651,6 +669,7 @@ export default function Configurator({
           </Stack>
         </Stepper.Step>
 
+        {/* Step 7: Life */}
         <Stepper.Step
           icon={<FontAwesomeIcon icon={faHeartPulse} />}
           completedIcon={<FontAwesomeIcon icon={faHeartPulse} />}
@@ -677,6 +696,7 @@ export default function Configurator({
           </Stack>
         </Stepper.Step>
 
+        {/* Step 8: Appearance */}
         <Stepper.Step
           icon={<FontAwesomeIcon icon={faGlasses} />}
           completedIcon={<FontAwesomeIcon icon={faGlasses} />}
@@ -716,6 +736,7 @@ export default function Configurator({
           </Stack>
         </Stepper.Step>
 
+        {/* Step 9: Metadata */}
         <Stepper.Step
           icon={<FontAwesomeIcon icon={faCode} />}
           completedIcon={<FontAwesomeIcon icon={faCode} />}

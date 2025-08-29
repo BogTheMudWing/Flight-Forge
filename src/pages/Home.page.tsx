@@ -172,6 +172,10 @@ export function HomePage() {
   const [dragon, setDragon] = useState<t.TypeOf<typeof Dragon>>(emptyDragon);
   const [history, setHistory] = useState<t.TypeOf<typeof Dragon>[]>([]);
 
+  /**
+   * Change the active dragon and save the current one in undo history.
+   * @param newDragon the modified Dragon
+   */
   const setDragonWithHistory: React.Dispatch<React.SetStateAction<t.TypeOf<typeof Dragon>>> = (
     newDragon
   ) => {
@@ -186,6 +190,9 @@ export function HomePage() {
     });
   };
 
+  /**
+   * Change the active dragon to the previous saved step.
+   */
   function undo(): void {
     setHistory((prevHistory) => {
       if (prevHistory.length === 0) {
@@ -201,31 +208,51 @@ export function HomePage() {
 
   const [json, setJson] = useState<string>('{"error":"This should not be empty!!"}');
 
+  /**
+   * Reset configurator and close welcome modal
+   */
   function loadNew(): void {
     reset();
     closeWelcomeModal();
   }
 
+  /**
+   * Load new empty dragon and reset configurator. If you also want to close the welcome modal, use loadNew().
+   */
   function reset(): void {
     setDragonWithHistory(emptyDragon);
     setConfiguratorPage(0);
   }
 
+  /**
+   * Turn the active dragon into JSON and open it in the JSON editor.
+   */
   function openJson(): void {
     setJson(JSON.stringify(dragon, null, 2));
     openJsonModal();
   }
 
+  /**
+   * Take the text in the JSON editor and set it as the active dragon.
+   */
   function applyJson(): void {
     setDragonWithHistory(JSON.parse(json));
     closeJsonModal();
   }
 
+  /**
+   * Load a given dragon and close the welcome modal
+   * @param dragonToLoad the dragon to load as the active dragon
+   */
   function loadDragon(dragonToLoad: t.TypeOf<typeof Dragon>): void {
     setDragonWithHistory(dragonToLoad);
     closeWelcomeModal();
   }
 
+  /**
+   * Remove a dragon from the loaded collection
+   * @param dragonToDelete the dragon to remove from the collect
+   */
   function deleteDragon(dragonToDelete: t.TypeOf<typeof Dragon>): void {
     const index: number = collection.dragons.indexOf(dragonToDelete);
     if (index === -1) {
@@ -242,6 +269,10 @@ export function HomePage() {
     }
   }
 
+  /**
+   * Duplicates a dragon in the current collection.
+   * @param dragonToDuplicate the dragon in the collection to duplicate
+   */
   function duplicateDragon(dragonToDuplicate: t.TypeOf<typeof Dragon>): void {
     const index: number = collection.dragons.indexOf(dragonToDuplicate);
     const newDragon = structuredClone(dragonToDuplicate);
@@ -259,6 +290,10 @@ export function HomePage() {
     }
   }
 
+  /**
+   * Generate dragon cards for welcome modal
+   * @returns elements representing the dragons in the collection for the welcome modal
+   */
   function generateCards(): JSX.Element[] {
     const elements: JSX.Element[] = [];
 
