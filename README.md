@@ -7,6 +7,8 @@ A guided Wings of Fire character generator.
 
 Flight Forge **is not currently but will eventually be** a web program that guides you through the process of creating a Wings of Fire character.
 
+*Interested in creating a style pack? See [ARTWORK.md](ARTWORK.md).*
+
 ## Run it Locally
 
 You'll need npm installed. The best way to install npm is using nvm.
