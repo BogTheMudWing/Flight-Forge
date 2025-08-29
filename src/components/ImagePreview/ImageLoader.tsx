@@ -21,7 +21,7 @@ const typesMap = [
   'primary', 'secondary', 'underscales', 'spikes', 'membrane', 'membrane-gradient', 'eyes'
 ];
 
-const imageModules = import.meta.glob('@/images/render/debug/**/**/*.png', {
+const imageModules = import.meta.glob('../../images/debug/**/**/*.png', {
   eager: true,
   import: 'default',
 });

@@ -3,7 +3,7 @@ import {Dragon,  BodyParts } from '../Dragon/Dragon';
 import './ImagePreview.css';
 
 import { JSX } from 'react';
-import Background from '@/images/render/debug/background/white.png';
+import Background from '@/images/debug/background/white.png';
 // import { imageAssets, ImageLayer, ImageType } from './ImageAssets';
 import { imageAssets, ImageLayer, ImageType } from './ImageLoader';
 import convert from 'color-convert';
