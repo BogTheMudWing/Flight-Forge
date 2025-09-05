@@ -106,7 +106,7 @@ To build a style pack so that Flight Forge can use it, arrange the files in the 
 │  │  │  ├─ 🖻 secondary.webp
 │  │  │  ╰─ 🖻 spikes.webp
 │  │  ╰─ 🖻 eyes.webp
-│  ├─ ice/
+│  ├─ 🖿 ice/
 │  │  ├─ 🖿 body/
 │  │  │  ├─ 🖻 membranes.webp
 │  │  │  ├─ 🖻 primary.webp
@@ -137,7 +137,7 @@ To build a style pack so that Flight Forge can use it, arrange the files in the 
 │  │  │  ├─ 🖻 secondary.webp
 │  │  │  ╰─ 🖻 spikes.webp
 │  │  │  ╰─ 🖻 eyes.webp
-│  ├─ leaf/
+│  ├─ 🖿 leaf/
 │  │  ├─ 🖿 body/
 │  │  │  ├─ 🖻 membranes.webp
 │  │  │  ├─ 🖻 primary.webp
@@ -168,7 +168,7 @@ To build a style pack so that Flight Forge can use it, arrange the files in the 
 │  │  │  ├─ 🖻 secondary.webp
 │  │  │  ╰─ 🖻 spikes.webp
 │  │  │  ╰─ 🖻 eyes.webp
-│  ├─ mud/
+│  ├─ 🖿 mud/
 │  │  ├─ 🖿 body/
 │  │  │  ├─ 🖻 membranes.webp
 │  │  │  ├─ 🖻 primary.webp
@@ -199,7 +199,7 @@ To build a style pack so that Flight Forge can use it, arrange the files in the 
 │  │  │  ├─ 🖻 secondary.webp
 │  │  │  ╰─ 🖻 spikes.webp
 │  │  │  ╰─ 🖻 eyes.webp
-│  ├─ night/
+│  ├─ 🖿 night/
 │  │  ├─ 🖿 body/
 │  │  │  ├─ 🖻 membranes.webp
 │  │  │  ├─ 🖻 primary.webp
@@ -230,7 +230,7 @@ To build a style pack so that Flight Forge can use it, arrange the files in the 
 │  │  │  ├─ 🖻 secondary.webp
 │  │  │  ╰─ 🖻 spikes.webp
 │  │  │  ╰─ 🖻 eyes.webp
-│  ├─ rain/
+│  ├─ 🖿 rain/
 │  │  ├─ 🖿 body/
 │  │  │  ├─ 🖻 membranes.webp
 │  │  │  ├─ 🖻 primary.webp
@@ -261,7 +261,7 @@ To build a style pack so that Flight Forge can use it, arrange the files in the 
 │  │  │  ├─ 🖻 secondary.webp
 │  │  │  ╰─ 🖻 spikes.webp
 │  │  │  ╰─ 🖻 eyes.webp
-│  ├─ sand/
+│  ├─ 🖿 sand/
 │  │  ├─ 🖿 body/
 │  │  │  ├─ 🖻 membranes.webp
 │  │  │  ├─ 🖻 primary.webp
@@ -292,7 +292,7 @@ To build a style pack so that Flight Forge can use it, arrange the files in the 
 │  │  │  ├─ 🖻 secondary.webp
 │  │  │  ╰─ 🖻 spikes.webp
 │  │  │  ╰─ 🖻 eyes.webp
-│  ├─ silk/
+│  ├─ 🖿 silk/
 │  │  ├─ 🖿 body/
 │  │  │  ├─ 🖻 membranes.webp
 │  │  │  ├─ 🖻 primary.webp
@@ -323,7 +323,7 @@ To build a style pack so that Flight Forge can use it, arrange the files in the 
 │  │  │  ├─ 🖻 secondary.webp
 │  │  │  ╰─ 🖻 spikes.webp
 │  │  │  ╰─ 🖻 eyes.webp
-│  ├─ sea/
+│  ├─ 🖿 sea/
 │  │  ├─ 🖿 body/
 │  │  │  ├─ 🖻 membranes.webp
 │  │  │  ├─ 🖻 primary.webp
