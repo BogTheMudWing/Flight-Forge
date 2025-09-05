@@ -1,4 +1,5 @@
 import { createTheme } from '@mantine/core';
+import './fonts/Ubuntu.woff'
 
 export const theme = createTheme({
   colors: {
@@ -15,7 +16,7 @@ export const theme = createTheme({
       '#8000ab',
     ],
   },
-  fontFamily: 'Roboto, sans-serif',
+  fontFamily: 'Ubuntu, Roboto, sans-serif',
   primaryColor: 'purpleFire',
   defaultRadius: 'md',
 });
