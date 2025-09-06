@@ -15,6 +15,7 @@ import notImplemented, { myJoin } from '../components/AppUtils/AppUtils';
 import { Collection, defaultCollection } from '../components/Collection/Collection';
 import Configurator from '../components/Configurator/Configurator';
 import { Dragon } from '../components/Dragon/Dragon';
+import icon from '../images/icon.png';
 
 
 library.add(fas, fab);
@@ -539,12 +540,15 @@ export function HomePage() {
       >
         <AppShell.Header h="auto">
           <Group p="xm">
-            <Stack px="md" gap="0" flex={1}>
-              <Title order={2}>Flight Forge</Title>
-              <Anchor href="https://code.macver.org/Bog/Flight-Forge" target="_blank">
-                <Text size="sm">Version DEV-1 © 2025 Bog The MudWing</Text>
-              </Anchor>
-            </Stack>
+            <Group gap={'xs'} flex={1}>
+              <Image src={icon} h={'50px'} w={'50px'} sizes='sm'></Image>
+              <Stack gap="0">
+                <Title order={2}>Flight Forge</Title>
+                <Anchor href="https://code.macver.org/Bog/Flight-Forge" target="_blank">
+                  <Text size="sm">Version DEV-1 © 2025 Bog The MudWing</Text>
+                </Anchor>
+              </Stack>
+            </Group>
             <Group>
               <Tooltip label={history.length > 0 ? 'Undo' : 'No undo steps'}>
                 <ActionIcon
