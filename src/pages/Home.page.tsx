@@ -2,7 +2,7 @@ import { JSX, useEffect, useState } from 'react';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 /* import all the icons in Free Solid, Free Regular, and Brands styles */
-import { faBan, faBars, faCheck, faCircleInfo, faClone, faCode, faDownload, faEllipsis, faFileExport, faGear, faHome, faPlus, faRotateLeft, fas, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUpRightFromSquare, faBan, faBars, faBug, faCheck, faCircleInfo, faClone, faCode, faDownload, faEllipsis, faFileExport, faGear, faHome, faPlus, faRotateLeft, fas, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isLeft } from 'fp-ts/lib/Either';
 import * as t from 'io-ts';
@@ -544,9 +544,7 @@ export function HomePage() {
               <Image src={icon} h={'50px'} w={'50px'} sizes='sm'></Image>
               <Stack gap="0">
                 <Title order={2}>Flight Forge</Title>
-                <Anchor href="https://code.macver.org/Bog/Flight-Forge" target="_blank">
-                  <Text size="sm">Version DEV-1 © 2025 Bog The MudWing</Text>
-                </Anchor>
+                <Text size="sm">Version DEV-1 © 2025 Bog The MudWing</Text>
               </Stack>
             </Group>
             <Group>
@@ -604,6 +602,14 @@ export function HomePage() {
                   >
                     Settings
                   </Menu.Item>
+                  <Anchor href='https://code.macver.org/Bog/Flight-Forge/issues/new' target='new'>
+                    <Menu.Item
+                    leftSection={<FontAwesomeIcon icon={faBug} size="sm" />}
+                    rightSection={<FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' />}
+                    >
+                      Report bug
+                    </Menu.Item>
+                  </Anchor>
                   <Menu.Item
                     onClick={openAboutModal}
                     leftSection={<FontAwesomeIcon icon={faCircleInfo} size="sm" />}
