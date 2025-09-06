@@ -9,6 +9,8 @@ Flight Forge **is not currently but will eventually be** a web program that guid
 
 *Interested in creating a style pack? See [ARTWORK.md](ARTWORK.md).*
 
+This is my first major webdev project,
+
 ## Run it Locally
 
 You'll need npm installed. The best way to install npm is using nvm.

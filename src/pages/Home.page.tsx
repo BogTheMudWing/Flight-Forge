@@ -33,14 +33,38 @@ export function HomePage() {
   const [collection, setCollection] = useState<t.TypeOf<typeof Collection>>(defaultCollection);
   const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(collection, null, 2))}`;
 
+  // Undo on Ctrl + Z
   useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.key === "z") { // if Ctrl and Z
+        event.preventDefault(); // Prevent default browser behavior
+        undo(); // Undo
+      }
+    };
+
+    // Add listener
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  // Read and parse collectionFile
+  useEffect(() => {
+    // Make sure it exists
     if (collectionFile) {
+      // We use a FileReader to read the file
       const fileReader = new FileReader();
       fileReader.onload = () => {
+        // Get the content as string
         const fileContent: string = fileReader.result as string;
+        // Parse the string into JSON
         const jsonData: JSON = JSON.parse(fileContent);
+        // Create a Collection from the JSON
         const decoded = Collection.decode(jsonData);
+        // If isLeft is true, there was a problem.
         if (isLeft(decoded)) {
+          // Notify user
           notifications.show({
             color: 'red',
             withBorder: true,
@@ -48,8 +72,11 @@ export function HomePage() {
             message: 'Could not validate data: '.concat(PathReporter.report(decoded).join('\n')),
           });
         } else {
+          // Everything went well, store as collection
           const decodedCollection: t.TypeOf<typeof Collection> = decoded.right;
+          // Set state
           setCollection(decodedCollection);
+          // Notify user that all is well
           notifications.show({
             color: 'green',
             withBorder: true,
@@ -60,10 +87,12 @@ export function HomePage() {
           });
         }
       };
+      // Run all that stuff
       fileReader.readAsText(collectionFile);
     }
   }, [collectionFile]);
 
+  // Used when creating a new dragon
   const emptyDragon: t.TypeOf<typeof Dragon> = {
     tribe: [],
     bodyParts: {
@@ -170,6 +199,7 @@ export function HomePage() {
     style: 'Pixel',
   };
 
+  // setDragon should not be used directly. setHistory should be used instead, which allows the undo function.
   const [dragon, setDragon] = useState<t.TypeOf<typeof Dragon>>(emptyDragon);
   const [history, setHistory] = useState<t.TypeOf<typeof Dragon>[]>([]);
 
@@ -257,6 +287,7 @@ export function HomePage() {
   function deleteDragon(dragonToDelete: t.TypeOf<typeof Dragon>): void {
     const index: number = collection.dragons.indexOf(dragonToDelete);
     if (index === -1) {
+      // This shouldn't happen, but if the dragon is not found, notify user.
       notifications.show({
         color: 'red',
         title: 'Error',
@@ -279,14 +310,18 @@ export function HomePage() {
     const newDragon = structuredClone(dragonToDuplicate);
     newDragon.name = newDragon.name.concat(' copy');
     if (index === -1) {
+      // This shouldn't happen, but if the dragon is not found, notify user.
       notifications.show({
         color: 'red',
         title: 'Error',
         message: 'That dragon was not found in the collection.',
       });
     } else {
+      // Create a copy of the collection of dragons
       const newItems = collection.dragons;
+      // Add the dragon to duplicate just after itself
       newItems.splice(index + 1, 0, newDragon);
+      // Save changes to state
       setCollection((prev) => ({ ...prev, dragons: newItems }));
     }
   }
@@ -299,11 +334,13 @@ export function HomePage() {
     const elements: JSX.Element[] = [];
 
     collection.dragons.forEach((dragonInCollection: t.TypeOf<typeof Dragon>) => {
+      // Name
       let name: string = dragonInCollection.name;
       if (name === undefined || name === null || name === '') {
         name = 'Unnamed';
       }
 
+      // Age
       const age: number | undefined = dragonInCollection.age;
       let ageString: string;
       if (age === undefined || age === null || age < 0) {
@@ -312,6 +349,7 @@ export function HomePage() {
         ageString = age.toString().concat('-year-old ');
       }
 
+      // Gender
       let gender: string = dragonInCollection.gender;
       if (name === undefined || name === null || name === '') {
         gender = '';
@@ -319,6 +357,7 @@ export function HomePage() {
         gender = gender.concat(' ');
       }
 
+      // Tribes
       const tribes: string[] = dragonInCollection.tribe;
       let tribeString: string;
       if (tribes === undefined || tribes === null || tribes.length === 0) {
@@ -327,10 +366,11 @@ export function HomePage() {
         tribeString = myJoin(tribes, '/').concat('Wing');
       }
 
+      // Build it!
       elements.push(
         <Card shadow="sm" withBorder>
           <Card.Section>
-            <Image
+            <Image // TODO: This should be a preview of the dragon
               src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png"
               height={160}
               alt="Norway"
@@ -507,14 +547,14 @@ export function HomePage() {
         <Stack>
           <Text>Flight Forge Version DEV-1</Text>
           <Text>
-            Built by <Anchor href="https://blog.macver.org/about-me" target='new'>Bog The MudWing</Anchor>.
+            Built by <Anchor href="https://blog.macver.org/about-me" target='new'>Bog The MudWing <FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor>.
           </Text>
           <Text>
             This is free and open source software licensed MIT and available on{' '}
-            <Anchor href="https://code.macver.org/Bog/Flight-Forge" target='new'>Macver Code Athenaeum</Anchor>.
+            <Anchor href="https://code.macver.org/Bog/Flight-Forge" target='new'>Macver Code Athenaeum <FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor>.
           </Text>
           <Text>
-            Images are licensed <Anchor href='https://creativecommons.org/publicdomain/zero/1.0/' target='new'>CC0 1.0</Anchor> and can be used for any purpose without attribution.
+            Images are licensed <Anchor href='https://creativecommons.org/publicdomain/zero/1.0/' target='new'>CC0 1.0 <FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor> and can be used for any purpose without attribution.
             <img
               src="https://mirrors.creativecommons.org/presskit/icons/cc.svg"
               alt=""
@@ -604,8 +644,8 @@ export function HomePage() {
                   </Menu.Item>
                   <Anchor href='https://code.macver.org/Bog/Flight-Forge/issues/new' target='new'>
                     <Menu.Item
-                    leftSection={<FontAwesomeIcon icon={faBug} size="sm" />}
-                    rightSection={<FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' />}
+                      leftSection={<FontAwesomeIcon icon={faBug} size="sm" />}
+                      rightSection={<FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' />}
                     >
                       Report bug
                     </Menu.Item>
