@@ -152,6 +152,11 @@ export default function Configurator({
     return progressButtons;
   }
 
+  function ageFeild(): string | number | undefined {
+    if (dragon.age > -1) return dragon.age;
+    else undefined;
+  }
+
   return (
     <Flex gap="md" direction="column" h="100%">
       <Stepper
@@ -197,7 +202,7 @@ export default function Configurator({
                 label="Age"
                 description="The age of the character"
                 placeholder="Mature at age 6"
-                value={dragon.age}
+                value={ageFeild()}
                 onChange={(newAge) => {
                   setDragon((prev) => ({ ...prev, age: Number(newAge) }));
                 }}
