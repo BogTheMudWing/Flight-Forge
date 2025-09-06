@@ -16,6 +16,7 @@ import { Collection, defaultCollection } from '../components/Collection/Collecti
 import Configurator from '../components/Configurator/Configurator';
 import { Dragon } from '../components/Dragon/Dragon';
 import icon from '../images/icon.png';
+import Telemetry from '@/components/Telemetry/Telemetry';
 
 
 library.add(fas, fab);
@@ -32,6 +33,7 @@ export function HomePage() {
   const [collectionFile, setCollectionFile] = useState<File | null>(null);
   const [collection, setCollection] = useState<t.TypeOf<typeof Collection>>(defaultCollection);
   const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(collection, null, 2))}`;
+  const telemetry = new Telemetry();
 
   // Undo on Ctrl + Z
   useEffect(() => {
@@ -444,6 +446,19 @@ export function HomePage() {
             label="Use light theme"
             description="If disabled, the app will use the dark theme."
           />
+          <Switch
+            checked={telemetry.isEnabled()}
+            onChange={(event) => {
+              const allow: boolean = event.currentTarget.checked;
+              if (allow) {
+                telemetry.allowTelemetry();
+              } else {
+                telemetry.denyTelemetry();
+              }
+            }}
+            label="Allow telemetry"
+            description="If enabled, anonymous usage data will be sent to the developer."
+          />
         </Stack>
       </Modal>
 
@@ -566,9 +581,12 @@ export function HomePage() {
               style={{ maxWidth: '1em', maxHeight: '1em', marginLeft: '.2em' }}
             />
           </Text>
+          <Text><Anchor href={import.meta.env.VITE_PRIVACY_POLICY_URL} target="new">Privacy Policy<FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor></Text>
           <Image src="https://blog.macver.org/content/images/size/w1600/2025/06/Wordmark-Color-5.png" />
         </Stack>
       </Modal>
+
+      {telemetry.render()}
 
       <AppShell
         styles={{
