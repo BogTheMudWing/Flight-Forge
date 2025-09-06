@@ -510,7 +510,7 @@ export function HomePage() {
           </Text>
           <Text>
             This is free and open source software licensed MIT and available on{' '}
-            <Anchor href="https://github.com/BogTheMudWing/Flight-Forge" target='new'>GitHub</Anchor>.
+            <Anchor href="https://code.macver.org/Bog/Flight-Forge" target='new'>Macver Code Athenaeum</Anchor>.
           </Text>
           <Text>
             Images are licensed <Anchor href='https://creativecommons.org/publicdomain/zero/1.0/' target='new'>CC0 1.0</Anchor> and can be used for any purpose without attribution.
@@ -541,7 +541,7 @@ export function HomePage() {
           <Group p="xm">
             <Stack px="md" gap="0" flex={1}>
               <Title order={2}>Flight Forge</Title>
-              <Anchor href="https://github.com/BogTheMudWing/Flight-Forge" target="_blank">
+              <Anchor href="https://code.macver.org/Bog/Flight-Forge" target="_blank">
                 <Text size="sm">Version DEV-1 © 2025 Bog The MudWing</Text>
               </Anchor>
             </Stack>

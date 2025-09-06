@@ -16,7 +16,7 @@ You'll need npm installed. The best way to install npm is using nvm.
 1. Clone the repository.
 
 ```
-git clone https://github.com/BogTheMudWing/Flight-Forge.git
+git clone https://code.macver.org/Bog/Flight-Forge.git
 cd Flight-Forge
 ```
 
@@ -41,7 +41,7 @@ You'll need npm installed. The best way to install npm is using nvm.
 1. Clone the repository.
 
 ```
-git clone https://github.com/BogTheMudWing/Flight-Forge.git
+git clone https://code.macver.org/Bog/Flight-Forge.git
 cd Flight-Forge
 ```
 
