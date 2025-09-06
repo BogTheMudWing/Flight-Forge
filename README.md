@@ -9,7 +9,7 @@ Flight Forge **is not currently but will eventually be** a web program that guid
 
 *Interested in creating a style pack? See [ARTWORK.md](ARTWORK.md).*
 
-This is my first major webdev project,
+If you want to contribute, please feel free to open a pull request! Please use a tab size of 2 spaces and follow good code cleanliness.
 
 ## Run it Locally
 
