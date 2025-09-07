@@ -16,8 +16,7 @@ import { Collection, defaultCollection } from '../components/Collection/Collecti
 import Configurator from '../components/Configurator/Configurator';
 import { Dragon } from '../components/Dragon/Dragon';
 import icon from '../images/icon.png';
-import Telemetry from '@/components/Telemetry/Telemetry';
-
+import Telemetry, {allowTelemetry, denyTelemetry, isTelemetryEnabled} from '@/components/Telemetry/Telemetry';
 
 library.add(fas, fab);
 
@@ -33,7 +32,6 @@ export function HomePage() {
   const [collectionFile, setCollectionFile] = useState<File | null>(null);
   const [collection, setCollection] = useState<t.TypeOf<typeof Collection>>(defaultCollection);
   const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(collection, null, 2))}`;
-  const telemetry = new Telemetry();
 
   // Undo on Ctrl + Z
   useEffect(() => {
@@ -421,6 +419,9 @@ export function HomePage() {
     return elements;
   }
 
+  const [lightModeSettingChecked, setlightModeSettingChecked] = useState(useMantineColorScheme().colorScheme === 'light');
+  const [telemetrySettingChecked, setTelemetrySettingChecked] = useState(isTelemetryEnabled());
+
   return (
     <>
       <Notifications />
@@ -442,19 +443,23 @@ export function HomePage() {
               } else {
                 setColorScheme('dark');
               }
+              setlightModeSettingChecked(event.currentTarget.checked);
             }}
             label="Use light theme"
             description="If disabled, the app will use the dark theme."
           />
           <Switch
-            checked={telemetry.isEnabled()}
+            checked={isTelemetryEnabled()}
             onChange={(event) => {
               const allow: boolean = event.currentTarget.checked;
               if (allow) {
-                telemetry.allowTelemetry();
+                allowTelemetry(true);
+                event.currentTarget.checked = true;
               } else {
-                telemetry.denyTelemetry();
+                denyTelemetry(true);
+                event.currentTarget.checked = false;
               }
+              setTelemetrySettingChecked(event.currentTarget.checked);
             }}
             label="Allow telemetry"
             description="If enabled, anonymous usage data will be sent to the developer."
@@ -586,7 +591,7 @@ export function HomePage() {
         </Stack>
       </Modal>
 
-      {telemetry.render()}
+      {Telemetry()}
 
       <AppShell
         styles={{
