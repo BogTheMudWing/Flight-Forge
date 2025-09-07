@@ -113,7 +113,7 @@ export default function Configurator({
   const [newRelationSelectorValue, setNewRelationSelectorValue] = useState<string | null>('');
 
   const prevButton = () => {
-    if (window.innerWidth <= 360) {
+    if (window.screen.width > 630) {
       return (
         <Button
           onClick={prevStep}
@@ -135,7 +135,8 @@ export default function Configurator({
   }
 
   const nextButton = () => {
-    if (window.innerWidth <= 360) {
+    console.log(window.screen.width);
+    if (window.screen.width > 630) {
       return (
         <Button
           onClick={nextStep}
@@ -153,7 +154,7 @@ export default function Configurator({
   }
 
   const randomButton = () => {
-    if (window.innerWidth <= 360) {
+    if (window.innerWidth > 630) {
       return (
         <Button
           onClick={notImplemented}
