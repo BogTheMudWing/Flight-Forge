@@ -493,10 +493,10 @@ export function HomePage() {
               onClick={closeJsonModal}
               variant="light"
             >
-              Discard changes
+              Discard
             </Button>
             <Button leftSection={<FontAwesomeIcon icon={faCheck} />} onClick={applyJson}>
-              Apply changes
+              Apply
             </Button>
           </Group>
         </Stack>
@@ -510,12 +510,12 @@ export function HomePage() {
         size="100%"
       >
         <Stack>
-          <Title order={1}>Welcome to Flight Forge!</Title>
-          <Text>
+          <Title style={{order: -2}} order={1}>Welcome to Flight Forge!</Title>
+          <Text style={{order: -2}}>
             Flight Forge is a web application that allows you to build characters based on Wings of
             Fire in a step-by-step guided form.
           </Text>
-          <SimpleGrid cols={{ base: 1, sm: 3 }}>
+          <SimpleGrid cols={{ base: 1, sm: 3 }} className='dragon-list'>
             {generateCards()}
             <Card shadow="sm" withBorder>
               <Card.Section>
@@ -541,7 +541,7 @@ export function HomePage() {
               </Button>
             </Card>
           </SimpleGrid>
-          <Flex gap="md" align="flex-end">
+          <Flex gap="md" align="flex-end" className='collection-buttons'>
             <TextInput
               label="Collection name"
               variant="filled"

@@ -47,6 +47,7 @@ import { Dragon, Relation } from '../Dragon/Dragon';
 import { recordTelemetry } from '../Telemetry/Telemetry';
 import { useState } from 'react';
 import './Configurator.css'
+import useWindowDimensions from '@/hooks/WindowDimensions';
 
 library.add(fas);
 
@@ -111,24 +112,72 @@ export default function Configurator({
   const relationStatus = ['Good', 'Estranged', 'Deceased', 'Lost', 'Unknown'];
   const [newRelationSelectorValue, setNewRelationSelectorValue] = useState<string | null>('');
 
+  const prevButton = () => {
+    if (window.innerWidth <= 360) {
+      return (
+        <Button
+          onClick={prevStep}
+          leftSection={<FontAwesomeIcon icon={faArrowLeft} />}
+          disabled={page === 0}
+        >
+          Previous
+        </Button>
+      );
+    }
+    return (
+      <Button
+        onClick={prevStep}
+        disabled={page === 0}
+      >
+        <FontAwesomeIcon icon={faArrowLeft} />
+      </Button>
+    );
+  }
+
+  const nextButton = () => {
+    if (window.innerWidth <= 360) {
+      return (
+        <Button
+          onClick={nextStep}
+          leftSection={<FontAwesomeIcon icon={faArrowRight} />}
+        >
+          Next
+        </Button>
+      );
+    }
+    return (
+      <Button onClick={nextStep}>
+        <FontAwesomeIcon icon={faArrowRight} />
+      </Button>
+    );
+  }
+
+  const randomButton = () => {
+    if (window.innerWidth <= 360) {
+      return (
+        <Button
+          onClick={notImplemented}
+          leftSection={<FontAwesomeIcon icon={faDice} />}
+        >
+          Random
+        </Button>
+      );
+    }
+    return (
+      <Button onClick={notImplemented}>
+        <FontAwesomeIcon icon={faDice} />
+      </Button>
+    );
+  }
+
   /**
    * Back, Randomize, and Next buttons
    */
   const progressButtons = (
     <Group>
-      <Button
-        onClick={prevStep}
-        leftSection={<FontAwesomeIcon icon={faArrowLeft} />}
-        disabled={page === 0}
-      >
-        Back
-      </Button>
-      <Button onClick={notImplemented} leftSection={<FontAwesomeIcon icon={faDice} />}>
-        Randomize
-      </Button>
-      <Button onClick={nextStep} rightSection={<FontAwesomeIcon icon={faArrowRight} />}>
-        Next
-      </Button>
+      {prevButton()}
+      {randomButton()}
+      {nextButton()}
     </Group>
   );
 
@@ -137,6 +186,7 @@ export default function Configurator({
    */
   const finishedButtons = (
     <Group>
+      {prevButton()}
       <Menu shadow="md" width={200} transitionProps={{ transition: 'pop', duration: 200 }}>
         <Menu.Target>
           <Button leftSection={<FontAwesomeIcon icon={faFloppyDisk} />}>Save</Button>

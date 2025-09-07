@@ -149,7 +149,7 @@ export default function Telemetry() {
                 </Stack>
                 <Group justify="space-between" grow>
                     <Button onClick={acceptAndClose}>Share data</Button>
-                    <Button onClick={denyAndClose}>Don't share data</Button>
+                    <Button onClick={denyAndClose}>Don't share</Button>
                 </Group>
             </Stack>
         </Dialog>
