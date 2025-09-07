@@ -2,7 +2,7 @@ import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Group, Button, Dialog, TextInput, Text, Progress, Stack, Anchor } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { init } from "@plausible-analytics/tracker";
+import { init, track } from "@plausible-analytics/tracker";
 import React from "react";
 import { useEffect, useState } from "react";
 
@@ -20,15 +20,10 @@ export function recordTelemetry(event: string, value: any) {
     // If undefined, do nothing.
     if (plausibleUrl == undefined) return;
 
-    // Otherwise, send POST request
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", plausibleUrl, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(JSON.stringify({
-        name: event,
-        url: window.location.href,
-        domain: window.location.hostname
-    }));
+    // Otherwise, send data
+    console.log("Sending event " + event + " with data: " + value);
+    let data: Record<string, string> = {[event]: value};
+    track("test", { props: data });
 }
 
 function setCookie(name: string, value: any, expireDays: number) {
@@ -58,7 +53,7 @@ export function allowTelemetry(doSetCookie: boolean) {
     telemetryEnabled = true;
     localStorage.plausible_ignore = "false";
     init({
-        domain: 'flightforge.org',
+        domain: import.meta.env.VITE_HOST,
         endpoint: import.meta.env.VITE_PLAUSIBLE_URL,
         captureOnLocalhost: true
     });

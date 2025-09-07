@@ -44,6 +44,7 @@ import {
 import notImplemented from '../AppUtils/AppUtils';
 import { Collection } from '../Collection/Collection';
 import { Dragon } from '../Dragon/Dragon';
+import { recordTelemetry } from '../Telemetry/Telemetry';
 
 library.add(fas);
 
@@ -194,6 +195,8 @@ export default function Configurator({
               value={dragon.tribe}
               comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
               onChange={(newTribes) => {
+                recordTelemetry("tribeSelect", newTribes[newTribes.length-1]);
+                recordTelemetry("tribeCount", newTribes.length);
                 setDragon((prev) => ({ ...prev, tribe: newTribes }));
               }}
             />
@@ -204,6 +207,7 @@ export default function Configurator({
                 placeholder="Mature at age 6"
                 value={ageFeild()}
                 onChange={(newAge) => {
+                  recordTelemetry("age", newAge);
                   setDragon((prev) => ({ ...prev, age: Number(newAge) }));
                 }}
               />
@@ -212,6 +216,7 @@ export default function Configurator({
                 description="The gender of the character"
                 value={dragon.gender}
                 onChange={(event) => {
+                  recordTelemetry("age", event.currentTarget.value);
                   setDragon((prev) => ({ ...prev, gender: event.currentTarget.value }));
                 }}
               />
