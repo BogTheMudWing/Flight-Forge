@@ -8,23 +8,23 @@ export const BodyParts = t.type({
   tail: t.string,
 })
 
-const Relation = t.type({
+export const Relation = t.type({
   relation: t.string,
   name: t.string,
   status: t.string,
 })
 
-const Location = t.type({
+export const Location = t.type({
   identifier: t.string,
   name: t.string,
 })
 
-const Trait = t.type({
+export const Trait = t.type({
   name: t.string,
   rating: t.number,
 })
 
-const Injuries = t.type({
+export const Injuries = t.type({
   leftArm: t.boolean,
   rightArm: t.boolean,
   leftLeg: t.boolean,
@@ -41,11 +41,11 @@ const Injuries = t.type({
   tail: t.boolean,
 })
 
-const Accessory = t.type({
+export const Accessory = t.type({
   color: t.string,
 })
 
-const Accessories = t.partial({
+export const Accessories = t.partial({
   leftArmBand: Accessory,
   rightArmBand: Accessory,
   leftEarring: Accessory,

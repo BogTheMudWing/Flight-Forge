@@ -17,6 +17,7 @@ import Configurator from '../components/Configurator/Configurator';
 import { Dragon } from '../components/Dragon/Dragon';
 import icon from '../images/icon.png';
 import Telemetry, {allowTelemetry, denyTelemetry, isTelemetryEnabled} from '@/components/Telemetry/Telemetry';
+import './Home.page.css'
 
 library.add(fas, fab);
 
@@ -600,17 +601,19 @@ export function HomePage() {
         }}
         padding="md"
         header={{ height: 80 }}
+        className='shell'
       >
-        <AppShell.Header h="auto">
+        <AppShell.Header h="auto" className='header'>
           <Group p="xm">
-            <Group gap={'xs'} flex={1}>
+            <Group gap={'xs'} flex={1} className='header-info'>
               <Image src={icon} h={'50px'} w={'50px'} sizes='sm'></Image>
               <Stack gap="0">
                 <Title order={2}>Flight Forge</Title>
                 <Text size="sm">Version DEV-1 © 2025 Bog The MudWing</Text>
               </Stack>
             </Group>
-            <Group>
+            <Group className='header-button'>
+              <Space h="md" />
               <Tooltip label={history.length > 0 ? 'Undo' : 'No undo steps'}>
                 <ActionIcon
                   variant="subtle"
@@ -686,7 +689,7 @@ export function HomePage() {
           </Group>
         </AppShell.Header>
 
-        <AppShell.Main>
+        <AppShell.Main className='main'>
           <SimpleGrid w="100%" cols={{ base: 1, md: 2 }}>
             <Center>
               <ImagePreview dragon={dragon} page={configuratorPage} />

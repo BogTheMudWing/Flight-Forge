@@ -1,0 +1,28 @@
+.header {
+  @media screen and (max-width: 630px) {
+    top: auto;
+    bottom: 0;
+  }
+}
+
+.main {
+  @media screen and (max-width: 630px) {
+    padding-top: 0;
+    padding-bottom: calc(var(--app-shell-header-offset, 0rem) + var(--app-shell-padding));
+  }
+}
+
+.header-info {
+  @media screen and (max-width: 630px) {
+    display: none;
+  }
+}
+
+.header-button {
+  margin: 10px;
+
+  @media screen and (max-width: 630px) {
+    flex-grow: 1;
+    justify-content: space-between;
+  }
+}

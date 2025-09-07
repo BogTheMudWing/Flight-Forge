@@ -4,7 +4,22 @@
     width: 100%;
     height: 100%;
     justify-content: center;
-}
-.image-preview > img, .image-preview > div {
-    position: absolute;
+
+    >img,
+    >div {
+        position: absolute;
+    }
+
+    @media screen and (max-width: 991px) {
+        position: relative;
+        height: fit-content;
+
+        >img,
+        >div {
+            position: relative;
+            max-height: 30vh;
+            margin: 0;
+            z-index: -1;
+        }
+    }
 }

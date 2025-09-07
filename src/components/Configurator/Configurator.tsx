@@ -43,8 +43,10 @@ import {
 } from '@mantine/core';
 import notImplemented from '../AppUtils/AppUtils';
 import { Collection } from '../Collection/Collection';
-import { Dragon } from '../Dragon/Dragon';
+import { Dragon, Relation } from '../Dragon/Dragon';
 import { recordTelemetry } from '../Telemetry/Telemetry';
+import { useState } from 'react';
+import './Configurator.css'
 
 library.add(fas);
 
@@ -89,10 +91,25 @@ export default function Configurator({
     return elements;
   }
 
+  /**
+   * Add a new relation to the active dragon.
+   */
+  function addRelation() {
+    let newDragon: t.TypeOf<typeof Dragon> = dragon;
+    let relations: t.TypeOf<typeof Relation>[] = dragon.relations;
+    newDragon.relations = relations;
+    let relation: string;
+    if (newRelationSelectorValue == null) relation = 'Unknown';
+    else relation = newRelationSelectorValue;
+    newDragon.relations.push({ relation: relation, name: 'Unknown', status: 'Unknown' })
+    setDragon(newDragon);
+  }
+
   const nextStep = () => setPage((current: number) => (current < 9 ? current + 1 : current));
   const prevStep = () => setPage((current: number) => (current > 0 ? current - 1 : current));
 
   const relationStatus = ['Good', 'Estranged', 'Deceased', 'Lost', 'Unknown'];
+  const [newRelationSelectorValue, setNewRelationSelectorValue] = useState<string | null>('');
 
   /**
    * Back, Randomize, and Next buttons
@@ -159,21 +176,25 @@ export default function Configurator({
   }
 
   return (
-    <Flex gap="md" direction="column" h="100%">
+    <Flex gap="md" direction="column" h="100%" className='configurator'>
       <Stepper
         flex={1}
         active={page}
         onStepClick={setPage}
         styles={{
-          content: {
-            height: '70vh',
-            overflow: 'scroll',
-          },
           separator: {
-            marginLeft: 4,
-            marginRight: 4,
+            marginLeft: 2,
+            marginRight: 2,
             height: 0,
           },
+          step: {
+            scale: 1,
+            margin: 0
+          }
+        }}
+        classNames={{
+          content: 'content',
+          steps: 'step-button-layout',
         }}
       >
         {/* Step 1: Basic Information */}
@@ -195,7 +216,7 @@ export default function Configurator({
               value={dragon.tribe}
               comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
               onChange={(newTribes) => {
-                recordTelemetry("tribeSelect", newTribes[newTribes.length-1]);
+                recordTelemetry("tribeSelect", newTribes[newTribes.length - 1]);
                 recordTelemetry("tribeCount", newTribes.length);
                 setDragon((prev) => ({ ...prev, tribe: newTribes }));
               }}
@@ -268,7 +289,7 @@ export default function Configurator({
                   '#fab005',
                   '#fd7e14',
                 ]}
-                // TODO: Dyanmically change swatches based on tribe
+              // TODO: Dyanmically change swatches based on tribe
               />
               <ColorInput
                 label="Secondary"
@@ -294,7 +315,7 @@ export default function Configurator({
                   '#fab005',
                   '#fd7e14',
                 ]}
-                // TODO: Dyanmically change swatches based on tribe
+              // TODO: Dyanmically change swatches based on tribe
               />
               <ColorInput
                 label="Underscales"
@@ -320,7 +341,7 @@ export default function Configurator({
                   '#fab005',
                   '#fd7e14',
                 ]}
-                // TODO: Dyanmically change swatches based on tribe
+              // TODO: Dyanmically change swatches based on tribe
               />
             </SimpleGrid>
             <Title order={3}>Membrane</Title>
@@ -348,7 +369,7 @@ export default function Configurator({
                   '#fab005',
                   '#fd7e14',
                 ]}
-                // TODO: Dyanmically change swatches based on tribe
+              // TODO: Dyanmically change swatches based on tribe
               />
               <ColorInput
                 label="End Color"
@@ -373,7 +394,7 @@ export default function Configurator({
                   '#fab005',
                   '#fd7e14',
                 ]}
-                // TODO: Dyanmically change swatches based on tribe
+              // TODO: Dyanmically change swatches based on tribe
               />
             </SimpleGrid>
             <Title order={3}>Other</Title>
@@ -402,7 +423,7 @@ export default function Configurator({
                   '#fab005',
                   '#fd7e14',
                 ]}
-                // TODO: Dyanmically change swatches based on tribe
+              // TODO: Dyanmically change swatches based on tribe
               />
               <ColorInput
                 label="Spikes"
@@ -428,7 +449,7 @@ export default function Configurator({
                   '#fab005',
                   '#fd7e14',
                 ]}
-                // TODO: Dyanmically change swatches based on tribe
+              // TODO: Dyanmically change swatches based on tribe
               />
             </SimpleGrid>
           </Stack>
@@ -473,6 +494,7 @@ export default function Configurator({
             </Stack>
             <Flex gap="md" justify="flex-start" align="flex-end" direction="row" wrap="nowrap">
               <Select
+                id='newRelationSelector'
                 flex={1}
                 label="Add relation"
                 placeholder="Pick value"
@@ -496,9 +518,11 @@ export default function Configurator({
                   'Ex-partner',
                   'Dragonet',
                 ]}
+                value={newRelationSelectorValue}
+                onChange={setNewRelationSelectorValue}
                 searchable
               />
-              <Button onClick={notImplemented}>Add</Button>
+              <Button onClick={addRelation}>Add</Button>
             </Flex>
 
             <SimpleGrid cols={2}>{relations()}</SimpleGrid>
@@ -523,7 +547,7 @@ export default function Configurator({
                   dragon.locations.find((location) => location.identifier === 'Hatching location')
                     ?.name
                 }
-                // TODO: Display random placeholder
+              // TODO: Display random placeholder
               />
               <TextInput
                 label="Growing up location"
@@ -531,14 +555,14 @@ export default function Configurator({
                   dragon.locations.find((location) => location.identifier === 'Growing up location')
                     ?.name
                 }
-                // TODO: Display random placeholder
+              // TODO: Display random placeholder
               />
               <TextInput
                 label="Home location"
                 defaultValue={
                   dragon.locations.find((location) => location.identifier === 'Home location')?.name
                 }
-                // TODO: Display random placeholder
+              // TODO: Display random placeholder
               />
               <TextInput
                 label="Current location"
@@ -546,7 +570,7 @@ export default function Configurator({
                   dragon.locations.find((location) => location.identifier === 'Current location')
                     ?.name
                 }
-                // TODO: Display random placeholder
+              // TODO: Display random placeholder
               />
             </SimpleGrid>
           </Stack>
@@ -700,7 +724,7 @@ export default function Configurator({
               <TextInput
                 label="Occupation"
                 defaultValue={dragon.occupation}
-                // TODO: Display random placeholder
+              // TODO: Display random placeholder
               />
             </SimpleGrid>
           </Stack>
