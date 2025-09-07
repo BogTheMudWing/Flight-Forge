@@ -55,7 +55,7 @@ export function allowTelemetry(doSetCookie: boolean) {
     init({
         domain: import.meta.env.VITE_HOST,
         endpoint: import.meta.env.VITE_PLAUSIBLE_URL,
-        captureOnLocalhost: true
+        captureOnLocalhost: false
     });
 }
 
