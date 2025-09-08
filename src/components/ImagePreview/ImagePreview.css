@@ -1,25 +1,25 @@
 .image-preview {
-    display: flex;
-    position: relative;
+    display: grid;
     width: 100%;
-    height: 100%;
     justify-content: center;
+    height: 50hv;
 
     >img,
     >div {
+        justify-self: center;
         position: absolute;
     }
 
     @media screen and (max-width: 991px) {
         position: relative;
-        height: fit-content;
+        height: var(--image-size-mobile);
 
-        >img,
-        >div {
-            position: relative;
-            max-height: 30vh;
-            margin: 0;
-            z-index: -1;
+        >img {
+            height: var(--image-size-mobile);
         }
+    }
+
+    @media screen and (max-height: 500px) {
+        display: none;
     }
 }

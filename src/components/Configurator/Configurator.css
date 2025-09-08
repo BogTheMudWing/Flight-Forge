@@ -9,7 +9,12 @@
     overflow-y: scroll;
 
     @media screen and (max-width: 991px) {
-        height: 35vh;
+        height: auto;
+        max-height: calc(100vh - 350px);
+    }
+
+    @media screen and (max-height: 500px) {
+        max-height: calc(100vh - 130px);
     }
 }
 

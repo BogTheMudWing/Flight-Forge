@@ -690,11 +690,9 @@ export function HomePage() {
         </AppShell.Header>
 
         <AppShell.Main className='main'>
-          <SimpleGrid w="100%" cols={{ base: 1, md: 2 }}>
-            <Center>
-              <ImagePreview dragon={dragon} page={configuratorPage} />
-            </Center>
-            <Container w="100%" h="100%" mah={500}>
+          <SimpleGrid mt={'lg'} w="100%" cols={{ base: 1, md: 2 }} className={'layout-grid'}>
+            <ImagePreview dragon={dragon} page={configuratorPage} />
+            <Container className='configurator-container'>
               <Configurator
                 dragon={dragon}
                 setDragon={setDragonWithHistory}

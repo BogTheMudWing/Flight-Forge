@@ -120,7 +120,7 @@ export default function Telemetry() {
             return;
         }
 
-        let timeoutMs = 10000;
+        let timeoutMs = 30000;
         let intervalMs = 100;
         let progressCapacity = 100;
         let intervals = timeoutMs / intervalMs;
@@ -144,7 +144,7 @@ export default function Telemetry() {
                         Allow anonymous telemetry? Data is collected for the curiosity of the developer of Flight Forge.
                     </Text>
                     <Text size="xs">
-                        "Don't share data" will be assumed if no option is chosen. More information can be found in the <Anchor href={import.meta.env.VITE_PRIVACY_POLICY_URL} target="new">Privacy Policy<FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor>.
+                        "Don't share data" will be assumed if no option is chosen. By clicking "Share data", you acknowledge that you accept the <Anchor href={import.meta.env.VITE_PRIVACY_POLICY_URL} target="new">Privacy Policy<FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor>.
                     </Text>
                 </Stack>
                 <Group justify="space-between" grow>
