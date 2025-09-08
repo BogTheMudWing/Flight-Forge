@@ -362,11 +362,11 @@ export function HomePage() {
       // Build it!
       elements.push(
         <Card shadow="sm" withBorder>
-          <Group justify='space-between'>
-            <Text mb="xs" fw={500}>
+          <Group justify='space-between' align='top' fw={500} mah={'2em'} style={{overflow: 'hidden'}}>
+            <Text mb="xs">
               {name}
             </Text>
-            <Group gap={'xs'}>
+            <Group gap={'xs'} mb="xs">
               <ColorSwatch size='18' color={dragonInCollection.primaryColor} />
               <ColorSwatch size='18' color={dragonInCollection.secondaryColor} />
               <ColorSwatch size='18' color={dragonInCollection.underscalesColor} />
