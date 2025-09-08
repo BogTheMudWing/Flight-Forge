@@ -14,7 +14,7 @@ import ImagePreview from '@/components/ImagePreview/ImagePreview';
 import notImplemented, { myJoin } from '../components/AppUtils/AppUtils';
 import { Collection, defaultCollection } from '../components/Collection/Collection';
 import Configurator from '../components/Configurator/Configurator';
-import { Dragon } from '../components/Dragon/Dragon';
+import { defaultDragon, Dragon } from '../components/Dragon/Dragon';
 import icon from '../images/icon.png';
 import Telemetry, { allowTelemetry, denyTelemetry, isTelemetryEnabled, recordTelemetry } from '@/components/Telemetry/Telemetry';
 import './Home.page.css'
@@ -194,7 +194,7 @@ export function HomePage() {
   };
 
   // setDragon should not be used directly. setHistory should be used instead, which allows the undo function.
-  const [dragon, setDragon] = useState<t.TypeOf<typeof Dragon>>(emptyDragon);
+  const [dragon, setDragon] = useState<t.TypeOf<typeof Dragon>>(defaultDragon);
   const [history, setHistory] = useState<t.TypeOf<typeof Dragon>[]>([]);
 
   /**
