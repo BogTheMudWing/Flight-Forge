@@ -1,6 +1,6 @@
 type Tribe = 'hive' | 'ice' | 'leaf' | 'mud' | 'night' | 'rain' | 'sand' | 'sea' | 'silk' | 'sky';
 type BodyPart = 'head' | 'body' | 'legs' | 'wings' | 'tail';
-export type ImageType = 'primary' | 'secondary' | 'underscales' | 'spikes' | 'membrane' | 'membrane-gradient' | 'eyes';
+export type ImageType = 'primary' | 'secondary' | 'underscales' | 'spikes' | 'membranes' | 'eyes';
 
 export type ImageLayer = {
   src: string;
@@ -18,10 +18,10 @@ export type TribeImages = {
 
 const parts: BodyPart[] = ['head', 'body', 'legs', 'wings', 'tail'];
 const typesMap = [
-  'primary', 'secondary', 'underscales', 'spikes', 'membrane', 'membrane-gradient', 'eyes'
+  'primary', 'secondary', 'underscales', 'spikes', 'membranes', 'eyes'
 ];
 
-const imageModules = import.meta.glob('../../images/debug/**/**/*.png', {
+const imageModules = import.meta.glob('../../images/debug/tribe/**/**/*.webp', {
   eager: true,
   import: 'default',
 });
@@ -37,18 +37,18 @@ function buildTribeImages(tribe: Tribe): TribeImages {
   };
 
   for (const path in imageModules) {
-    if (!path.includes(`/debug/${tribe}/`)) {continue;}
+    if (!path.includes(`/debug/tribe/${tribe}/`)) {continue;}
 
     const src = imageModules[path] as string;
 
-    if (path.includes('/eyes.png')) {
+    if (path.includes('/eyes.webp')) {
       tribeImages.eyes?.push({ src, type: 'eyes' });
       continue;
     }
 
     for (const part of parts) {
       if (path.includes(`/${part}/`)) {
-        const type: ImageType = typesMap.find((key) => path.includes(`${key}.png`)) as ImageType;
+        const type: ImageType = typesMap.find((key) => path.includes(`${key}.webp`)) as ImageType;
         if (type) {
           tribeImages[part]?.push({ src, type });
         }

@@ -6,6 +6,8 @@
 
     >img,
     >div {
+        width: 512px;
+        height: 512px;
         justify-self: center;
         position: absolute;
     }
@@ -14,8 +16,10 @@
         position: relative;
         height: var(--image-size-mobile);
 
-        >img {
+        >img,
+        >div {
             height: var(--image-size-mobile);
+            width: var(--image-size-mobile);
         }
     }
 

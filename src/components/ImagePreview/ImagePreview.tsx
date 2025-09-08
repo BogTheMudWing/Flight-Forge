@@ -1,4 +1,4 @@
-import {Dragon,  BodyParts } from '../Dragon/Dragon';
+import { Dragon, BodyParts } from '../Dragon/Dragon';
 
 import './ImagePreview.css';
 
@@ -26,20 +26,20 @@ export default function ImagePreview({ dragon, page }: ImagePreviewProps) {
   function getLayerStyle(type: ImageLayer['type'], dragon: t.TypeOf<typeof Dragon>): React.CSSProperties {
     switch (type) {
       case 'primary':
-        return { filter: `hue-rotate(${convert.hex.hsl(dragon.primaryColor)[0]}deg) saturate(${convert.hex.hsl(dragon.primaryColor)[1]}%) brightness(${convert.hex.hsl(dragon.primaryColor)[2]/50})` };
+        return { filter: `hue-rotate(${convert.hex.hsl(dragon.primaryColor)[0]}deg) saturate(${convert.hex.hsl(dragon.primaryColor)[1]}%) brightness(${convert.hex.hsl(dragon.primaryColor)[2] / 50})` };
       case 'secondary':
         return {
-          filter: `hue-rotate(${convert.hex.hsl(dragon.secondaryColor)[0]}deg) saturate(${convert.hex.hsl(dragon.secondaryColor)[1]}%) brightness(${convert.hex.hsl(dragon.secondaryColor)[2]/50})`,
+          filter: `hue-rotate(${convert.hex.hsl(dragon.secondaryColor)[0]}deg) saturate(${convert.hex.hsl(dragon.secondaryColor)[1]}%) brightness(${convert.hex.hsl(dragon.secondaryColor)[2] / 50})`,
         };
       case 'underscales':
         return {
-          filter: `hue-rotate(${convert.hex.hsl(dragon.underscalesColor)[0]}deg) saturate(${convert.hex.hsl(dragon.underscalesColor)[1]}%) brightness(${convert.hex.hsl(dragon.underscalesColor)[2]/50})`,
+          filter: `hue-rotate(${convert.hex.hsl(dragon.underscalesColor)[0]}deg) saturate(${convert.hex.hsl(dragon.underscalesColor)[1]}%) brightness(${convert.hex.hsl(dragon.underscalesColor)[2] / 50})`,
         };
       case 'spikes':
-        return { filter: `hue-rotate(${convert.hex.hsl(dragon.spikesColor)[0]}deg) saturate(${convert.hex.hsl(dragon.spikesColor)[1]}%) brightness(${convert.hex.hsl(dragon.spikesColor)[2]/50})` };
+        return { filter: `hue-rotate(${convert.hex.hsl(dragon.spikesColor)[0]}deg) saturate(${convert.hex.hsl(dragon.spikesColor)[1]}%) brightness(${convert.hex.hsl(dragon.spikesColor)[2] / 50})` };
       case 'eyes':
-        return { filter: `hue-rotate(${convert.hex.hsl(dragon.eyeColor)[0]}deg) saturate(${convert.hex.hsl(dragon.eyeColor)[1]}%) brightness(${convert.hex.hsl(dragon.eyeColor)[2]/50})` };
-      case 'membrane':
+        return { filter: `hue-rotate(${convert.hex.hsl(dragon.eyeColor)[0]}deg) saturate(${convert.hex.hsl(dragon.eyeColor)[1]}%) brightness(${convert.hex.hsl(dragon.eyeColor)[2] / 50})` };
+      case 'membranes':
         return { backgroundColor: dragon.membraneColor1 };
       default:
         return {};
@@ -58,34 +58,33 @@ export default function ImagePreview({ dragon, page }: ImagePreviewProps) {
       return [];
     }
 
-  return layers.map(({ src, type }: { src: string; type: ImageType }, i: number) => {
-    const style = getLayerStyle(type, dragon);
+    return layers.map(({ src, type }: { src: string; type: ImageType }, i: number) => {
+      const style = getLayerStyle(type, dragon);
 
-    if (type === 'membrane-gradient') {
+      if (type === 'membranes') {
+        return (
+          <div
+            key={i}
+            style={{
+              ...style,
+              background: `linear-gradient(to bottom, ${dragon.membraneColor1}, ${dragon.membraneColor2})`,
+              maskImage: `url(${src})`,
+              maskSize: `contain`
+            }}
+            aria-label={`${bodyPart} ${type}`}
+          />
+        );
+      }
+
       return (
-        <div
+        <img
           key={i}
-          style={{
-            ...style,
-            width: `512px`,
-            height: `512px`,
-            background: `linear-gradient(to bottom, ${dragon.membraneColor1}, ${dragon.membraneColor2})`,
-            maskImage: `url(${src})`
-          }}
-          aria-label={`${bodyPart} ${type}`}
+          src={src}
+          alt={`${bodyPart} ${type}`}
+          style={style}
         />
       );
-    }
-
-    return (
-      <img
-        key={i}
-        src={src}
-        alt={`${bodyPart} ${type}`}
-        style={style}
-      />
-    );
-  });
+    });
   }
 
   const getTribePart = (part: keyof t.TypeOf<typeof BodyParts>): keyof typeof imageAssets => {
@@ -94,7 +93,7 @@ export default function ImagePreview({ dragon, page }: ImagePreviewProps) {
 
   return (
     <div className="image-preview">
-      <img src={Background} alt="background" />
+      {/* <img src={Background} alt="background" /> */}
       {renderPart(getTribePart('head'), 'eyes')}
       {renderPart(getTribePart('head'), 'head')}
       {renderPart(getTribePart('body'), 'body')}
