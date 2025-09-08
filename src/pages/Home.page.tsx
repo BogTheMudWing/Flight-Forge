@@ -571,7 +571,7 @@ export function HomePage() {
 
       <Modal opened={aboutModalOpened} onClose={closeAboutModal} title="About" centered>
         <Stack>
-          <Text>Flight Forge Version DEV-1</Text>
+          <Text>Flight Forge Version {import.meta.env.VITE_VERSION}</Text>
           <Text>
             Built by <Anchor href="https://blog.macver.org/about-me" target='new'>Bog The MudWing <FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor>.
           </Text>
@@ -614,7 +614,7 @@ export function HomePage() {
               <Image src={icon} h={'50px'} w={'50px'} sizes='sm'></Image>
               <Stack gap="0">
                 <Title order={2}>Flight Forge</Title>
-                <Text size="sm">Version DEV-1 © 2025 Bog The MudWing</Text>
+                <Text size="sm">Version {import.meta.env.VITE_VERSION} © 2025 Bog The MudWing</Text>
               </Stack>
             </Group>
             <Group className='header-button'>

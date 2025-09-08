@@ -1,6 +1,6 @@
 # Privacy Policy
 
-This Privacy Policy outlines how we collect, use, and protect information when you use our web application, Flight Forge. By using the app, you agree to the practices described in this policy.
+This Privacy Policy outlines how we collect, use, and protect information when you use our web application, Flight Forge at <https://flightforge.app>. By using the app, you agree to the practices described in this policy.
 
 ## 1. Data We Collect
 

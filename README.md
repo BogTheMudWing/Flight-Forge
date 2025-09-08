@@ -2,6 +2,8 @@
 
 A guided Wings of Fire character generator.
 
+<https://flightforge.app>
+
  > [!NOTE]
  > This repository is mirrored to [GitHub](https://github.com/BogTheMudWing/Flight-Forge) for visibility. Issues and pull requests should be made on [Macver Code Athenaeum](https://code.macver.org/Bog/Flight-Forge).
 
