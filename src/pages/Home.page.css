@@ -74,4 +74,7 @@
     height: min-content;
     align-self: center;
   }
+  @media screen and (max-height: 500px) {
+    display: none;
+  }
 }
