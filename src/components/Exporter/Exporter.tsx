@@ -34,14 +34,11 @@ export async function exportImage(layers: HTMLCollection, name: string, gradient
         context.restore();
       }
     } else if (layer instanceof HTMLDivElement) {
-      console.log("Rendering div")
       // Handle <div> layers with background-color and mask-image
       const style = getComputedStyle(layer);
 
       const background = style.background;
-      console.log("bgColor: " + background)
       const maskImage = style.maskImage || style.webkitMaskImage;
-      console.log("maskImage: " + maskImage)
 
       // Draw background color only if it's not transparent
       if (background && background !== 'rgba(0, 0, 0, 0)' && background !== 'transparent') {
