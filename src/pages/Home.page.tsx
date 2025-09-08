@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isLeft } from 'fp-ts/lib/Either';
 import * as t from 'io-ts';
 import { PathReporter } from 'io-ts/PathReporter';
-import { ActionIcon, Anchor, AppShell, Button, Card, Center, ColorSwatch, Container, FileButton, Flex, Group, Image, JsonInput, Menu, Modal, SegmentedControl, Select, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
+import { ActionIcon, Anchor, AppShell, Button, Card, Center, ColorSwatch, Container, FileButton, Flex, Group, Image, JsonInput, Menu, Modal, Overlay, SegmentedControl, Select, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications, Notifications } from '@mantine/notifications';
 import ImagePreview from '@/components/ImagePreview/ImagePreview';
@@ -34,6 +34,7 @@ export function HomePage() {
   const [collectionFile, setCollectionFile] = useState<File | null>(null);
   const [collection, setCollection] = useState<t.TypeOf<typeof Collection>>(defaultCollection);
   const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(collection, null, 2))}`;
+  let dragonIndex = -1;
 
   // Undo on Ctrl + Z
   useEffect(() => {
@@ -210,6 +211,9 @@ export function HomePage() {
           : newDragon;
 
       setHistory((prevHistory) => [...prevHistory, prevDragon]);
+      const newCollection = collection;
+      newCollection.dragons.splice(dragonIndex, 1, resolvedNewDragon);
+      setCollection(newCollection);
       return resolvedNewDragon;
     });
   };
@@ -244,7 +248,10 @@ export function HomePage() {
    * Load new empty dragon and reset configurator. If you also want to close the welcome modal, use loadNew().
    */
   function reset(): void {
-    setDragonWithHistory(emptyDragon);
+    setDragon(emptyDragon);
+    const newCollection = collection;
+    newCollection.dragons.push(emptyDragon);
+    setCollection(newCollection);
     setConfiguratorPage(0);
   }
 
@@ -269,6 +276,7 @@ export function HomePage() {
    * @param dragonToLoad the dragon to load as the active dragon
    */
   function loadDragon(dragonToLoad: t.TypeOf<typeof Dragon>): void {
+    dragonIndex = collection.dragons.indexOf(dragonToLoad);
     setDragonWithHistory(dragonToLoad);
     closeWelcomeModal();
   }
@@ -287,6 +295,9 @@ export function HomePage() {
         message: 'That dragon was not found in the collection.',
       });
     } else {
+      if (dragonToDelete == dragon) {
+        loadNew();
+      }
       setCollection((prev) => ({
         ...prev,
         dragons: collection.dragons.filter((item) => item.name !== dragonToDelete.name),
@@ -344,7 +355,7 @@ export function HomePage() {
 
       // Gender
       let gender: string = dragonInCollection.gender;
-      if (name === undefined || name === null || name === '') {
+      if (gender === undefined || gender === null || gender === '') {
         gender = '';
       } else {
         gender = gender.concat(' ');
@@ -620,6 +631,7 @@ export function HomePage() {
                 <Text size="sm">Version {import.meta.env.VITE_VERSION} © 2025 Bog The MudWing</Text>
               </Stack>
             </Group>
+            <Text display={(window.innerWidth <= 991) ? 'none' : 'auto'}>Currently editing {dragon.name? dragon.name : "unnamed"}</Text>
             <Group className='header-button'>
               <Space h="md" />
               <Tooltip label={history.length > 0 ? 'Undo' : 'No undo steps'}>
