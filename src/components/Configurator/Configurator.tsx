@@ -182,6 +182,23 @@ export default function Configurator({
     </Group>
   );
 
+  const colorSwatches = [
+    '#2e2e2e',
+    '#868e96',
+    '#fa5252',
+    '#e64980',
+    '#be4bdb',
+    '#7950f2',
+    '#4c6ef5',
+    '#228be6',
+    '#15aabf',
+    '#12b886',
+    '#40c057',
+    '#82c91e',
+    '#fab005',
+    '#fd7e14',
+  ]
+
   /**
    * The Save button which allows Download or Export at the end of the configurator.
    */
@@ -324,22 +341,7 @@ export default function Configurator({
                 }}
                 description="Primary scales color"
                 popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-                swatches={[
-                  '#2e2e2e',
-                  '#868e96',
-                  '#fa5252',
-                  '#e64980',
-                  '#be4bdb',
-                  '#7950f2',
-                  '#4c6ef5',
-                  '#228be6',
-                  '#15aabf',
-                  '#12b886',
-                  '#40c057',
-                  '#82c91e',
-                  '#fab005',
-                  '#fd7e14',
-                ]}
+                swatches={colorSwatches}
               // TODO: Dyanmically change swatches based on tribe
               />
               <ColorInput
@@ -350,22 +352,7 @@ export default function Configurator({
                 }}
                 description="Secondary scales color"
                 popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-                swatches={[
-                  '#2e2e2e',
-                  '#868e96',
-                  '#fa5252',
-                  '#e64980',
-                  '#be4bdb',
-                  '#7950f2',
-                  '#4c6ef5',
-                  '#228be6',
-                  '#15aabf',
-                  '#12b886',
-                  '#40c057',
-                  '#82c91e',
-                  '#fab005',
-                  '#fd7e14',
-                ]}
+                swatches={colorSwatches}
               // TODO: Dyanmically change swatches based on tribe
               />
               <ColorInput
@@ -376,22 +363,7 @@ export default function Configurator({
                 }}
                 description="Underscales color"
                 popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-                swatches={[
-                  '#2e2e2e',
-                  '#868e96',
-                  '#fa5252',
-                  '#e64980',
-                  '#be4bdb',
-                  '#7950f2',
-                  '#4c6ef5',
-                  '#228be6',
-                  '#15aabf',
-                  '#12b886',
-                  '#40c057',
-                  '#82c91e',
-                  '#fab005',
-                  '#fd7e14',
-                ]}
+                swatches={colorSwatches}
               // TODO: Dyanmically change swatches based on tribe
               />
             </SimpleGrid>
@@ -404,22 +376,7 @@ export default function Configurator({
                   setDragon((prev) => ({ ...prev, membraneColor1: newColor }));
                 }}
                 popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-                swatches={[
-                  '#2e2e2e',
-                  '#868e96',
-                  '#fa5252',
-                  '#e64980',
-                  '#be4bdb',
-                  '#7950f2',
-                  '#4c6ef5',
-                  '#228be6',
-                  '#15aabf',
-                  '#12b886',
-                  '#40c057',
-                  '#82c91e',
-                  '#fab005',
-                  '#fd7e14',
-                ]}
+                swatches={colorSwatches}
               // TODO: Dyanmically change swatches based on tribe
               />
               <ColorInput
@@ -429,22 +386,7 @@ export default function Configurator({
                   setDragon((prev) => ({ ...prev, membraneColor2: newColor }));
                 }}
                 popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-                swatches={[
-                  '#2e2e2e',
-                  '#868e96',
-                  '#fa5252',
-                  '#e64980',
-                  '#be4bdb',
-                  '#7950f2',
-                  '#4c6ef5',
-                  '#228be6',
-                  '#15aabf',
-                  '#12b886',
-                  '#40c057',
-                  '#82c91e',
-                  '#fab005',
-                  '#fd7e14',
-                ]}
+                swatches={colorSwatches}
               // TODO: Dyanmically change swatches based on tribe
               />
             </SimpleGrid>
@@ -458,22 +400,7 @@ export default function Configurator({
                 }}
                 description="Eye color"
                 popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-                swatches={[
-                  '#2e2e2e',
-                  '#868e96',
-                  '#fa5252',
-                  '#e64980',
-                  '#be4bdb',
-                  '#7950f2',
-                  '#4c6ef5',
-                  '#228be6',
-                  '#15aabf',
-                  '#12b886',
-                  '#40c057',
-                  '#82c91e',
-                  '#fab005',
-                  '#fd7e14',
-                ]}
+                swatches={colorSwatches}
               // TODO: Dyanmically change swatches based on tribe
               />
               <ColorInput
@@ -484,22 +411,7 @@ export default function Configurator({
                 }}
                 description="Spikes and talons"
                 popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-                swatches={[
-                  '#2e2e2e',
-                  '#868e96',
-                  '#fa5252',
-                  '#e64980',
-                  '#be4bdb',
-                  '#7950f2',
-                  '#4c6ef5',
-                  '#228be6',
-                  '#15aabf',
-                  '#12b886',
-                  '#40c057',
-                  '#82c91e',
-                  '#fab005',
-                  '#fd7e14',
-                ]}
+                swatches={colorSwatches}
               // TODO: Dyanmically change swatches based on tribe
               />
             </SimpleGrid>
