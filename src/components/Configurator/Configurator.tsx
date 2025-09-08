@@ -3,6 +3,7 @@ import {
   faAddressCard,
   faArrowLeft,
   faArrowRight,
+  faArrowUpRightFromSquare,
   faChartPie,
   faCode,
   faDice,
@@ -23,6 +24,7 @@ import { JSX } from 'react/jsx-runtime';
 import {
   Anchor,
   Button,
+  Center,
   ColorInput,
   Fieldset,
   Flex,
@@ -241,6 +243,38 @@ export default function Configurator({
   function ageFeild(): string | number | undefined {
     if (dragon.age > -1) return dragon.age;
     else undefined;
+  }
+
+  /**
+   * Create or overwrite a location for the active dragon.
+   * @param identifier the identifier of the location (i.e. "Hatching location")
+   * @param value the value of the location (i.e. "Catamont's Claw")
+   */
+  function setLocation(identifier: string, value: string) {
+    const locations = dragon.locations;
+    const sameLocation = locations.find((oldLocation) => oldLocation.identifier === identifier);
+    if (sameLocation == null) locations.push({ identifier: identifier, name: value });
+    else {
+      const index = locations.indexOf(sameLocation);
+      locations.splice(index, 1, { identifier: identifier, name: value });
+    }
+    setDragon((prev) => ({ ...prev, locations: locations }));
+  }
+
+    /**
+   * Create or overwrite a trait for the active dragon.
+   * @param name the name of the trait (i.e. "Intelligence")
+   * @param rating the rating from 0 to 5 (i.e. 3.5)
+   */
+  function setTrait(name: string, rating: number) {
+    const traits = dragon.traits;
+    const sameTrait = traits.find((oldTrait) => oldTrait.name === name);
+    if (sameTrait == null) traits.push({ name: name, rating: rating });
+    else {
+      const index = traits.indexOf(sameTrait);
+      traits.splice(index, 1, { name: name, rating: rating });
+    }
+    setDragon((prev) => ({ ...prev, traits: traits }));
   }
 
   return (
@@ -500,7 +534,7 @@ export default function Configurator({
           <Stack>
             <Stack>
               <Title order={2}>Locations</Title>
-              <Text>Where??</Text>
+              <Text>Check the <Anchor href='https://wingsoffire.fandom.com/wiki/Map:Pyrrhia' target='new'>Pyrrhia map<FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor> or <Anchor href='https://wingsoffire.fandom.com/wiki/Map:Pantala' target='new'>Pantala map<FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor> for help.</Text>
             </Stack>
             <SimpleGrid cols={2}>
               <TextInput
@@ -510,6 +544,7 @@ export default function Configurator({
                   dragon.locations.find((location) => location.identifier === 'Hatching location')
                     ?.name
                 }
+                onChange={(event) => { setLocation('Hatching location', event.currentTarget.value); }}
               // TODO: Display random placeholder
               />
               <TextInput
@@ -518,6 +553,7 @@ export default function Configurator({
                   dragon.locations.find((location) => location.identifier === 'Growing up location')
                     ?.name
                 }
+                onChange={(event) => { setLocation('Growing up location', event.currentTarget.value); }}
               // TODO: Display random placeholder
               />
               <TextInput
@@ -525,6 +561,7 @@ export default function Configurator({
                 defaultValue={
                   dragon.locations.find((location) => location.identifier === 'Home location')?.name
                 }
+                onChange={(event) => { setLocation('Home location', event.currentTarget.value); }}
               // TODO: Display random placeholder
               />
               <TextInput
@@ -533,6 +570,7 @@ export default function Configurator({
                   dragon.locations.find((location) => location.identifier === 'Current location')
                     ?.name
                 }
+                onChange={(event) => { setLocation('Current location', event.currentTarget.value); }}
               // TODO: Display random placeholder
               />
             </SimpleGrid>
@@ -547,122 +585,136 @@ export default function Configurator({
           <Stack>
             <Title order={2}>Traits</Title>
             <Text>Tell me what this dragon is like.</Text>
-            <SimpleGrid cols={2}>
-              <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                <Text size="sm" fw="bold">
-                  Intelligence
-                </Text>
-                <Rating
-                  fractions={2}
-                  defaultValue={
-                    dragon.traits.find((trait) => trait.name === 'Intelligence')?.rating
-                  }
-                />
-              </Flex>
-              <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                <Text size="sm" fw="bold">
-                  Perception
-                </Text>
-                <Rating
-                  fractions={2}
-                  defaultValue={dragon.traits.find((trait) => trait.name === 'Perception')?.rating}
-                />
-              </Flex>
-              <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                <Text size="sm" fw="bold">
-                  Charisma
-                </Text>
-                <Rating
-                  fractions={2}
-                  defaultValue={dragon.traits.find((trait) => trait.name === 'Charisma')?.rating}
-                />
-              </Flex>
-              <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                <Text size="sm" fw="bold">
-                  Stealth
-                </Text>
-                <Rating
-                  fractions={2}
-                  defaultValue={dragon.traits.find((trait) => trait.name === 'Stealth')?.rating}
-                />
-              </Flex>
-              <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                <Text size="sm" fw="bold">
-                  Speed
-                </Text>
-                <Rating
-                  fractions={2}
-                  defaultValue={dragon.traits.find((trait) => trait.name === 'Speed')?.rating}
-                />
-              </Flex>
-              <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                <Text size="sm" fw="bold">
-                  Agility
-                </Text>
-                <Rating
-                  fractions={2}
-                  defaultValue={dragon.traits.find((trait) => trait.name === 'Agility')?.rating}
-                />
-              </Flex>
-              <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                <Text size="sm" fw="bold">
-                  Strength
-                </Text>
-                <Rating
-                  fractions={2}
-                  defaultValue={dragon.traits.find((trait) => trait.name === 'Strength')?.rating}
-                />
-              </Flex>
-              <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                <Text size="sm" fw="bold">
-                  Leadership
-                </Text>
-                <Rating
-                  fractions={2}
-                  defaultValue={dragon.traits.find((trait) => trait.name === 'Leadership')?.rating}
-                />
-              </Flex>
-              <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                <Text size="sm" fw="bold">
-                  Teamwork
-                </Text>
-                <Rating
-                  fractions={2}
-                  defaultValue={dragon.traits.find((trait) => trait.name === 'Teamwork')?.rating}
-                />
-              </Flex>
-              <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                <Text size="sm" fw="bold">
-                  Independence
-                </Text>
-                <Rating
-                  fractions={2}
-                  defaultValue={
-                    dragon.traits.find((trait) => trait.name === 'Independence')?.rating
-                  }
-                />
-              </Flex>
-              <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                <Text size="sm" fw="bold">
-                  Organization
-                </Text>
-                <Rating
-                  fractions={2}
-                  defaultValue={
-                    dragon.traits.find((trait) => trait.name === 'Organization')?.rating
-                  }
-                />
-              </Flex>
-              <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                <Text size="sm" fw="bold">
-                  Empathy
-                </Text>
-                <Rating
-                  fractions={2}
-                  defaultValue={dragon.traits.find((trait) => trait.name === 'Empathy')?.rating}
-                />
-              </Flex>
-            </SimpleGrid>
+            <Center>
+              <SimpleGrid cols={{ base: 1, md: 2 }}>
+                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
+                  <Text size="sm" fw="bold">
+                    Intelligence
+                  </Text>
+                  <Rating
+                    fractions={2}
+                    defaultValue={
+                      dragon.traits.find((trait) => trait.name === 'Intelligence')?.rating
+                    }
+                    onChange={(value) => setTrait('Intelligence', value)}
+                  />
+                </Flex>
+                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
+                  <Text size="sm" fw="bold">
+                    Perception
+                  </Text>
+                  <Rating
+                    fractions={2}
+                    defaultValue={dragon.traits.find((trait) => trait.name === 'Perception')?.rating}
+                    onChange={(value) => setTrait('Perception', value)}
+                  />
+                </Flex>
+                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
+                  <Text size="sm" fw="bold">
+                    Charisma
+                  </Text>
+                  <Rating
+                    fractions={2}
+                    defaultValue={dragon.traits.find((trait) => trait.name === 'Charisma')?.rating}
+                    onChange={(value) => setTrait('Charisma', value)}
+                  />
+                </Flex>
+                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
+                  <Text size="sm" fw="bold">
+                    Stealth
+                  </Text>
+                  <Rating
+                    fractions={2}
+                    defaultValue={dragon.traits.find((trait) => trait.name === 'Stealth')?.rating}
+                    onChange={(value) => setTrait('Stealth', value)}
+                  />
+                </Flex>
+                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
+                  <Text size="sm" fw="bold">
+                    Speed
+                  </Text>
+                  <Rating
+                    fractions={2}
+                    defaultValue={dragon.traits.find((trait) => trait.name === 'Speed')?.rating}
+                    onChange={(value) => setTrait('Speed', value)}
+                  />
+                </Flex>
+                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
+                  <Text size="sm" fw="bold">
+                    Agility
+                  </Text>
+                  <Rating
+                    fractions={2}
+                    defaultValue={dragon.traits.find((trait) => trait.name === 'Agility')?.rating}
+                    onChange={(value) => setTrait('Agility', value)}
+                  />
+                </Flex>
+                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
+                  <Text size="sm" fw="bold">
+                    Strength
+                  </Text>
+                  <Rating
+                    fractions={2}
+                    defaultValue={dragon.traits.find((trait) => trait.name === 'Strength')?.rating}
+                    onChange={(value) => setTrait('Strength', value)}
+                  />
+                </Flex>
+                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
+                  <Text size="sm" fw="bold">
+                    Leadership
+                  </Text>
+                  <Rating
+                    fractions={2}
+                    defaultValue={dragon.traits.find((trait) => trait.name === 'Leadership')?.rating}
+                    onChange={(value) => setTrait('Leadership', value)}
+                  />
+                </Flex>
+                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
+                  <Text size="sm" fw="bold">
+                    Teamwork
+                  </Text>
+                  <Rating
+                    fractions={2}
+                    defaultValue={dragon.traits.find((trait) => trait.name === 'Teamwork')?.rating}
+                    onChange={(value) => setTrait('Teamwork', value)}
+                  />
+                </Flex>
+                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
+                  <Text size="sm" fw="bold">
+                    Independence
+                  </Text>
+                  <Rating
+                    fractions={2}
+                    defaultValue={
+                      dragon.traits.find((trait) => trait.name === 'Independence')?.rating
+                    }
+                    onChange={(value) => setTrait('Independence', value)}
+                  />
+                </Flex>
+                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
+                  <Text size="sm" fw="bold">
+                    Organization
+                  </Text>
+                  <Rating
+                    fractions={2}
+                    defaultValue={
+                      dragon.traits.find((trait) => trait.name === 'Organization')?.rating
+                    }
+                    onChange={(value) => setTrait('Organization', value)}
+                  />
+                </Flex>
+                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
+                  <Text size="sm" fw="bold">
+                    Empathy
+                  </Text>
+                  <Rating
+                    fractions={2}
+                    defaultValue={dragon.traits.find((trait) => trait.name === 'Empathy')?.rating}
+                    onChange={(value) => setTrait('Empathy', value)}
+                  />
+                </Flex>
+              </SimpleGrid>
+            </Center>
           </Stack>
         </Stepper.Step>
 
@@ -683,10 +735,20 @@ export default function Configurator({
                 data={['Well', 'Injured', 'Deteriorating', 'Ill', 'Dying']}
                 searchable
                 defaultValue={dragon.health}
+                onChange={(value) => {
+                  let newHealth: string = '';
+                  if (value != null) newHealth = value;
+                  setDragon((prev) => ({ ...prev, health: newHealth }));
+                }}
               />
               <TextInput
                 label="Occupation"
                 defaultValue={dragon.occupation}
+                onChange={(event) => {
+                  let newOccupation: string = '';
+                  if (event.currentTarget.value != null) newOccupation = event.currentTarget.value;
+                  setDragon((prev) => ({ ...prev, occupation: newOccupation }));
+                }}
               // TODO: Display random placeholder
               />
             </SimpleGrid>
@@ -738,11 +800,21 @@ export default function Configurator({
                 label="Creator"
                 description="The original creator of this character"
                 defaultValue={dragon.creator}
+                onChange={(event) => {
+                  let newCreator: string = '';
+                  if (event.currentTarget.value != null) newCreator = event.currentTarget.value;
+                  setDragon((prev) => ({ ...prev, creator: newCreator }));
+                }}
               />
               <TextInput
                 label="Builder"
                 description="The individual who built this in Flight Forge (YOU)"
                 defaultValue={dragon.builder}
+                onChange={(event) => {
+                  let newBuilder: string = '';
+                  if (event.currentTarget.value != null) newBuilder = event.currentTarget.value;
+                  setDragon((prev) => ({ ...prev, builder: newBuilder }));
+                }}
               />
             </SimpleGrid>
           </Stack>
