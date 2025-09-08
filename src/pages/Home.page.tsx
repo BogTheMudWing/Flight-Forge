@@ -450,7 +450,7 @@ export function HomePage() {
             description="If disabled, the app will use the dark theme."
           />
           <Switch
-            checked={isTelemetryEnabled()}
+            checked={telemetrySettingChecked}
             onChange={(event) => {
               const allow: boolean = event.currentTarget.checked;
               if (allow) {
@@ -600,7 +600,7 @@ export function HomePage() {
           main: { display: 'flex' },
         }}
         padding="md"
-        header={{ height: 80 }}
+        header={{ height: 50 }}
         className='shell'
       >
         <AppShell.Header h="auto" className='header'>

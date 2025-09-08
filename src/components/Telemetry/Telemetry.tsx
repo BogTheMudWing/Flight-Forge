@@ -21,7 +21,6 @@ export function recordTelemetry(event: string, value: any) {
     if (plausibleUrl == undefined) return;
 
     // Otherwise, send data
-    console.log("Sending event " + event + " with data: " + value);
     let data: Record<string, string> = {[event]: value};
     track("test", { props: data });
 }
@@ -52,11 +51,6 @@ export function allowTelemetry(doSetCookie: boolean) {
     if (setCookie) setCookie("telemetry", true, 30);
     telemetryEnabled = true;
     localStorage.plausible_ignore = "false";
-    init({
-        domain: import.meta.env.VITE_HOST,
-        endpoint: import.meta.env.VITE_PLAUSIBLE_URL,
-        captureOnLocalhost: false
-    });
 }
 
 export function denyTelemetry(doSetCookie: boolean) {
@@ -106,6 +100,12 @@ export default function Telemetry() {
             denyTelemetry(false);
             return;
         }
+
+        init({
+            domain: import.meta.env.VITE_HOST,
+            endpoint: import.meta.env.VITE_PLAUSIBLE_URL,
+            captureOnLocalhost: false
+        });
 
         // Get the cookie which records whether the user allows telemetry.
         let cookie = getCookie("telemetry");

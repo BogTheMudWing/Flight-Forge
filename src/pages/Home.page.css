@@ -6,7 +6,9 @@
 }
 
 .layout-grid {
-  grid-template-rows: var(--image-size-mobile) auto;
+  @media screen and (max-height: 630px) {
+    grid-template-rows: var(--image-size-mobile) auto;
+  }
   @media screen and (max-height: 500px) {
     grid-template-rows: 0 auto;
   }

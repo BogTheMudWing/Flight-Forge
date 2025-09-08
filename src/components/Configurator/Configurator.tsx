@@ -135,7 +135,6 @@ export default function Configurator({
   }
 
   const nextButton = () => {
-    console.log(window.screen.width);
     if (window.screen.width > 630) {
       return (
         <Button
