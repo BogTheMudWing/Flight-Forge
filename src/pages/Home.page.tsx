@@ -16,7 +16,7 @@ import { Collection, defaultCollection } from '../components/Collection/Collecti
 import Configurator from '../components/Configurator/Configurator';
 import { Dragon } from '../components/Dragon/Dragon';
 import icon from '../images/icon.png';
-import Telemetry, { allowTelemetry, denyTelemetry, isTelemetryEnabled } from '@/components/Telemetry/Telemetry';
+import Telemetry, { allowTelemetry, denyTelemetry, isTelemetryEnabled, recordTelemetry } from '@/components/Telemetry/Telemetry';
 import './Home.page.css'
 import { exportImage } from '@/components/Exporter/Exporter';
 
@@ -705,7 +705,10 @@ export function HomePage() {
                     { label: 'Debug', value: 'debug' },
                   ]}
                   value={dragon.style}
-                  onChange={(value) => setDragon((prev) => ({ ...prev, style: value }))}
+                  onChange={(value) => {
+                    recordTelemetry('style', value);
+                    setDragon((prev) => ({ ...prev, style: value }));
+                  }}
                   orientation={(window.innerWidth <= 991) ? 'vertical' : 'horizontal'}
                 />
                 <Center display={(window.innerWidth <= 991) ? 'none' : 'flex'}>
