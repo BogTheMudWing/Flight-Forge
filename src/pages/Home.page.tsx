@@ -90,6 +90,8 @@ export function HomePage() {
               .concat(decodedCollection.dragons.length.toString())
               .concat(' dragons.'),
           });
+          dragonIndex = 0;
+          setDragon(decodedCollection.dragons[0]);
         }
       };
       // Run all that stuff
@@ -584,8 +586,8 @@ export function HomePage() {
               label="Collection name"
               variant="filled"
               value={collection.name}
-              onChange={(newName) => {
-                setCollection((prev) => ({ ...prev, name: String(newName) }));
+              onChange={(event) => {
+                setCollection((prev) => ({ ...prev, name: event.currentTarget.value }));
               }}
             />
             <FileButton onChange={setCollectionFile} accept="application/json">
