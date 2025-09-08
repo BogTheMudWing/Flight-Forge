@@ -1,8 +1,9 @@
 .image-preview {
+    position: relative;
     display: grid;
     width: 100%;
     justify-content: center;
-    height: 50hv;
+    height: 512px;
 
     >img,
     >div {
@@ -15,6 +16,7 @@
     @media screen and (max-width: 991px) {
         position: relative;
         height: var(--image-size-mobile);
+        width: var(--image-size-mobile);
 
         >img,
         >div {

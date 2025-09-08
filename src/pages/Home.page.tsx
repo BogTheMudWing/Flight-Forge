@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isLeft } from 'fp-ts/lib/Either';
 import * as t from 'io-ts';
 import { PathReporter } from 'io-ts/PathReporter';
-import { ActionIcon, Anchor, AppShell, Button, Card, Center, Container, FileButton, Flex, Group, Image, JsonInput, Menu, Modal, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
+import { ActionIcon, Anchor, AppShell, Button, Card, Center, Container, FileButton, Flex, Group, Image, JsonInput, Menu, Modal, SegmentedControl, Select, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications, Notifications } from '@mantine/notifications';
 import ImagePreview from '@/components/ImagePreview/ImagePreview';
@@ -16,7 +16,7 @@ import { Collection, defaultCollection } from '../components/Collection/Collecti
 import Configurator from '../components/Configurator/Configurator';
 import { Dragon } from '../components/Dragon/Dragon';
 import icon from '../images/icon.png';
-import Telemetry, {allowTelemetry, denyTelemetry, isTelemetryEnabled} from '@/components/Telemetry/Telemetry';
+import Telemetry, { allowTelemetry, denyTelemetry, isTelemetryEnabled } from '@/components/Telemetry/Telemetry';
 import './Home.page.css'
 import { exportImage } from '@/components/Exporter/Exporter';
 
@@ -189,7 +189,7 @@ export function HomePage() {
     accessories: [],
     creator: '',
     builder: '',
-    style: 'Pixel',
+    style: 'pixel',
   };
 
   // setDragon should not be used directly. setHistory should be used instead, which allows the undo function.
@@ -424,6 +424,10 @@ export function HomePage() {
   const [lightModeSettingChecked, setlightModeSettingChecked] = useState(useMantineColorScheme().colorScheme === 'light');
   const [telemetrySettingChecked, setTelemetrySettingChecked] = useState(isTelemetryEnabled());
 
+  function uploadStylePack(payload: File | null): void {
+    notImplemented();
+  }
+
   return (
     <>
       <Notifications />
@@ -511,8 +515,8 @@ export function HomePage() {
         size="100%"
       >
         <Stack>
-          <Title style={{order: -2}} order={1}>Welcome to Flight Forge!</Title>
-          <Text style={{order: -2}}>
+          <Title style={{ order: -2 }} order={1}>Welcome to Flight Forge!</Title>
+          <Text style={{ order: -2 }}>
             Flight Forge is a web application that allows you to build characters based on Wings of
             Fire in a step-by-step guided form.
           </Text>
@@ -692,7 +696,29 @@ export function HomePage() {
 
         <AppShell.Main className='main'>
           <SimpleGrid mt={'lg'} w="100%" cols={{ base: 1, md: 2 }} className={'layout-grid'}>
-            <ImagePreview dragon={dragon} page={configuratorPage} />
+            <Flex className='imageArea'>
+              <ImagePreview dragon={dragon} page={configuratorPage} style={dragon.style} />
+              <Stack className='styleControl'>
+                <SegmentedControl
+                  data={[
+                    { label: 'Pixel', value: 'pixel' },
+                    { label: 'Debug', value: 'debug' },
+                  ]}
+                  value={dragon.style}
+                  onChange={(value) => setDragon((prev) => ({ ...prev, style: value }))}
+                  orientation={(window.innerWidth <= 991) ? 'vertical' : 'horizontal'}
+                />
+                <Center display={(window.innerWidth <= 991) ? 'none' : 'flex'}>
+                  {/* This only appears on desktop */}
+                  <Group>
+                    <Anchor href='https://code.macver.org/Bog/Flight-Forge/src/branch/main/ARTWORK.md' target='new'><Text size='sm' c="dimmed">Interested in creating a style pack? <FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Text></Anchor>
+                    <FileButton onChange={uploadStylePack} accept="application/zip">
+                      {(props) => <ActionIcon {...props} variant='subtle' c='dimmed'><FontAwesomeIcon icon={faUpload} /></ActionIcon>}
+                    </FileButton>
+                  </Group>
+                </Center>
+              </Stack>
+            </Flex>
             <Container className='configurator-container'>
               <Configurator
                 dragon={dragon}

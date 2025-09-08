@@ -101,11 +101,11 @@ export default function Telemetry() {
             return;
         }
 
-        init({
-            domain: import.meta.env.VITE_HOST,
-            endpoint: import.meta.env.VITE_PLAUSIBLE_URL,
-            captureOnLocalhost: false
-        });
+        // init({
+        //     domain: import.meta.env.VITE_HOST,
+        //     endpoint: import.meta.env.VITE_PLAUSIBLE_URL,
+        //     captureOnLocalhost: false
+        // });
 
         // Get the cookie which records whether the user allows telemetry.
         let cookie = getCookie("telemetry");

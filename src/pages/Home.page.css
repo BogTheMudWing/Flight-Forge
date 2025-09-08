@@ -52,3 +52,19 @@
     height: auto;
   }
 }
+
+.imageArea {
+  flex-direction: column;
+  justify-content: center;
+  @media screen and (max-width: 991px) {
+    gap: 10px;
+    flex-direction: row;
+  }
+}
+
+.styleControl {
+  @media screen and (max-width: 991px) {
+    height: min-content;
+    align-self: center;
+  }
+}

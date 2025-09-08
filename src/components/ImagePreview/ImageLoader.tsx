@@ -1,4 +1,3 @@
-type Tribe = 'hive' | 'ice' | 'leaf' | 'mud' | 'night' | 'rain' | 'sand' | 'sea' | 'silk' | 'sky';
 type BodyPart = 'head' | 'body' | 'legs' | 'wings' | 'tail';
 export type ImageType = 'primary' | 'secondary' | 'underscales' | 'spikes' | 'membranes' | 'eyes';
 
@@ -21,12 +20,12 @@ const typesMap = [
   'primary', 'secondary', 'underscales', 'spikes', 'membranes', 'eyes'
 ];
 
-const imageModules = import.meta.glob('../../images/debug/tribe/**/**/*.webp', {
+const imageModules = import.meta.glob('../../images/**/tribe/**/**/*.webp', {
   eager: true,
   import: 'default',
 });
 
-function buildTribeImages(tribe: Tribe): TribeImages {
+function buildTribeImages(tribe: string, style: string): TribeImages {
   const tribeImages: Partial<TribeImages> = {
     eyes: [],
     head: [],
@@ -37,7 +36,9 @@ function buildTribeImages(tribe: Tribe): TribeImages {
   };
 
   for (const path in imageModules) {
-    if (!path.includes(`/debug/tribe/${tribe}/`)) {continue;}
+    if (!path.includes(`/${style}/tribe/${tribe}/`)) {
+      continue;
+    }
 
     const src = imageModules[path] as string;
 
@@ -59,15 +60,6 @@ function buildTribeImages(tribe: Tribe): TribeImages {
   return tribeImages as TribeImages;
 }
 
-export const imageAssets: Record<string, TribeImages> = {
-  Hive: buildTribeImages('hive'),
-  Ice: buildTribeImages('ice'),
-  Leaf: buildTribeImages('leaf'),
-  Mud: buildTribeImages('mud'),
-  Night: buildTribeImages('night'),
-  Rain: buildTribeImages('rain'),
-  Sand: buildTribeImages('sand'),
-  Sea: buildTribeImages('sea'),
-  Silk: buildTribeImages('silk'),
-  Sky: buildTribeImages('sky'),
+export function imageAssets(tribe: string, style: string): TribeImages {
+  return buildTribeImages(tribe, style);
 };

@@ -140,7 +140,7 @@ export const defaultCollection: t.TypeOf<typeof Collection> = {
       ],
       creator: 'Bog The MudWing',
       builder: 'Bog The MudWing',
-      style: 'Pixel',
+      style: 'debug',
     },
   ],
   version: 1,

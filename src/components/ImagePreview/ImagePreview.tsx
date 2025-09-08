@@ -2,20 +2,23 @@ import { Dragon, BodyParts } from '../Dragon/Dragon';
 
 import './ImagePreview.css';
 
-import { JSX } from 'react';
+import { JSX, useState } from 'react';
 import Background from '@/images/debug/background/white.png';
 // import { imageAssets, ImageLayer, ImageType } from './ImageAssets';
-import { imageAssets, ImageLayer, ImageType } from './ImageLoader';
+import { imageAssets, ImageLayer, ImageType, TribeImages } from './ImageLoader';
 import convert from 'color-convert';
 
 import * as t from 'io-ts';
+import { LoadingOverlay } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 
 type ImagePreviewProps = {
   dragon: t.TypeOf<typeof Dragon>;
   page: number;
+  style: string;
 };
 
-export default function ImagePreview({ dragon, page }: ImagePreviewProps) {
+export default function ImagePreview({ dragon, page, style }: ImagePreviewProps) {
 
   /**
    * Get CSS properties for a given image part
@@ -52,8 +55,8 @@ export default function ImagePreview({ dragon, page }: ImagePreviewProps) {
    * @param bodyPart the bodypart
    * @returns the element
    */
-  function renderPart(tribe: keyof typeof imageAssets, bodyPart: keyof (typeof imageAssets)['Hive']): JSX.Element[] {
-    const layers = imageAssets[tribe]?.[bodyPart];
+  function renderPart(tribe: string, style: string, bodyPart: keyof TribeImages): JSX.Element[] {
+    const layers = imageAssets(tribe, style)[bodyPart];
     if (!layers) {
       return [];
     }
@@ -87,19 +90,19 @@ export default function ImagePreview({ dragon, page }: ImagePreviewProps) {
     });
   }
 
-  const getTribePart = (part: keyof t.TypeOf<typeof BodyParts>): keyof typeof imageAssets => {
-    return dragon.tribe.length === 1 ? dragon.tribe[0] as keyof typeof imageAssets : dragon.bodyParts[part] as keyof typeof imageAssets;
+  const getTribePart = (part: keyof t.TypeOf<typeof BodyParts>): string => {
+    return dragon.tribe.length === 1 ? dragon.tribe[0].toLowerCase() : dragon.bodyParts[part].toLowerCase();
   };
 
   return (
     <div id='image-preview' className="image-preview">
       {/* <img src={Background} alt="background" /> */}
-      {renderPart(getTribePart('head'), 'eyes')}
-      {renderPart(getTribePart('head'), 'head')}
-      {renderPart(getTribePart('body'), 'body')}
-      {renderPart(getTribePart('wings'), 'wings')}
-      {renderPart(getTribePart('legs'), 'legs')}
-      {renderPart(getTribePart('tail'), 'tail')}
+      {renderPart(getTribePart('head'), style, 'eyes')}
+      {renderPart(getTribePart('head'), style, 'head')}
+      {renderPart(getTribePart('body'), style, 'body')}
+      {renderPart(getTribePart('wings'), style, 'wings')}
+      {renderPart(getTribePart('legs'), style, 'legs')}
+      {renderPart(getTribePart('tail'), style, 'tail')}
     </div>
   );
 }
