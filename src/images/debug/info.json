@@ -20,53 +20,5 @@
         "sea",
         "silk",
         "sky"
-    ],
-    "included_accessories": [
-        {
-            "name": "Left Arm Band",
-            "image": "left_arm_band"
-        },
-        {
-            "name": "Right Arm Band",
-            "image": "right_arm_band"
-        },
-        {
-            "name": "Left Earring",
-            "image": "left_earring"
-        },
-        {
-            "name": "Glasses",
-            "image": "glasses"
-        },
-        {
-            "name": "Right Earring",
-            "image": "left_earring"
-        },
-        {
-            "name": "Nose Ring",
-            "image": "nose_ring"
-        },
-        {
-            "name": "Crown",
-            "image": "crown"
-        },
-        {
-            "name": "Necklace",
-            "image": "necklace"
-        },
-        {
-            "name": "Bag",
-            "image": "bag"
-        },
-        {
-            "name": "Chestplate",
-            "image": "chestplate"
-        }
-    ],
-    "included_backgrounds": [
-        {
-            "name": "Grid",
-            "image": "white"
-        }
     ]
 }

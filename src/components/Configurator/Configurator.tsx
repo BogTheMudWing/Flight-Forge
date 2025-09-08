@@ -703,20 +703,10 @@ export default function Configurator({
               <Title order={2}>Appearance</Title>
               <Text>Customize! Accessorize! Decorate!</Text>
             </Stack>
-            <Text size="sm" fw="bold">
-              Size
-            </Text>
-            <Slider
-              defaultValue={dragon.size}
-              marks={[
-                { value: 25, label: '25%' },
-                { value: 50, label: '50%' },
-                { value: 75, label: '75%' },
-              ]}
-            />
-            <Title order={3}>Injuries</Title>
+            <Title order={3}>Accessories</Title>
             <SimpleGrid cols={2}>
-              <Switch label="Left arm" defaultChecked={dragon.injuries.leftArm} />
+              {/* TODO: Generate accessory toggles (with preview?) based on pack info.json. */}
+              {/* <Switch label="Left arm" defaultChecked={dragon.injuries.leftArm} />
               <Switch label="Right arm" defaultChecked={dragon.injuries.rightArm} />
               <Switch label="Left leg" defaultChecked={dragon.injuries.leftLeg} />
               <Switch label="Right leg" defaultChecked={dragon.injuries.rightLeg} />
@@ -728,7 +718,7 @@ export default function Configurator({
               <Switch label="Right horn" defaultChecked={dragon.injuries.rightHorn} />
               <Switch label="Left ear" defaultChecked={dragon.injuries.leftEar} />
               <Switch label="Right ear" defaultChecked={dragon.injuries.rightEar} />
-              <Switch label="Tail" defaultChecked={dragon.injuries.tail} />
+              <Switch label="Tail" defaultChecked={dragon.injuries.tail} /> */}
             </SimpleGrid>
           </Stack>
         </Stepper.Step>
