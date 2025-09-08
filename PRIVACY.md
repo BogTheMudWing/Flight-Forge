@@ -51,4 +51,4 @@ We may update this Privacy Policy from time to time. If any significant changes 
 
 ## 9. Contact Us
 
-If you have any questions or concerns about this Privacy Policy, please contact us at email soon.
+If you have any questions or concerns about this Privacy Policy, please contact us at bog@macver.org.
