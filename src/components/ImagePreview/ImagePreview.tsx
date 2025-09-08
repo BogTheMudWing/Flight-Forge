@@ -92,7 +92,7 @@ export default function ImagePreview({ dragon, page }: ImagePreviewProps) {
   };
 
   return (
-    <div className="image-preview">
+    <div id='image-preview' className="image-preview">
       {/* <img src={Background} alt="background" /> */}
       {renderPart(getTribePart('head'), 'eyes')}
       {renderPart(getTribePart('head'), 'head')}

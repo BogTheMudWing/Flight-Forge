@@ -18,6 +18,7 @@ import { Dragon } from '../components/Dragon/Dragon';
 import icon from '../images/icon.png';
 import Telemetry, {allowTelemetry, denyTelemetry, isTelemetryEnabled} from '@/components/Telemetry/Telemetry';
 import './Home.page.css'
+import { exportImage } from '@/components/Exporter/Exporter';
 
 library.add(fas, fab);
 
@@ -420,6 +421,15 @@ export function HomePage() {
     return elements;
   }
 
+  function doExport() {
+    let imagePreview: HTMLElement | null = document.getElementById('image-preview');
+    if (imagePreview == null) {
+      return;
+    }
+    let images = imagePreview.children;
+    exportImage(images, dragon.name, dragon.membraneColor1, dragon.membraneColor2);
+  }
+
   const [lightModeSettingChecked, setlightModeSettingChecked] = useState(useMantineColorScheme().colorScheme === 'light');
   const [telemetrySettingChecked, setTelemetrySettingChecked] = useState(isTelemetryEnabled());
 
@@ -625,7 +635,7 @@ export function HomePage() {
                 </ActionIcon>
               </Tooltip>
               <Tooltip label="Export">
-                <ActionIcon onClick={notImplemented} variant="subtle" aria-label="Export">
+                <ActionIcon onClick={doExport} variant="subtle" aria-label="Export">
                   <FontAwesomeIcon icon={faFileExport} />
                 </ActionIcon>
               </Tooltip>
@@ -700,6 +710,7 @@ export function HomePage() {
                 dataStr={dataStr}
                 page={configuratorPage}
                 setPage={setConfiguratorPage}
+                doExport={doExport}
               />
             </Container>
           </SimpleGrid>

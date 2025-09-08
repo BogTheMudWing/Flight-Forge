@@ -47,7 +47,6 @@ import { Dragon, Relation } from '../Dragon/Dragon';
 import { recordTelemetry } from '../Telemetry/Telemetry';
 import { useState } from 'react';
 import './Configurator.css'
-import useWindowDimensions from '@/hooks/WindowDimensions';
 
 library.add(fas);
 
@@ -58,6 +57,7 @@ type ConfiguratorProps = {
   dataStr: string;
   page: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
+  doExport: Function
 };
 
 export default function Configurator({
@@ -67,6 +67,7 @@ export default function Configurator({
   setDragon,
   page,
   setPage,
+  doExport
 }: ConfiguratorProps) {
   /**
    * Generate the elements for viewing and editing relations.
@@ -199,7 +200,7 @@ export default function Configurator({
             </Menu.Item>
           </Anchor>
           <Menu.Item
-            onClick={notImplemented}
+            onClick={() => doExport()}
             leftSection={<FontAwesomeIcon icon={faFileExport} size="sm" />}
           >
             Export
