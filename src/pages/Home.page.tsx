@@ -392,7 +392,7 @@ export function HomePage() {
       // Build it!
       elements.push(
         <Card shadow="sm" withBorder>
-          <Group justify='space-between' align='top' fw={500} mah={'2em'} style={{ overflow: 'hidden' }}>
+          <Group justify='space-between' align='top' fw={500} mah={'2.5em'} style={{ overflow: 'hidden' }}>
             <Text mb="xs">
               {name}
             </Text>
