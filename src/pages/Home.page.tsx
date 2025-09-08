@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isLeft } from 'fp-ts/lib/Either';
 import * as t from 'io-ts';
 import { PathReporter } from 'io-ts/PathReporter';
-import { ActionIcon, Anchor, AppShell, Button, Card, Center, Container, FileButton, Flex, Group, Image, JsonInput, Menu, Modal, SegmentedControl, Select, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
+import { ActionIcon, Anchor, AppShell, Button, Card, Center, ColorSwatch, Container, FileButton, Flex, Group, Image, JsonInput, Menu, Modal, SegmentedControl, Select, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications, Notifications } from '@mantine/notifications';
 import ImagePreview from '@/components/ImagePreview/ImagePreview';
@@ -362,21 +362,28 @@ export function HomePage() {
       // Build it!
       elements.push(
         <Card shadow="sm" withBorder>
-          <Card.Section>
-            <Image // TODO: This should be a preview of the dragon
-              src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png"
-              height={160}
-              alt="Norway"
-            />
-          </Card.Section>
+          <Group justify='space-between'>
+            <Text mb="xs" fw={500}>
+              {name}
+            </Text>
+            <Group gap={'xs'}>
+              <ColorSwatch size='18' color={dragonInCollection.primaryColor} />
+              <ColorSwatch size='18' color={dragonInCollection.secondaryColor} />
+              <ColorSwatch size='18' color={dragonInCollection.underscalesColor} />
+              <ColorSwatch size='18' color={dragonInCollection.membraneColor1} />
+              <ColorSwatch size='18' color={dragonInCollection.membraneColor2} />
+            </Group>
+          </Group>
 
-          <Text mt="md" mb="xs" fw={500}>
-            {name}
-          </Text>
+          <Group justify='space-between'>
+            <Text size="sm" c="dimmed">
+              {ageString.concat(gender).concat(tribeString)}
+            </Text>
+            <Text size="sm" c="dimmed">
+              {dragonInCollection.style} style
+            </Text>
+          </Group>
 
-          <Text size="sm" c="dimmed">
-            {ageString.concat(gender).concat(tribeString)}
-          </Text>
 
           <Flex mt="md" gap="md">
             <Button onClick={() => loadDragon(dragonInCollection)} fullWidth variant="light">
@@ -523,11 +530,7 @@ export function HomePage() {
           <SimpleGrid cols={{ base: 1, sm: 3 }} className='dragon-list'>
             {generateCards()}
             <Card shadow="sm" withBorder>
-              <Card.Section>
-                <Container h={160} />
-              </Card.Section>
-
-              <Text mt="md" mb="xs" fw={500}>
+              <Text mb="xs" fw={500}>
                 Create New
               </Text>
 
