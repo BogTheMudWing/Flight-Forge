@@ -34,6 +34,8 @@ export function HomePage() {
   const [collectionFile, setCollectionFile] = useState<File | null>(null);
   const [collection, setCollection] = useState<t.TypeOf<typeof Collection>>(defaultCollection);
   const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(collection, null, 2))}`;
+  const [lastSave, setLastSave] = useState<Date | null>(null);
+  const [timeDiff, setTimeDiff] = useState<number | null>(null);
   let dragonIndex = -1;
 
   // Undo on Ctrl + Z
@@ -94,6 +96,18 @@ export function HomePage() {
       fileReader.readAsText(collectionFile);
     }
   }, [collectionFile]);
+
+  // Calculate the time difference in minutes
+  useEffect(() => {
+    if (lastSave != null) {
+      const interval = setInterval(() => {
+        const diff = Math.round((new Date().getTime() - lastSave.getTime()) / 60000);
+        setTimeDiff(diff);
+      }, 60000); // Update every minute
+
+      return () => clearInterval(interval); // Clean up on component unmount or lastSave change
+    }
+  }, [lastSave]); // Only re-run when lastSave changes
 
   // Used when creating a new dragon
   const emptyDragon: t.TypeOf<typeof Dragon> = {
@@ -192,6 +206,11 @@ export function HomePage() {
     builder: '',
     style: 'pixel',
   };
+
+  function save() {
+    setLastSave(new Date());
+    setTimeDiff(0);
+  }
 
   // setDragon should not be used directly. setHistory should be used instead, which allows the undo function.
   const [dragon, setDragon] = useState<t.TypeOf<typeof Dragon>>(defaultDragon);
@@ -373,7 +392,7 @@ export function HomePage() {
       // Build it!
       elements.push(
         <Card shadow="sm" withBorder>
-          <Group justify='space-between' align='top' fw={500} mah={'2em'} style={{overflow: 'hidden'}}>
+          <Group justify='space-between' align='top' fw={500} mah={'2em'} style={{ overflow: 'hidden' }}>
             <Text mb="xs">
               {name}
             </Text>
@@ -576,7 +595,7 @@ export function HomePage() {
                 </Button>
               )}
             </FileButton>
-            <Anchor href={dataStr} download={collection.name.concat('.json')}>
+            <Anchor href={dataStr} download={collection.name.concat('.json')} onClick={() => save()}>
               <Button leftSection={<FontAwesomeIcon icon={faDownload} />}>Save Collection</Button>
             </Anchor>
           </Flex>
@@ -631,7 +650,10 @@ export function HomePage() {
                 <Text size="sm">Version {import.meta.env.VITE_VERSION} © 2025 Bog The MudWing</Text>
               </Stack>
             </Group>
-            <Text display={(window.innerWidth <= 991) ? 'none' : 'auto'}>Currently editing {dragon.name? dragon.name : "unnamed"}</Text>
+            <Stack gap="0" display={(window.innerWidth <= 991) ? 'none' : 'auto'}>
+              <Text ta="right">Currently editing {dragon.name ? dragon.name : "unnamed"}</Text>
+              <Text ta="right" size='sm'>{lastSave != null && timeDiff != null ? (timeDiff < 2) ? "Last save was just now" : "Last save was " + timeDiff + " minutes ago." : "You have never saved this session"}</Text>
+            </Stack>
             <Group className='header-button'>
               <Space h="md" />
               <Tooltip label={history.length > 0 ? 'Undo' : 'No undo steps'}>
@@ -650,7 +672,7 @@ export function HomePage() {
                 </ActionIcon>
               </Tooltip>
               <Tooltip label="Download">
-                <Anchor href={dataStr} download={collection.name.concat('.json')}>
+                <Anchor href={dataStr} download={collection.name.concat('.json')} onClick={() => save()}>
                   <ActionIcon variant="subtle" aria-label="Download">
                     <FontAwesomeIcon icon={faDownload} />
                   </ActionIcon>
@@ -745,6 +767,7 @@ export function HomePage() {
                 dataStr={dataStr}
                 page={configuratorPage}
                 setPage={setConfiguratorPage}
+                setLastSave={save}
                 doExport={doExport}
               />
             </Container>
