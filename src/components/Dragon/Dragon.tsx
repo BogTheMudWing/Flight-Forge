@@ -42,20 +42,10 @@ export const Injuries = t.type({
 })
 
 export const Accessory = t.type({
+  file: t.string,
+  name: t.string,
   color: t.string,
 })
-
-export const Accessories = t.partial({
-  leftArmBand: Accessory,
-  rightArmBand: Accessory,
-  leftEarring: Accessory,
-  rightEarring: Accessory,
-  noseRing: Accessory,
-  chestplate: Accessory,
-  glasses: Accessory,
-  necklace: Accessory,
-})
-
 
 export const Dragon = t.type({
   tribe: t.array(t.string),
@@ -78,7 +68,7 @@ export const Dragon = t.type({
   occupation: t.string,
   size: t.number,
   injuries: Injuries,
-  accessories: Accessories,
+  accessories: t.array(Accessory),
   // The original creator of the character
   creator: t.string,
   // The user who built the dragon

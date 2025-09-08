@@ -32,6 +32,7 @@
     "color-convert": "^3.1.0",
     "dotenv": "^17.2.2",
     "fp-ts": "^2.16.10",
+    "hex-color-to-color-name": "^1.0.2",
     "io-ts": "^2.2.22",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

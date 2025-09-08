@@ -43,12 +43,13 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import notImplemented from '../AppUtils/AppUtils';
+import notImplemented, { myJoin } from '../AppUtils/AppUtils';
 import { Collection } from '../Collection/Collection';
 import { Dragon, Relation } from '../Dragon/Dragon';
 import { recordTelemetry } from '../Telemetry/Telemetry';
 import { useState } from 'react';
 import './Configurator.css'
+import { GetColorName } from 'hex-color-to-color-name';
 
 library.add(fas);
 
@@ -275,6 +276,58 @@ export default function Configurator({
       traits.splice(index, 1, { name: name, rating: rating });
     }
     setDragon((prev) => ({ ...prev, traits: traits }));
+  }
+
+  const summary = () => {
+    const elements: JSX.Element[] = [];
+
+    // Name
+    let name: string = dragon.name;
+    if (name === undefined || name === null || name === '') {
+      name = 'Unnamed';
+    }
+
+    // Age
+    const age: number | undefined = dragon.age;
+    let ageString: string;
+    if (age === undefined || age === null || age < 0) {
+      ageString = '';
+    } else {
+      ageString = age.toString().concat('-year-old ');
+    }
+
+    // Gender
+    let gender: string = dragon.gender;
+    if (name === undefined || name === null || name === '') {
+      gender = '';
+    } else {
+      gender = gender.concat(' ');
+    }
+
+    // Tribes
+    const tribes: string[] = dragon.tribe;
+    let tribeString: string;
+    if (tribes === undefined || tribes === null || tribes.length === 0) {
+      tribeString = 'Dragon';
+    } else {
+      tribeString = myJoin(tribes, '/').concat('Wing');
+    }
+
+    const primaryColorName: string = GetColorName(dragon.primaryColor);
+    const secondaryColorName: string = GetColorName(dragon.secondaryColor);
+    const underscalesColorName: string = GetColorName(dragon.underscalesColor);
+    const eyeColorName: string = GetColorName(dragon.eyeColor);
+
+    // Build it!
+    return (
+      <Stack>
+        <Title order={2}>{name}</Title>
+        <Text>{ageString.concat(gender).concat(tribeString)}</Text>
+        <Title order={3}>Appearance</Title>
+        <Text>{name} is a {tribeString} with scales the color of {primaryColorName.toLowerCase()} and {secondaryColorName.toLowerCase()}. {name} has underscales are the color of {underscalesColorName.toLowerCase()} and eyes of {eyeColorName.toLowerCase()}.</Text>
+        <Text></Text>
+      </Stack>
+    )
   }
 
   return (
@@ -820,7 +873,9 @@ export default function Configurator({
           </Stack>
         </Stepper.Step>
 
-        <Stepper.Completed>Completed, click back button to get to previous step</Stepper.Completed>
+        <Stepper.Completed>
+          {summary()}
+        </Stepper.Completed>
       </Stepper>
       <Group justify="center">{actionButtons()}</Group>
     </Flex>
