@@ -153,23 +153,23 @@ export default function Configurator({
     );
   }
 
-  const randomButton = () => {
-    if (window.innerWidth > 630) {
-      return (
-        <Button
-          onClick={notImplemented}
-          leftSection={<FontAwesomeIcon icon={faDice} />}
-        >
-          Random
-        </Button>
-      );
-    }
-    return (
-      <Button onClick={notImplemented}>
-        <FontAwesomeIcon icon={faDice} />
-      </Button>
-    );
-  }
+  // const randomButton = () => {
+  //   if (window.innerWidth > 630) {
+  //     return (
+  //       <Button
+  //         onClick={notImplemented}
+  //         leftSection={<FontAwesomeIcon icon={faDice} />}
+  //       >
+  //         Random
+  //       </Button>
+  //     );
+  //   }
+  //   return (
+  //     <Button onClick={notImplemented}>
+  //       <FontAwesomeIcon icon={faDice} />
+  //     </Button>
+  //   );
+  // }
 
   /**
    * Back, Randomize, and Next buttons
@@ -177,7 +177,7 @@ export default function Configurator({
   const progressButtons = (
     <Group>
       {prevButton()}
-      {randomButton()}
+      {/* {randomButton()} */}
       {nextButton()}
     </Group>
   );
