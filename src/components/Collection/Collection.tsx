@@ -126,20 +126,18 @@ export const defaultCollection: t.TypeOf<typeof Collection> = {
         rightEar: false,
         tail: false,
       },
-      accessories: {
-        leftArmBand: {
+      accessories: [
+        {
+          file: 'leftArmBand',
+          name: 'Left Arm Band',
           color: '#ffe5a8',
         },
-        rightArmBand: undefined,
-        leftEarring: undefined,
-        rightEarring: undefined,
-        noseRing: undefined,
-        chestplate: undefined,
-        glasses: undefined,
-        necklace: {
+        {
+          file: 'necklace',
+          name: 'Necklace',
           color: '#ffe5a8',
         },
-      },
+      ],
       creator: 'Bog The MudWing',
       builder: 'Bog The MudWing',
       style: 'Pixel',
