@@ -60,7 +60,8 @@ type ConfiguratorProps = {
   dataStr: string;
   page: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
-  doExport: Function
+  setLastSave: Function;
+  doExport: Function;
 };
 
 export default function Configurator({
@@ -70,6 +71,7 @@ export default function Configurator({
   setDragon,
   page,
   setPage,
+  setLastSave,
   doExport
 }: ConfiguratorProps) {
   /**
@@ -214,7 +216,7 @@ export default function Configurator({
         </Menu.Target>
 
         <Menu.Dropdown>
-          <Anchor href={dataStr} download={collection.name.concat('.json')}>
+          <Anchor href={dataStr} download={collection.name.concat('.json')} onClick={() => setLastSave(new Date())}>
             <Menu.Item leftSection={<FontAwesomeIcon icon={faDownload} size="sm" />}>
               Download
             </Menu.Item>

@@ -7,16 +7,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isLeft } from 'fp-ts/lib/Either';
 import * as t from 'io-ts';
 import { PathReporter } from 'io-ts/PathReporter';
-import { ActionIcon, Anchor, AppShell, Button, Card, Center, Container, FileButton, Flex, Group, Image, JsonInput, Menu, Modal, SegmentedControl, Select, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
+import { ActionIcon, Anchor, AppShell, Button, Card, Center, ColorSwatch, Container, FileButton, Flex, Group, Image, JsonInput, Menu, Modal, Overlay, SegmentedControl, Select, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications, Notifications } from '@mantine/notifications';
 import ImagePreview from '@/components/ImagePreview/ImagePreview';
 import notImplemented, { myJoin } from '../components/AppUtils/AppUtils';
 import { Collection, defaultCollection } from '../components/Collection/Collection';
 import Configurator from '../components/Configurator/Configurator';
-import { Dragon } from '../components/Dragon/Dragon';
+import { defaultDragon, Dragon } from '../components/Dragon/Dragon';
 import icon from '../images/icon.png';
-import Telemetry, { allowTelemetry, denyTelemetry, isTelemetryEnabled } from '@/components/Telemetry/Telemetry';
+import Telemetry, { allowTelemetry, denyTelemetry, isTelemetryEnabled, recordTelemetry } from '@/components/Telemetry/Telemetry';
 import './Home.page.css'
 import { exportImage } from '@/components/Exporter/Exporter';
 
@@ -34,6 +34,9 @@ export function HomePage() {
   const [collectionFile, setCollectionFile] = useState<File | null>(null);
   const [collection, setCollection] = useState<t.TypeOf<typeof Collection>>(defaultCollection);
   const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(collection, null, 2))}`;
+  const [lastSave, setLastSave] = useState<Date | null>(null);
+  const [timeDiff, setTimeDiff] = useState<number | null>(null);
+  let dragonIndex = -1;
 
   // Undo on Ctrl + Z
   useEffect(() => {
@@ -87,12 +90,26 @@ export function HomePage() {
               .concat(decodedCollection.dragons.length.toString())
               .concat(' dragons.'),
           });
+          dragonIndex = 0;
+          setDragon(decodedCollection.dragons[0]);
         }
       };
       // Run all that stuff
       fileReader.readAsText(collectionFile);
     }
   }, [collectionFile]);
+
+  // Calculate the time difference in minutes
+  useEffect(() => {
+    if (lastSave != null) {
+      const interval = setInterval(() => {
+        const diff = Math.round((new Date().getTime() - lastSave.getTime()) / 60000);
+        setTimeDiff(diff);
+      }, 60000); // Update every minute
+
+      return () => clearInterval(interval); // Clean up on component unmount or lastSave change
+    }
+  }, [lastSave]); // Only re-run when lastSave changes
 
   // Used when creating a new dragon
   const emptyDragon: t.TypeOf<typeof Dragon> = {
@@ -192,8 +209,13 @@ export function HomePage() {
     style: 'pixel',
   };
 
+  function save() {
+    setLastSave(new Date());
+    setTimeDiff(0);
+  }
+
   // setDragon should not be used directly. setHistory should be used instead, which allows the undo function.
-  const [dragon, setDragon] = useState<t.TypeOf<typeof Dragon>>(emptyDragon);
+  const [dragon, setDragon] = useState<t.TypeOf<typeof Dragon>>(defaultDragon);
   const [history, setHistory] = useState<t.TypeOf<typeof Dragon>[]>([]);
 
   /**
@@ -210,6 +232,9 @@ export function HomePage() {
           : newDragon;
 
       setHistory((prevHistory) => [...prevHistory, prevDragon]);
+      const newCollection = collection;
+      newCollection.dragons.splice(dragonIndex, 1, resolvedNewDragon);
+      setCollection(newCollection);
       return resolvedNewDragon;
     });
   };
@@ -244,7 +269,10 @@ export function HomePage() {
    * Load new empty dragon and reset configurator. If you also want to close the welcome modal, use loadNew().
    */
   function reset(): void {
-    setDragonWithHistory(emptyDragon);
+    setDragon(emptyDragon);
+    const newCollection = collection;
+    newCollection.dragons.push(emptyDragon);
+    setCollection(newCollection);
     setConfiguratorPage(0);
   }
 
@@ -269,6 +297,7 @@ export function HomePage() {
    * @param dragonToLoad the dragon to load as the active dragon
    */
   function loadDragon(dragonToLoad: t.TypeOf<typeof Dragon>): void {
+    dragonIndex = collection.dragons.indexOf(dragonToLoad);
     setDragonWithHistory(dragonToLoad);
     closeWelcomeModal();
   }
@@ -287,6 +316,9 @@ export function HomePage() {
         message: 'That dragon was not found in the collection.',
       });
     } else {
+      if (dragonToDelete == dragon) {
+        loadNew();
+      }
       setCollection((prev) => ({
         ...prev,
         dragons: collection.dragons.filter((item) => item.name !== dragonToDelete.name),
@@ -344,7 +376,7 @@ export function HomePage() {
 
       // Gender
       let gender: string = dragonInCollection.gender;
-      if (name === undefined || name === null || name === '') {
+      if (gender === undefined || gender === null || gender === '') {
         gender = '';
       } else {
         gender = gender.concat(' ');
@@ -362,21 +394,28 @@ export function HomePage() {
       // Build it!
       elements.push(
         <Card shadow="sm" withBorder>
-          <Card.Section>
-            <Image // TODO: This should be a preview of the dragon
-              src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png"
-              height={160}
-              alt="Norway"
-            />
-          </Card.Section>
+          <Group justify='space-between' align='top' fw={500} mah={'2.5em'} style={{ overflow: 'hidden' }}>
+            <Text mb="xs">
+              {name}
+            </Text>
+            <Group gap={'xs'} mb="xs">
+              <ColorSwatch size='18' color={dragonInCollection.primaryColor} />
+              <ColorSwatch size='18' color={dragonInCollection.secondaryColor} />
+              <ColorSwatch size='18' color={dragonInCollection.underscalesColor} />
+              <ColorSwatch size='18' color={dragonInCollection.membraneColor1} />
+              <ColorSwatch size='18' color={dragonInCollection.membraneColor2} />
+            </Group>
+          </Group>
 
-          <Text mt="md" mb="xs" fw={500}>
-            {name}
-          </Text>
+          <Group justify='space-between'>
+            <Text size="sm" c="dimmed">
+              {ageString.concat(gender).concat(tribeString)}
+            </Text>
+            <Text size="sm" c="dimmed">
+              {dragonInCollection.style} style
+            </Text>
+          </Group>
 
-          <Text size="sm" c="dimmed">
-            {ageString.concat(gender).concat(tribeString)}
-          </Text>
 
           <Flex mt="md" gap="md">
             <Button onClick={() => loadDragon(dragonInCollection)} fullWidth variant="light">
@@ -523,11 +562,7 @@ export function HomePage() {
           <SimpleGrid cols={{ base: 1, sm: 3 }} className='dragon-list'>
             {generateCards()}
             <Card shadow="sm" withBorder>
-              <Card.Section>
-                <Container h={160} />
-              </Card.Section>
-
-              <Text mt="md" mb="xs" fw={500}>
+              <Text mb="xs" fw={500}>
                 Create New
               </Text>
 
@@ -551,8 +586,8 @@ export function HomePage() {
               label="Collection name"
               variant="filled"
               value={collection.name}
-              onChange={(newName) => {
-                setCollection((prev) => ({ ...prev, name: String(newName) }));
+              onChange={(event) => {
+                setCollection((prev) => ({ ...prev, name: event.currentTarget.value }));
               }}
             />
             <FileButton onChange={setCollectionFile} accept="application/json">
@@ -562,7 +597,7 @@ export function HomePage() {
                 </Button>
               )}
             </FileButton>
-            <Anchor href={dataStr} download={collection.name.concat('.json')}>
+            <Anchor href={dataStr} download={collection.name.concat('.json')} onClick={() => save()}>
               <Button leftSection={<FontAwesomeIcon icon={faDownload} />}>Save Collection</Button>
             </Anchor>
           </Flex>
@@ -617,6 +652,10 @@ export function HomePage() {
                 <Text size="sm">Version {import.meta.env.VITE_VERSION} © 2025 Bog The MudWing</Text>
               </Stack>
             </Group>
+            <Stack gap="0" display={(window.innerWidth <= 991) ? 'none' : 'auto'}>
+              <Text ta="right">Currently editing {dragon.name ? dragon.name : "unnamed"}</Text>
+              <Text ta="right" size='sm'>{lastSave != null && timeDiff != null ? (timeDiff < 2) ? "Last save was just now" : "Last save was " + timeDiff + " minutes ago." : "You have never saved this session"}</Text>
+            </Stack>
             <Group className='header-button'>
               <Space h="md" />
               <Tooltip label={history.length > 0 ? 'Undo' : 'No undo steps'}>
@@ -635,7 +674,7 @@ export function HomePage() {
                 </ActionIcon>
               </Tooltip>
               <Tooltip label="Download">
-                <Anchor href={dataStr} download={collection.name.concat('.json')}>
+                <Anchor href={dataStr} download={collection.name.concat('.json')} onClick={() => save()}>
                   <ActionIcon variant="subtle" aria-label="Download">
                     <FontAwesomeIcon icon={faDownload} />
                   </ActionIcon>
@@ -705,7 +744,10 @@ export function HomePage() {
                     { label: 'Debug', value: 'debug' },
                   ]}
                   value={dragon.style}
-                  onChange={(value) => setDragon((prev) => ({ ...prev, style: value }))}
+                  onChange={(value) => {
+                    recordTelemetry('style', value);
+                    setDragon((prev) => ({ ...prev, style: value }));
+                  }}
                   orientation={(window.innerWidth <= 991) ? 'vertical' : 'horizontal'}
                 />
                 <Center display={(window.innerWidth <= 991) ? 'none' : 'flex'}>
@@ -727,6 +769,7 @@ export function HomePage() {
                 dataStr={dataStr}
                 page={configuratorPage}
                 setPage={setConfiguratorPage}
+                setLastSave={save}
                 doExport={doExport}
               />
             </Container>

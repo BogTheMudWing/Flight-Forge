@@ -1,4 +1,10 @@
 .header {
+  @media screen and (max-width: 991px) {
+    >Text {
+      display: none;
+    }
+  }
+  
   @media screen and (max-width: 630px) {
     top: auto;
     bottom: 0;
