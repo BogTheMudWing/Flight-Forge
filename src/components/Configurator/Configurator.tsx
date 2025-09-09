@@ -42,6 +42,7 @@ import {
   SimpleGrid,
   Stack,
   Stepper,
+  Switch,
   Text,
   TextInput,
   Title,
@@ -50,7 +51,7 @@ import notImplemented, { myJoin } from '../AppUtils/AppUtils';
 import { Collection } from '../Collection/Collection';
 import { Dragon, Relation } from '../Dragon/Dragon';
 import { recordTelemetry } from '../Telemetry/Telemetry';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Configurator.css'
 import { GetColorName } from 'hex-color-to-color-name';
 import { names } from '../Random/Random';
@@ -149,12 +150,66 @@ export default function Configurator({
     setDragon(newDragon);
   }
 
+  const accessories = () => {
+    let info = null;
+    if (dragon.style == 'debug') info = styleInfoDebug;
+    else if (dragon.style == 'developer') info = styleInfoDeveloper;
+    if (info == null) return (<Text>It seems like you have an invalid style pack applied. Select one of the provided style packs.</Text>);
+
+    const accessories = info.included_accessories;
+    if (accessories == undefined || accessories == null || accessories.length == 0) return <Text>There are no accessories provided by the current style pack.</Text>
+
+    const accessoryElements: JSX.Element[] = [];
+
+    const dragonHasAccessory = (accessory: { image: string; }) => {
+      dragon.accessories.forEach((dergAccessory) => {
+        console.log(accessory.image);
+        console.log(dergAccessory.file);
+        if (accessory.image == dergAccessory.file) {
+          console.log('match');
+          return true;
+        }
+      })
+      return false;
+    }
+
+    for (let i = 0; i < accessories.length; i++) {
+      const element = accessories[i];
+      accessoryElements.push(
+        <Switch
+          checked={dragonHasAccessory(element)}
+          onChange={(event) => {
+            let newAccessories = dragon.accessories;
+            let accessory = newAccessories.find((accessory) => {(accessory.file == element.image)});
+
+            if (event.currentTarget.value) {
+              // if enabled, set the accessory and add it
+              accessory = {file: element.image, name: element.name, color: '#ffffff'};
+              newAccessories.push(accessory);
+            } else if (accessory != undefined) {
+              // if disabled, remove it from the list
+              newAccessories.splice(newAccessories.indexOf(accessory), 1);
+              setDragon((prev) => ({...prev, accessories: newAccessories}));
+            } 
+          }}
+          label={element.name}
+        />
+      )
+    }
+
+    return <SimpleGrid cols={2}>{accessoryElements}</SimpleGrid>;
+  }
+
   const nextStep = () => setPage((current: number) => (current < 9 ? current + 1 : current));
   const prevStep = () => setPage((current: number) => (current > 0 ? current - 1 : current));
 
   const relationStatus = ['Good', 'Estranged', 'Deceased', 'Lost', 'Unknown'];
   const [newRelationSelectorValue, setNewRelationSelectorValue] = useState<string | null>('');
   const [sameBuilderCreator, setSameBuilderCreator] = useState(dragon.creator == dragon.builder);
+
+  useEffect(() => {
+    setSameBuilderCreator(dragon.creator == dragon.builder);
+  }, [dragon])
 
   const prevButton = () => {
     if (window.screen.width > 630) {
@@ -224,24 +279,6 @@ export default function Configurator({
       </ActionIcon>
     )
   }
-
-  // const randomButton = () => {
-  //   if (window.innerWidth > 630) {
-  //     return (
-  //       <Button
-  //         onClick={notImplemented}
-  //         leftSection={<FontAwesomeIcon icon={faDice} />}
-  //       >
-  //         Random
-  //       </Button>
-  //     );
-  //   }
-  //   return (
-  //     <Button onClick={notImplemented}>
-  //       <FontAwesomeIcon icon={faDice} />
-  //     </Button>
-  //   );
-  // }
 
   /**
    * Back, Randomize, and Next buttons
@@ -977,6 +1014,7 @@ export default function Configurator({
               <Text>Customize! Accessorize! Decorate!</Text>
             </Stack>
             <Title order={3}>Accessories</Title>
+            {accessories()}
             <SimpleGrid cols={2}>
               {/* TODO: Generate accessory toggles (with preview?) based on pack info.json. */}
               {/* <Switch label="Left arm" defaultChecked={dragon.injuries.leftArm} />

@@ -77,7 +77,7 @@ export const Dragon = t.type({
   style: t.string,
 })
 
-export const defaultDragon = {
+export const defaultDragon1 = {
   tribe: ['Mud'],
   bodyParts: {
     head: 'Mud',
@@ -207,4 +207,162 @@ export const defaultDragon = {
   creator: 'Bog The MudWing',
   builder: 'Bog The MudWing',
   style: 'debug',
+}
+
+export const defaultDragon2 = {
+  tribe: [
+    "Sky"
+  ],
+  bodyParts: {
+    head: "Sky",
+    body: "Sky",
+    wings: "Sky",
+    legs: "Sky",
+    tail: "Sky"
+  },
+  age: 8,
+  gender: "Female",
+  primaryColor: "#ffc466",
+  secondaryColor: "#9e3d34",
+  underscalesColor: "#ffc966",
+  membraneColor1: "#fff1d1",
+  membraneColor2: "#ffc038",
+  eyeColor: "#269FE4",
+  spikesColor: "#331b1b",
+  name: "Peril",
+  pronouns: "she/her",
+  relations: [
+    {
+      relation: "Father",
+      name: "Chameleon",
+      status: "Estranged"
+    },
+    {
+      relation: "Friend",
+      name: "Clay",
+      "status": "Good"
+    },
+    {
+      "relation": "Mother",
+      "name": "Kestrel",
+      "status": "Deceased"
+    },
+    {
+      "relation": "Mentor",
+      "name": "Osprey",
+      "status": "Deceased"
+    },
+    {
+      "relation": "Adoptive Mother",
+      "name": "Scarlet",
+      "status": "Deceased"
+    },
+    {
+      "relation": "Friend",
+      "name": "Turtle",
+      "status": "Good"
+    }
+  ],
+  "locations": [
+    {
+      "identifier": "Hatching location",
+      "name": "the SkyWing Palace"
+    },
+    {
+      "identifier": "Home location",
+      "name": "Jade Mountain Academy"
+    },
+    {
+      "identifier": "Current location",
+      "name": "Jade Mountain Academy"
+    },
+    {
+      "identifier": "Growing up location",
+      "name": "the SkyWing Palace"
+    }
+  ],
+  "traits": [
+    {
+      "name": "Intelligence",
+      "rating": 2.5
+    },
+    {
+      "name": "Charisma",
+      "rating": 3
+    },
+    {
+      "name": "Speed",
+      "rating": 2.5
+    },
+    {
+      "name": "Strength",
+      "rating": 2
+    },
+    {
+      "name": "Teamwork",
+      "rating": 2
+    },
+    {
+      "name": "Organization",
+      "rating": 1
+    },
+    {
+      "name": "Perception",
+      "rating": 1.5
+    },
+    {
+      "name": "Stealth",
+      "rating": 0.5
+    },
+    {
+      "name": "Agility",
+      "rating": 1.5
+    },
+    {
+      "name": "Leadership",
+      "rating": 1
+    },
+    {
+      "name": "Independence",
+      "rating": 2
+    },
+    {
+      "name": "Empathy",
+      "rating": 3
+    }
+  ],
+  "health": "Well",
+  "occupation": "Student",
+  "size": 80,
+  "injuries": {
+    "leftArm": false,
+    "rightArm": false,
+    "leftLeg": false,
+    "rightLeg": false,
+    "leftWing": false,
+    "rightWing": false,
+    "leftEye": false,
+    "rightEye": false,
+    "leftHorn": false,
+    "rightHorn": false,
+    "rigthEar": false,
+    "leftEar": false,
+    "rightEar": false,
+    "tail": false
+  },
+  "accessories": [
+    {
+      "file": "left_arm_band",
+      "name": "Left Arm Band",
+      "color": "#ffe5a8"
+    },
+    {
+      "file": "necklace",
+      "name": "Necklace",
+      "color": "#ffe5a8"
+    }
+  ],
+  "creator": "Tui T. Sutherland",
+  "builder": "Bog The MudWing",
+  "style": "developer"
 }

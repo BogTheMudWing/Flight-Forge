@@ -1,4 +1,4 @@
-import { defaultDragon, Dragon } from '../Dragon/Dragon';
+import { defaultDragon1, defaultDragon2, Dragon } from '../Dragon/Dragon';
 import * as t from 'io-ts'
 
 export const Collection = t.type({
@@ -11,7 +11,8 @@ export const Collection = t.type({
 export const defaultCollection: t.TypeOf<typeof Collection> = {
   name: 'Default',
   dragons: [
-    defaultDragon
+    defaultDragon1,
+    defaultDragon2
   ],
   version: 1,
 };
