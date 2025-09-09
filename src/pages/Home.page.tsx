@@ -2,12 +2,12 @@ import { JSX, useEffect, useState } from 'react';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 /* import all the icons in Free Solid, Free Regular, and Brands styles */
-import { faArrowUpRightFromSquare, faBan, faBars, faBug, faCheck, faCircleInfo, faClone, faCode, faDownload, faEllipsis, faFileExport, faGear, faHome, faPlus, faRotateLeft, fas, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUpRightFromSquare, faBan, faBars, faBug, faCheck, faCircleInfo, faClone, faCode, faDownload, faEllipsis, faFileExport, faGear, faHome, faNewspaper, faPlus, faRotateLeft, fas, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isLeft } from 'fp-ts/lib/Either';
 import * as t from 'io-ts';
 import { PathReporter } from 'io-ts/PathReporter';
-import { ActionIcon, Anchor, AppShell, Button, Card, Center, ColorSwatch, Container, FileButton, Flex, Group, Image, JsonInput, Menu, Modal, Overlay, SegmentedControl, Select, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
+import { ActionIcon, Anchor, AppShell, Button, Card, Center, ColorSwatch, Container, FileButton, Flex, Group, Image, Indicator, JsonInput, Menu, Modal, Overlay, SegmentedControl, Select, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications, Notifications } from '@mantine/notifications';
 import ImagePreview from '@/components/ImagePreview/ImagePreview';
@@ -29,6 +29,7 @@ export function HomePage() {
   const [jsonModalOpened, { open: openJsonModal, close: closeJsonModal }] = useDisclosure(false);
   const [welcomeModalOpened, { open: openWelcomeModal, close: closeWelcomeModal }] =
     useDisclosure(true);
+  const [updatesModalOpened, { open: openUpdatesModal, close: closeUpdatesModal }] = useDisclosure(false);
   const [aboutModalOpened, { open: openAboutModal, close: closeAboutModal }] = useDisclosure(false);
   const [configuratorPage, setConfiguratorPage] = useState<number>(0);
   const [collectionFile, setCollectionFile] = useState<File | null>(null);
@@ -37,6 +38,18 @@ export function HomePage() {
   const [lastSave, setLastSave] = useState<Date | null>(null);
   const [timeDiff, setTimeDiff] = useState<number | null>(null);
   let dragonIndex = -1;
+  const latestUpdate = 0;
+
+  const seenUpdate = () => {
+    let lastUpdateSeen = 0;
+    const storedLastUpdate = window.localStorage.getItem("lastUpdateSeen");
+    if (storedLastUpdate != null) lastUpdateSeen = Number.parseInt(storedLastUpdate);
+    return !(lastUpdateSeen < latestUpdate);
+  }
+
+  function setUpdate() {
+    window.localStorage.setItem("lastUpdateSeen", latestUpdate.toString());
+  }
 
   // Undo on Ctrl + Z
   useEffect(() => {
@@ -467,6 +480,11 @@ export function HomePage() {
     notImplemented();
   }
 
+  function openUpdates(): void {
+    setUpdate();
+    openUpdatesModal();
+  }
+
   return (
     <>
       <Notifications />
@@ -639,6 +657,12 @@ export function HomePage() {
         </Stack>
       </Modal>
 
+      <Modal opened={updatesModalOpened} onClose={closeUpdatesModal} title="Updates" centered>
+        <Stack>
+          <Text>No updates yet.</Text>
+        </Stack>
+      </Modal>
+
       {Telemetry()}
 
       <AppShell
@@ -694,9 +718,11 @@ export function HomePage() {
               </Tooltip>
               <Menu shadow="md" width={200} transitionProps={{ transition: 'pop', duration: 200 }}>
                 <Menu.Target>
-                  <ActionIcon variant="subtle" aria-label="Menu">
-                    <FontAwesomeIcon icon={faBars} />
-                  </ActionIcon>
+                  <Indicator disabled={seenUpdate()}>
+                    <ActionIcon variant="subtle" aria-label="Menu">
+                      <FontAwesomeIcon icon={faBars} />
+                    </ActionIcon>
+                  </Indicator>
                 </Menu.Target>
                 <Menu.Dropdown>
                   <Menu.Label>Editor</Menu.Label>
@@ -727,6 +753,15 @@ export function HomePage() {
                       Report bug
                     </Menu.Item>
                   </Anchor>
+                  <Indicator position='middle-start' disabled={seenUpdate()}>
+                    <Menu.Item
+                      onClick={openUpdates}
+                      leftSection={<FontAwesomeIcon icon={faNewspaper} size="sm" />}
+                    >
+                      Updates
+                    </Menu.Item>
+                  </Indicator>
+
                   <Menu.Item
                     onClick={openAboutModal}
                     leftSection={<FontAwesomeIcon icon={faCircleInfo} size="sm" />}

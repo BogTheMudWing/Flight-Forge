@@ -27,11 +27,11 @@ Anonymous usage data is stored for the purpose of analysis and improvement of Fl
 
 We do not sell or share any personal data. However, aggregated and anonymous usage data may be shared with third parties for analysis and to improve the app. This data will always be in a non-identifiable form and cannot be traced back to any individual user.
 
-## 5. Cookies
+## 5. Browser Storage
 
-Flight Forge uses cookies to remember your preference on whether or not to share anonymous usage data.
+Flight Forge uses your browser's local storage to remember your preference on whether or not to share anonymous usage data, whether you prefer a light or dark theme, and the last update you saw.
 
-You can choose to disable cookies through your browser settings.
+You can choose to disable this feature through your browser settings.
 
 ## 6. Your Rights
 
