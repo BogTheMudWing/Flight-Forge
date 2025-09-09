@@ -134,6 +134,7 @@ export default function Configurator({
     if (window.screen.width > 630) {
       return (
         <Button
+          variant='light'
           onClick={prevStep}
           leftSection={<FontAwesomeIcon icon={faArrowLeft} />}
           disabled={page === 0}
@@ -144,6 +145,7 @@ export default function Configurator({
     }
     return (
       <Button
+        variant='light'
         onClick={prevStep}
         disabled={page === 0}
       >
@@ -156,6 +158,7 @@ export default function Configurator({
     if (window.screen.width > 630) {
       return (
         <Button
+          variant='light'
           onClick={nextStep}
           rightSection={<FontAwesomeIcon icon={faArrowRight} />}
         >
@@ -164,7 +167,7 @@ export default function Configurator({
       );
     }
     return (
-      <Button onClick={nextStep}>
+      <Button variant='light' onClick={nextStep}>
         <FontAwesomeIcon icon={faArrowRight} />
       </Button>
     );
