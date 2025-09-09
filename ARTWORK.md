@@ -6,15 +6,15 @@ If you need help, don't be afraid to reach out to me. I have my contact informat
 
 ## Tribe Images
 
-These images are needed for each of the ten tribes:
+These images are use for each of the ten tribes. You don't need to include all of them.
 
 | Eyes      | Body             | Head             | Legs             | Tail             | Wings            |
 |---------- | ---------------- | ---------------- | ---------------- | ---------------- | ---------------- |
-| eyes.webp | membranes.webp   | membranes.webp   | membranes.webp   | membranes.webp   | membranes.webp   |
-|           | primary.webp     | primary.webp     | primary.webp     | primary.webp     | primary.webp     |
-|           | secondary.webp   | secondary.webp   | secondary.webp   | secondary.webp   | secondary.webp   |
-|           | spikes.webp      | spikes.webp      | spikes.webp      | spikes.webp      | spikes.webp      |
-|           | underscales.webp | underscales.webp | underscales.webp | underscales.webp |                  |
+| eyes.png  | membranes.png    | membranes.png    | membranes.png    | membranes.png    | membranes.png    |
+|           | primary.png      | primary.png      | primary.png      | primary.png      | primary.png      |
+|           | secondary.png    | secondary.png    | secondary.png    | secondary.png    | secondary.png    |
+|           | spikes.png       | spikes.png       | spikes.png       | spikes.png       | spikes.png       |
+|           | underscales.png  | underscales.png  | underscales.png  | underscales.png  |                  |
 
 This is easiest to do if you utilize layers in an art program.
 
@@ -22,16 +22,16 @@ This is easiest to do if you utilize layers in an art program.
 
 You may also choose to provide accessories. Below are the accessories included in the default pixel style, but you can omit any or all of them. You may also add your own.
 
-- left_arm_band.webp
-- right_arm_band.webp
-- left_earring.webp
-- right_earring.webp
-- nose_ring.webp
-- chestplate.webp
-- glasses.webp
-- necklace.webp
-- crown.webp
-- bag.webp
+- left_arm_band.png
+- right_arm_band.png
+- left_earring.png
+- right_earring.png
+- nose_ring.png
+- chestplate.png
+- glasses.png
+- necklace.png
+- crown.png
+- bag.png
 
 ## Backgrounds
 
@@ -54,7 +54,7 @@ White (#ffffff) will always appear as white and black (#000000) will always appe
 ## Requirements
 
 
-All images must be the same size. The exact dimensions are not strict, but the images must be 1:1 aspect ratio. Images must not be obscene or disturbing and they should be free of text, watermarks, and backgrounds. You must provide the images in webp format. If your image editor does not support exporting in webp, you can use [Squoosh](https://squoosh.app) to convert by uploading the image and setting the compression to *WebP*.
+All images must be the same size. The exact dimensions are not strict, but the images must be 1:1 aspect ratio. Images must not be obscene or disturbing and they should be free of text, watermarks, and backgrounds. You must provide the images in png format. If your image editor does not support exporting in png, you can use [Squoosh](https://squoosh.app) to convert by uploading the image and setting the compression to *png*.
 
 > 🖼️ **Image wanted here.**
 > 
@@ -71,320 +71,320 @@ To build a style pack so that Flight Forge can use it, arrange the files in the 
 ```
 🖿 style_name/
 ├─ 🖿 accessory/
-|  ╰─ 🖻 (optional accessories in webp format)
+|  ╰─ 🖻 (optional accessories in png format)
 ├─ 🖿 background/
-│  ├─ 🖻 (optional backgrounds in webp format)
+│  ├─ 🖻 (optional backgrounds in png format)
 ├─ 🖿 tribe/
 │  ├─ 🖿 hive/
 │  │  ├─ 🖿 body/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 head/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 legs/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 tail/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 wings/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ╰─ 🖻 spikes.webp
-│  │  ╰─ 🖻 eyes.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ╰─ 🖻 spikes.png
+│  │  ╰─ 🖻 eyes.png
 │  ├─ 🖿 ice/
 │  │  ├─ 🖿 body/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 head/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 legs/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 tail/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 wings/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ╰─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 eyes.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ╰─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 eyes.png
 │  ├─ 🖿 leaf/
 │  │  ├─ 🖿 body/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 head/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 legs/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 tail/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 wings/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ╰─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 eyes.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ╰─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 eyes.png
 │  ├─ 🖿 mud/
 │  │  ├─ 🖿 body/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 head/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 legs/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 tail/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 wings/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ╰─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 eyes.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ╰─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 eyes.png
 │  ├─ 🖿 night/
 │  │  ├─ 🖿 body/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 head/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 legs/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 tail/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 wings/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ╰─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 eyes.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ╰─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 eyes.png
 │  ├─ 🖿 rain/
 │  │  ├─ 🖿 body/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 head/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 legs/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 tail/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 wings/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ╰─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 eyes.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ╰─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 eyes.png
 │  ├─ 🖿 sand/
 │  │  ├─ 🖿 body/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 head/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 legs/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 tail/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 wings/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ╰─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 eyes.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ╰─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 eyes.png
 │  ├─ 🖿 silk/
 │  │  ├─ 🖿 body/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 head/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 legs/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 tail/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 wings/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ╰─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 eyes.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ╰─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 eyes.png
 │  ├─ 🖿 sea/
 │  │  ├─ 🖿 body/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 head/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 legs/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 tail/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ├─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 underscales.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ├─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 underscales.png
 │  │  ├─ 🖿 wings/
-│  │  │  ├─ 🖻 membranes.webp
-│  │  │  ├─ 🖻 primary.webp
-│  │  │  ├─ 🖻 secondary.webp
-│  │  │  ╰─ 🖻 spikes.webp
-│  │  │  ╰─ 🖻 eyes.webp
+│  │  │  ├─ 🖻 membranes.png
+│  │  │  ├─ 🖻 primary.png
+│  │  │  ├─ 🖻 secondary.png
+│  │  │  ╰─ 🖻 spikes.png
+│  │  │  ╰─ 🖻 eyes.png
 │  ╰─ 🖿 sky/
 │     ├─ 🖿 body/
-│     │  ├─ 🖻 membranes.webp
-│     │  ├─ 🖻 primary.webp
-│     │  ├─ 🖻 secondary.webp
-│     │  ├─ 🖻 spikes.webp
-│     │  ╰─ 🖻 underscales.webp
+│     │  ├─ 🖻 membranes.png
+│     │  ├─ 🖻 primary.png
+│     │  ├─ 🖻 secondary.png
+│     │  ├─ 🖻 spikes.png
+│     │  ╰─ 🖻 underscales.png
 │     ├─ 🖿 head/
-│     │  ├─ 🖻 membranes.webp
-│     │  ├─ 🖻 primary.webp
-│     │  ├─ 🖻 secondary.webp
-│     │  ├─ 🖻 spikes.webp
-│     │  ╰─ 🖻 underscales.webp
+│     │  ├─ 🖻 membranes.png
+│     │  ├─ 🖻 primary.png
+│     │  ├─ 🖻 secondary.png
+│     │  ├─ 🖻 spikes.png
+│     │  ╰─ 🖻 underscales.png
 │     ├─ 🖿 legs/
-│     │  ├─ 🖻 membranes.webp
-│     │  ├─ 🖻 primary.webp
-│     │  ├─ 🖻 secondary.webp
-│     │  ├─ 🖻 spikes.webp
-│     │  ╰─ 🖻 underscales.webp
+│     │  ├─ 🖻 membranes.png
+│     │  ├─ 🖻 primary.png
+│     │  ├─ 🖻 secondary.png
+│     │  ├─ 🖻 spikes.png
+│     │  ╰─ 🖻 underscales.png
 │     ├─ 🖿 tail/
-│     │  ├─ 🖻 membranes.webp
-│     │  ├─ 🖻 primary.webp
-│     │  ├─ 🖻 secondary.webp
-│     │  ├─ 🖻 spikes.webp
-│     │  ╰─ 🖻 underscales.webp
+│     │  ├─ 🖻 membranes.png
+│     │  ├─ 🖻 primary.png
+│     │  ├─ 🖻 secondary.png
+│     │  ├─ 🖻 spikes.png
+│     │  ╰─ 🖻 underscales.png
 │     ├─ 🖿 wings/
-│     │  ├─ 🖻 membranes.webp
-│     │  ├─ 🖻 primary.webp
-│     │  ├─ 🖻 secondary.webp
-│     │  ╰─ 🖻 spikes.webp
-│     ╰─ 🖻 eyes.webp
+│     │  ├─ 🖻 membranes.png
+│     │  ├─ 🖻 primary.png
+│     │  ├─ 🖻 secondary.png
+│     │  ╰─ 🖻 spikes.png
+│     ╰─ 🖻 eyes.png
 ├─ 🖿 source/
 │  ╰─ 🖻 (source files from your editor)
 ├ 🖹 license.txt
