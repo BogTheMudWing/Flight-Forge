@@ -96,9 +96,35 @@ export default function Configurator({
       elements.push(
         <Fieldset legend={relation.relation}>
           <Stack>
-            <TextInput label="Name" value={relation.name} />
-            <Select label="Status" value={relation.status} data={relationStatus} />
-            <Button color="red" variant="light" onClick={notImplemented}>
+            <TextInput
+              label="Name"
+              value={relation.name}
+              onChange={(event) => {
+                let newRelations = dragon.relations;
+                let newRelation = relation;
+                newRelation.name = event.currentTarget.value;
+                newRelations.splice(newRelations.indexOf(relation), 1, newRelation);
+                setDragon((prev) => ({ ...prev, relations: newRelations }));
+              }}
+            />
+            <Select
+              label="Status"
+              value={relation.status}
+              data={relationStatus}
+              onChange={(value) => {
+                if (value == null) return;
+                let newRelations = dragon.relations;
+                let newRelation = relation;
+                newRelation.status = value;
+                newRelations.splice(newRelations.indexOf(relation), 1, newRelation);
+                setDragon((prev) => ({ ...prev, relations: newRelations }));
+              }}
+            />
+            <Button color="red" variant="light" onClick={() => {
+              let newRelations = dragon.relations;
+              newRelations.splice(newRelations.indexOf(relation), 1);
+              setDragon((prev) => ({ ...prev, relations: newRelations }));
+            }}>
               Delete
             </Button>
           </Stack>
