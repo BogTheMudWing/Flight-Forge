@@ -1,0 +1,15 @@
+{
+    "name": "Developer", 
+    "description": "Used during development to test and debug Flight Forge.",
+    "pack_version": "1",
+    "creators": [
+        {
+            "name": "Bog",
+            "image_url": "https://blog.macver.org/content/images/2025/03/Compute-Cube-Medium.png",
+            "link": "https://blog.macver.org/about-me"
+        }
+    ],
+    "included_tribes": [
+        "sky"
+    ]
+}

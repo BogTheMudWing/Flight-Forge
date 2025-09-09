@@ -223,7 +223,7 @@ export function HomePage() {
     accessories: [],
     creator: '',
     builder: '',
-    style: 'pixel',
+    style: 'devloper',
   };
 
   function save() {
@@ -786,7 +786,7 @@ export function HomePage() {
               <Stack className='styleControl'>
                 <SegmentedControl
                   data={[
-                    { label: 'Pixel', value: 'pixel' },
+                    { label: 'Developer', value: 'developer' },
                     { label: 'Debug', value: 'debug' },
                   ]}
                   value={dragon.style}
