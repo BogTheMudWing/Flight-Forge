@@ -408,16 +408,16 @@ The `info.json` file contains information about the style pack. See the example 
         }
     ],
     "included_tribes": [
-        "hive",
-        "ice",
-        "leaf",
-        "mud",
-        "night",
-        "rain",
-        "sand",
-        "sea",
-        "silk",
-        "sky"
+        "Hive",
+        "Ice",
+        "Leaf",
+        "Mud",
+        "Night",
+        "Rain",
+        "Sand",
+        "Sea",
+        "Silk",
+        "Sky"
     ],
     "included_accessories": [
         {

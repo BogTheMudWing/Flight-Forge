@@ -54,6 +54,10 @@ import { GetColorName } from 'hex-color-to-color-name';
 import { names } from '../Random/Random';
 import { notifications } from '@mantine/notifications';
 
+// Style Info
+import styleInfoDebug from '@/images/debug/info.json';
+import styleInfoDeveloper from '@/images/developer/info.json';
+
 library.add(fas);
 
 type ConfiguratorProps = {
@@ -335,6 +339,15 @@ export default function Configurator({
     )
   }
 
+  const availableTribes = () => {
+    let info = null;
+    if (dragon.style == 'debug') info = styleInfoDebug;
+    else if (dragon.style == 'developer') info = styleInfoDeveloper;
+    if (info == null) return [];
+
+    return info.included_tribes;
+  }
+
   return (
     <Flex gap="md" direction="column" h="100%" className='configurator'>
       <Stepper
@@ -369,7 +382,7 @@ export default function Configurator({
               label="Tribe"
               description="The tribe(s) of the character"
               placeholder="Select any"
-              data={['Hive', 'Ice', 'Leaf', 'Mud', 'Night', 'Rain', 'Sand', 'Sea', 'Silk', 'Sky']}
+              data={availableTribes()}
               clearable
               searchable
               nothingFoundMessage="Nothing found..."

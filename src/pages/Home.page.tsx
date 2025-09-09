@@ -19,6 +19,9 @@ import icon from '../images/icon.png';
 import Telemetry, { allowTelemetry, denyTelemetry, isTelemetryEnabled, recordTelemetry } from '@/components/Telemetry/Telemetry';
 import './Home.page.css'
 import { exportImage } from '@/components/Exporter/Exporter';
+// Style Info
+import styleInfoDebug from '@/images/debug/info.json';
+import styleInfoDeveloper from '@/images/developer/info.json';
 
 library.add(fas, fab);
 
@@ -489,6 +492,25 @@ export function HomePage() {
     openUpdatesModal();
   }
 
+  const styleAllowedWithCurrentTribes = (style: string) => {
+    let info = null;
+    if (style == 'debug') info = styleInfoDebug;
+    else if (style == 'developer') info = styleInfoDeveloper;
+    if (info == null) return false;
+
+    const includedTribes: string[] = info.included_tribes;
+    let matches = 0;
+    for (let i = 0; i < dragon.tribe.length; i++) {
+      const tribe = dragon.tribe[i];
+      for (let j = 0; j < includedTribes.length; j++) {
+        const element = includedTribes[j];
+        if (tribe == element) matches++;
+      }
+    }
+
+    return (matches == dragon.tribe.length);
+  }
+
   return (
     <>
       <Notifications />
@@ -786,8 +808,30 @@ export function HomePage() {
               <Stack className='styleControl'>
                 <SegmentedControl
                   data={[
-                    { label: 'Developer', value: 'developer' },
-                    { label: 'Debug', value: 'debug' },
+                    {
+                      label: (
+                        <Tooltip
+                          disabled={styleAllowedWithCurrentTribes('developer')}
+                          label={"Only compatible with tribes " + styleInfoDeveloper.included_tribes.toString().replaceAll(',', ', ')}
+                        >
+                          <span>Developer</span>
+                        </Tooltip>
+                      ),
+                      value: 'developer',
+                      disabled: !styleAllowedWithCurrentTribes('developer')
+                    },
+                    {
+                      label: (
+                        <Tooltip
+                          disabled={styleAllowedWithCurrentTribes('debug')}
+                          label={"Only compatible with tribes " + styleInfoDebug.included_tribes.toString().replaceAll(',', ', ')}
+                        >
+                          <span>Debug</span>
+                        </Tooltip>
+                      ),
+                      value: 'debug',
+                      disabled: !styleAllowedWithCurrentTribes('debug')
+                    },
                   ]}
                   value={dragon.style}
                   onChange={(value) => {
