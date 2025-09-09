@@ -43,7 +43,11 @@ export function HomePage() {
   const seenUpdate = () => {
     let lastUpdateSeen = 0;
     const storedLastUpdate = window.localStorage.getItem("lastUpdateSeen");
-    if (storedLastUpdate != null) lastUpdateSeen = Number.parseInt(storedLastUpdate);
+    if (storedLastUpdate == null) {
+      setUpdate();
+      return true;
+    }
+    lastUpdateSeen = Number.parseInt(storedLastUpdate);
     return !(lastUpdateSeen < latestUpdate);
   }
 
