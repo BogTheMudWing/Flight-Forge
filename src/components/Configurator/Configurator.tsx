@@ -156,7 +156,8 @@ export default function Configurator({
     else if (dragon.style == 'developer') info = styleInfoDeveloper;
     if (info == null) return (<Text>It seems like you have an invalid style pack applied. Select one of the provided style packs.</Text>);
 
-    const accessories = info.included_accessories;
+    // const accessories = info.included_accessories;
+    const accessories: string | any[] | null | undefined = [];
     if (accessories == undefined || accessories == null || accessories.length == 0) return <Text>There are no accessories provided by the current style pack.</Text>
 
     const accessoryElements: JSX.Element[] = [];
