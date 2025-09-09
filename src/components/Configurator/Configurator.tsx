@@ -62,6 +62,7 @@ library.add(fas);
 
 type ConfiguratorProps = {
   dragon: t.TypeOf<typeof Dragon>;
+  previewDragon: React.Dispatch<React.SetStateAction<t.TypeOf<typeof Dragon>>>;
   setDragon: React.Dispatch<React.SetStateAction<t.TypeOf<typeof Dragon>>>;
   collection: t.TypeOf<typeof Collection>;
   dataStr: string;
@@ -75,6 +76,7 @@ export default function Configurator({
   dragon,
   collection,
   dataStr,
+  previewDragon,
   setDragon,
   page,
   setPage,
@@ -442,6 +444,9 @@ export default function Configurator({
               <ColorInput
                 label="Primary"
                 value={dragon.primaryColor}
+                onChange={(newColor) => {
+                  previewDragon((prev) => ({ ...prev, primaryColor: newColor }));
+                }}
                 onChangeEnd={(newColor) => {
                   setDragon((prev) => ({ ...prev, primaryColor: newColor }));
                 }}
@@ -453,6 +458,9 @@ export default function Configurator({
               <ColorInput
                 label="Secondary"
                 value={dragon.secondaryColor}
+                onChange={(newColor) => {
+                  previewDragon((prev) => ({ ...prev, secondaryColor: newColor }));
+                }}
                 onChangeEnd={(newColor) => {
                   setDragon((prev) => ({ ...prev, secondaryColor: newColor }));
                 }}
@@ -464,6 +472,9 @@ export default function Configurator({
               <ColorInput
                 label="Underscales"
                 value={dragon.underscalesColor}
+                onChange={(newColor) => {
+                  previewDragon((prev) => ({ ...prev, underscalesColor: newColor }));
+                }}
                 onChangeEnd={(newColor) => {
                   setDragon((prev) => ({ ...prev, underscalesColor: newColor }));
                 }}
@@ -478,6 +489,9 @@ export default function Configurator({
               <ColorInput
                 label="Start Color"
                 value={dragon.membraneColor1}
+                onChange={(newColor) => {
+                  previewDragon((prev) => ({ ...prev, membraneColor1: newColor }));
+                }}
                 onChangeEnd={(newColor) => {
                   setDragon((prev) => ({ ...prev, membraneColor1: newColor }));
                 }}
@@ -488,6 +502,9 @@ export default function Configurator({
               <ColorInput
                 label="End Color"
                 value={dragon.membraneColor2}
+                onChange={(newColor) => {
+                  previewDragon((prev) => ({ ...prev, membraneColor2: newColor }));
+                }}
                 onChangeEnd={(newColor) => {
                   setDragon((prev) => ({ ...prev, membraneColor2: newColor }));
                 }}
@@ -501,6 +518,9 @@ export default function Configurator({
               <ColorInput
                 label="Eyes"
                 value={dragon.eyeColor}
+                onChange={(newColor) => {
+                  previewDragon((prev) => ({ ...prev, eyeColor: newColor }));
+                }}
                 onChangeEnd={(newColor) => {
                   setDragon((prev) => ({ ...prev, eyeColor: newColor }));
                 }}
@@ -512,6 +532,9 @@ export default function Configurator({
               <ColorInput
                 label="Spikes"
                 value={dragon.spikesColor}
+                onChange={(newColor) => {
+                  previewDragon((prev) => ({ ...prev, spikesColor: newColor }));
+                }}
                 onChangeEnd={(newColor) => {
                   setDragon((prev) => ({ ...prev, spikesColor: newColor }));
                 }}

@@ -854,6 +854,7 @@ export function HomePage() {
             <Container className='configurator-container'>
               <Configurator
                 dragon={dragon}
+                previewDragon={setDragon}
                 setDragon={setDragonWithHistory}
                 collection={collection}
                 dataStr={dataStr}
