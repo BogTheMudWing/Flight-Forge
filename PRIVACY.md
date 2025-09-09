@@ -15,7 +15,7 @@ If you choose to permit it, we collect anonymous usage data to understand how Fl
 
 Upon your first visit to Flight Forge, you will be asked if you wish to share anonymous usage data. If you choose to participate, the data is collected anonymously and is not linked to your identity or any personal information. This data helps the developer analyze how the app is used but is never sold, and it is shared only in aggregated, non-identifiable sets.
 
-If you choose not to share usage data, we will respect your decision. Your choice will be stored in a cookie for 30 days to remember your preference. You can change this preference at any time via the app’s settings.
+If you choose not to share usage data, we will respect your decision. Your choice will be stored in your browser's local storage to remember your preference. You can change this preference at any time via the app’s settings.
 
 ## 3. Data Storage and Retention
 
