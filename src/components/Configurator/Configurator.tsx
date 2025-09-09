@@ -4,12 +4,14 @@ import {
   faArrowLeft,
   faArrowRight,
   faArrowUpRightFromSquare,
+  faBackward,
   faChartPie,
   faCode,
   faDice,
   faDownload,
   faFileExport,
   faFloppyDisk,
+  faForward,
   faGlasses,
   faHeartPulse,
   faInfo,
@@ -154,7 +156,7 @@ export default function Configurator({
       return (
         <Button
           onClick={nextStep}
-          leftSection={<FontAwesomeIcon icon={faArrowRight} />}
+          rightSection={<FontAwesomeIcon icon={faArrowRight} />}
         >
           Next
         </Button>
@@ -165,6 +167,32 @@ export default function Configurator({
         <FontAwesomeIcon icon={faArrowRight} />
       </Button>
     );
+  }
+
+  const startButton = () => {
+    return (
+      <ActionIcon
+        variant='subtle'
+        onClick={() => setPage(0)}
+        disabled={page === 0}
+        aria-label='Go to start'
+      >
+        <FontAwesomeIcon icon={faBackward} />
+      </ActionIcon>
+    )
+  }
+
+  const endButton = () => {
+    return (
+      <ActionIcon
+        variant='subtle'
+        onClick={() => setPage(9)}
+        disabled={page === 9}
+        aria-label='Go to end'
+      >
+        <FontAwesomeIcon icon={faForward} />
+      </ActionIcon>
+    )
   }
 
   // const randomButton = () => {
@@ -190,9 +218,11 @@ export default function Configurator({
    */
   const progressButtons = (
     <Group>
+      {startButton()}
       {prevButton()}
       {/* {randomButton()} */}
       {nextButton()}
+      {endButton()}
     </Group>
   );
 
@@ -218,6 +248,7 @@ export default function Configurator({
    */
   const finishedButtons = (
     <Group>
+      {startButton()}
       {prevButton()}
       <Menu shadow="md" width={200} transitionProps={{ transition: 'pop', duration: 200 }}>
         <Menu.Target>
@@ -238,6 +269,7 @@ export default function Configurator({
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>
+      {endButton()}
     </Group>
   );
 
