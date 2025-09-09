@@ -402,7 +402,8 @@ export default function Configurator({
                 value={ageFeild()}
                 onChange={(newAge) => {
                   recordTelemetry("age", newAge);
-                  setDragon((prev) => ({ ...prev, age: Number(newAge) }));
+                  if (newAge == '') setDragon((prev) => ({ ...prev, age: -1 }));
+                  else setDragon((prev) => ({ ...prev, age: Number(newAge) }));
                 }}
               />
               <TextInput
