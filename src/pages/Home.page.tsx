@@ -550,14 +550,19 @@ export function HomePage() {
         opened={welcomeModalOpened}
         onClose={closeWelcomeModal}
         centered
-        withCloseButton={false}
+        withCloseButton={true}
+        title={
+          <Group gap={'sm'} style={{ order: -2 }}>
+            <Image src={icon} h={'42px'} w={'42px'} />
+            <Title order={1}>Flight Forge</Title>
+          </Group>
+        }
         size="100%"
       >
         <Stack>
-          <Title style={{ order: -2 }} order={1}>Welcome to Flight Forge!</Title>
           <Text style={{ order: -2 }}>
             Flight Forge is a web application that allows you to build characters based on Wings of
-            Fire in a step-by-step guided form.
+            Fire. Open or create a dragon to get started!
           </Text>
           <SimpleGrid cols={{ base: 1, sm: 3 }} className='dragon-list'>
             {generateCards()}
@@ -590,16 +595,18 @@ export function HomePage() {
                 setCollection((prev) => ({ ...prev, name: event.currentTarget.value }));
               }}
             />
-            <FileButton onChange={setCollectionFile} accept="application/json">
-              {(props) => (
-                <Button {...props} leftSection={<FontAwesomeIcon icon={faUpload} />}>
-                  Open Collection
-                </Button>
-              )}
-            </FileButton>
-            <Anchor href={dataStr} download={collection.name.concat('.json')} onClick={() => save()}>
-              <Button leftSection={<FontAwesomeIcon icon={faDownload} />}>Save Collection</Button>
-            </Anchor>
+            <Group>
+              <FileButton onChange={setCollectionFile} accept="application/json">
+                {(props) => (
+                  <Button {...props} leftSection={<FontAwesomeIcon icon={faUpload} />}>
+                    {window.innerWidth <= 630 ? "Open" : "Open Collection"}
+                  </Button>
+                )}
+              </FileButton>
+              <Anchor href={dataStr} download={collection.name.concat('.json')} onClick={() => save()}>
+                <Button leftSection={<FontAwesomeIcon icon={faDownload} />}>{window.innerWidth <= 630 ? "Save" : "Save Collection"}</Button>
+              </Anchor>
+            </Group>
           </Flex>
         </Stack>
       </Modal>
