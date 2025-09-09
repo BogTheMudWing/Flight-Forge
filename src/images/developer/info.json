@@ -1,5 +1,5 @@
 {
-    "name": "Debug", 
+    "name": "Developer", 
     "description": "Used during development to test and debug Flight Forge.",
     "pack_version": "1",
     "creators": [
@@ -10,15 +10,6 @@
         }
     ],
     "included_tribes": [
-        "Hive",
-        "Ice",
-        "Leaf",
-        "Mud",
-        "Night",
-        "Rain",
-        "Sand",
-        "Sea",
-        "Silk",
         "Sky"
     ]
 }

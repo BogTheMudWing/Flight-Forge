@@ -2,12 +2,12 @@ import { JSX, useEffect, useState } from 'react';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 /* import all the icons in Free Solid, Free Regular, and Brands styles */
-import { faArrowUpRightFromSquare, faBan, faBars, faBug, faCheck, faCircleInfo, faClone, faCode, faDownload, faEllipsis, faFileExport, faGear, faHome, faPlus, faRotateLeft, fas, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUpRightFromSquare, faBan, faBars, faBug, faCheck, faCircleInfo, faClone, faCode, faDownload, faEllipsis, faFileExport, faGear, faHome, faNewspaper, faPlus, faRotateLeft, fas, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isLeft } from 'fp-ts/lib/Either';
 import * as t from 'io-ts';
 import { PathReporter } from 'io-ts/PathReporter';
-import { ActionIcon, Anchor, AppShell, Button, Card, Center, ColorSwatch, Container, FileButton, Flex, Group, Image, JsonInput, Menu, Modal, Overlay, SegmentedControl, Select, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
+import { ActionIcon, Anchor, AppShell, Button, Card, Center, ColorSwatch, Container, FileButton, Flex, Group, Image, Indicator, JsonInput, Menu, Modal, Overlay, SegmentedControl, Select, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications, Notifications } from '@mantine/notifications';
 import ImagePreview from '@/components/ImagePreview/ImagePreview';
@@ -19,6 +19,9 @@ import icon from '../images/icon.png';
 import Telemetry, { allowTelemetry, denyTelemetry, isTelemetryEnabled, recordTelemetry } from '@/components/Telemetry/Telemetry';
 import './Home.page.css'
 import { exportImage } from '@/components/Exporter/Exporter';
+// Style Info
+import styleInfoDebug from '@/images/debug/info.json';
+import styleInfoDeveloper from '@/images/developer/info.json';
 
 library.add(fas, fab);
 
@@ -29,6 +32,7 @@ export function HomePage() {
   const [jsonModalOpened, { open: openJsonModal, close: closeJsonModal }] = useDisclosure(false);
   const [welcomeModalOpened, { open: openWelcomeModal, close: closeWelcomeModal }] =
     useDisclosure(true);
+  const [updatesModalOpened, { open: openUpdatesModal, close: closeUpdatesModal }] = useDisclosure(false);
   const [aboutModalOpened, { open: openAboutModal, close: closeAboutModal }] = useDisclosure(false);
   const [configuratorPage, setConfiguratorPage] = useState<number>(0);
   const [collectionFile, setCollectionFile] = useState<File | null>(null);
@@ -37,6 +41,22 @@ export function HomePage() {
   const [lastSave, setLastSave] = useState<Date | null>(null);
   const [timeDiff, setTimeDiff] = useState<number | null>(null);
   let dragonIndex = -1;
+  const latestUpdate = 0;
+
+  const seenUpdate = () => {
+    let lastUpdateSeen = 0;
+    const storedLastUpdate = window.localStorage.getItem("lastUpdateSeen");
+    if (storedLastUpdate == null) {
+      setUpdate();
+      return true;
+    }
+    lastUpdateSeen = Number.parseInt(storedLastUpdate);
+    return !(lastUpdateSeen < latestUpdate);
+  }
+
+  function setUpdate() {
+    window.localStorage.setItem("lastUpdateSeen", latestUpdate.toString());
+  }
 
   // Undo on Ctrl + Z
   useEffect(() => {
@@ -206,7 +226,7 @@ export function HomePage() {
     accessories: [],
     creator: '',
     builder: '',
-    style: 'pixel',
+    style: 'devloper',
   };
 
   function save() {
@@ -467,6 +487,30 @@ export function HomePage() {
     notImplemented();
   }
 
+  function openUpdates(): void {
+    setUpdate();
+    openUpdatesModal();
+  }
+
+  const styleAllowedWithCurrentTribes = (style: string) => {
+    let info = null;
+    if (style == 'debug') info = styleInfoDebug;
+    else if (style == 'developer') info = styleInfoDeveloper;
+    if (info == null) return false;
+
+    const includedTribes: string[] = info.included_tribes;
+    let matches = 0;
+    for (let i = 0; i < dragon.tribe.length; i++) {
+      const tribe = dragon.tribe[i];
+      for (let j = 0; j < includedTribes.length; j++) {
+        const element = includedTribes[j];
+        if (tribe == element) matches++;
+      }
+    }
+
+    return (matches == dragon.tribe.length);
+  }
+
   return (
     <>
       <Notifications />
@@ -550,14 +594,19 @@ export function HomePage() {
         opened={welcomeModalOpened}
         onClose={closeWelcomeModal}
         centered
-        withCloseButton={false}
+        withCloseButton={true}
+        title={
+          <Group gap={'sm'} style={{ order: -2 }}>
+            <Image src={icon} h={'42px'} w={'42px'} />
+            <Title order={1}>Flight Forge</Title>
+          </Group>
+        }
         size="100%"
       >
         <Stack>
-          <Title style={{ order: -2 }} order={1}>Welcome to Flight Forge!</Title>
           <Text style={{ order: -2 }}>
             Flight Forge is a web application that allows you to build characters based on Wings of
-            Fire in a step-by-step guided form.
+            Fire. Open or create a dragon to get started!
           </Text>
           <SimpleGrid cols={{ base: 1, sm: 3 }} className='dragon-list'>
             {generateCards()}
@@ -590,16 +639,18 @@ export function HomePage() {
                 setCollection((prev) => ({ ...prev, name: event.currentTarget.value }));
               }}
             />
-            <FileButton onChange={setCollectionFile} accept="application/json">
-              {(props) => (
-                <Button {...props} leftSection={<FontAwesomeIcon icon={faUpload} />}>
-                  Open Collection
-                </Button>
-              )}
-            </FileButton>
-            <Anchor href={dataStr} download={collection.name.concat('.json')} onClick={() => save()}>
-              <Button leftSection={<FontAwesomeIcon icon={faDownload} />}>Save Collection</Button>
-            </Anchor>
+            <Group>
+              <FileButton onChange={setCollectionFile} accept="application/json">
+                {(props) => (
+                  <Button {...props} leftSection={<FontAwesomeIcon icon={faUpload} />}>
+                    {window.innerWidth <= 630 ? "Open" : "Open Collection"}
+                  </Button>
+                )}
+              </FileButton>
+              <Anchor href={dataStr} download={collection.name.concat('.json')} onClick={() => save()}>
+                <Button leftSection={<FontAwesomeIcon icon={faDownload} />}>{window.innerWidth <= 630 ? "Save" : "Save Collection"}</Button>
+              </Anchor>
+            </Group>
           </Flex>
         </Stack>
       </Modal>
@@ -629,6 +680,12 @@ export function HomePage() {
           </Text>
           <Text><Anchor href={import.meta.env.VITE_PRIVACY_POLICY_URL} target="new">Privacy Policy<FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor></Text>
           <Image src="https://blog.macver.org/content/images/size/w1600/2025/06/Wordmark-Color-5.png" />
+        </Stack>
+      </Modal>
+
+      <Modal opened={updatesModalOpened} onClose={closeUpdatesModal} title="Updates" centered>
+        <Stack>
+          <Text>No updates yet.</Text>
         </Stack>
       </Modal>
 
@@ -687,9 +744,11 @@ export function HomePage() {
               </Tooltip>
               <Menu shadow="md" width={200} transitionProps={{ transition: 'pop', duration: 200 }}>
                 <Menu.Target>
-                  <ActionIcon variant="subtle" aria-label="Menu">
-                    <FontAwesomeIcon icon={faBars} />
-                  </ActionIcon>
+                  <Indicator disabled={seenUpdate()}>
+                    <ActionIcon variant="subtle" aria-label="Menu">
+                      <FontAwesomeIcon icon={faBars} />
+                    </ActionIcon>
+                  </Indicator>
                 </Menu.Target>
                 <Menu.Dropdown>
                   <Menu.Label>Editor</Menu.Label>
@@ -720,6 +779,15 @@ export function HomePage() {
                       Report bug
                     </Menu.Item>
                   </Anchor>
+                  <Indicator position='middle-start' disabled={seenUpdate()}>
+                    <Menu.Item
+                      onClick={openUpdates}
+                      leftSection={<FontAwesomeIcon icon={faNewspaper} size="sm" />}
+                    >
+                      Updates
+                    </Menu.Item>
+                  </Indicator>
+
                   <Menu.Item
                     onClick={openAboutModal}
                     leftSection={<FontAwesomeIcon icon={faCircleInfo} size="sm" />}
@@ -740,8 +808,30 @@ export function HomePage() {
               <Stack className='styleControl'>
                 <SegmentedControl
                   data={[
-                    { label: 'Pixel', value: 'pixel' },
-                    { label: 'Debug', value: 'debug' },
+                    {
+                      label: (
+                        <Tooltip
+                          disabled={styleAllowedWithCurrentTribes('developer')}
+                          label={"Only compatible with tribes " + styleInfoDeveloper.included_tribes.toString().replaceAll(',', ', ')}
+                        >
+                          <span>Developer</span>
+                        </Tooltip>
+                      ),
+                      value: 'developer',
+                      disabled: !styleAllowedWithCurrentTribes('developer')
+                    },
+                    {
+                      label: (
+                        <Tooltip
+                          disabled={styleAllowedWithCurrentTribes('debug')}
+                          label={"Only compatible with tribes " + styleInfoDebug.included_tribes.toString().replaceAll(',', ', ')}
+                        >
+                          <span>Debug</span>
+                        </Tooltip>
+                      ),
+                      value: 'debug',
+                      disabled: !styleAllowedWithCurrentTribes('debug')
+                    },
                   ]}
                   value={dragon.style}
                   onChange={(value) => {

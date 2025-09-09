@@ -22,6 +22,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as t from 'io-ts';
 import { JSX } from 'react/jsx-runtime';
 import {
+  ActionIcon,
   Anchor,
   Button,
   Center,
@@ -50,6 +51,12 @@ import { recordTelemetry } from '../Telemetry/Telemetry';
 import { useState } from 'react';
 import './Configurator.css'
 import { GetColorName } from 'hex-color-to-color-name';
+import { names } from '../Random/Random';
+import { notifications } from '@mantine/notifications';
+
+// Style Info
+import styleInfoDebug from '@/images/debug/info.json';
+import styleInfoDeveloper from '@/images/developer/info.json';
 
 library.add(fas);
 
@@ -264,11 +271,11 @@ export default function Configurator({
     setDragon((prev) => ({ ...prev, locations: locations }));
   }
 
-    /**
-   * Create or overwrite a trait for the active dragon.
-   * @param name the name of the trait (i.e. "Intelligence")
-   * @param rating the rating from 0 to 5 (i.e. 3.5)
-   */
+  /**
+ * Create or overwrite a trait for the active dragon.
+ * @param name the name of the trait (i.e. "Intelligence")
+ * @param rating the rating from 0 to 5 (i.e. 3.5)
+ */
   function setTrait(name: string, rating: number) {
     const traits = dragon.traits;
     const sameTrait = traits.find((oldTrait) => oldTrait.name === name);
@@ -332,6 +339,15 @@ export default function Configurator({
     )
   }
 
+  const availableTribes = () => {
+    let info = null;
+    if (dragon.style == 'debug') info = styleInfoDebug;
+    else if (dragon.style == 'developer') info = styleInfoDeveloper;
+    if (info == null) return [];
+
+    return info.included_tribes;
+  }
+
   return (
     <Flex gap="md" direction="column" h="100%" className='configurator'>
       <Stepper
@@ -366,7 +382,7 @@ export default function Configurator({
               label="Tribe"
               description="The tribe(s) of the character"
               placeholder="Select any"
-              data={['Hive', 'Ice', 'Leaf', 'Mud', 'Night', 'Rain', 'Sand', 'Sea', 'Silk', 'Sky']}
+              data={availableTribes()}
               clearable
               searchable
               nothingFoundMessage="Nothing found..."
@@ -522,6 +538,32 @@ export default function Configurator({
                 onChange={(event) => {
                   setDragon((prev) => ({ ...prev, name: event.target.value }));
                 }}
+                rightSection={
+                  <ActionIcon aria-label="Randomize" variant='subtle' color="gray" onClick={() => {
+                    if (dragon.tribe.length != 0) {
+                      let possibleNames: string[] = [];
+                      for (let i = 0; i < dragon.tribe.length; i++) {
+                        const dragonTribe: string = dragon.tribe[i].toLowerCase();
+                        for (let j = 0; j < names.length; j++) {
+                          const element = names[j];
+                          if (element.tribe != dragonTribe) continue;
+                          possibleNames = possibleNames.concat(element.names);
+                        }
+                      }
+                      const index = Math.floor(Math.random() * possibleNames.length);
+                      setDragon((prev) => ({ ...prev, name: possibleNames[index] }));
+                    } else {
+                      notifications.show({
+                        color: 'red',
+                        withBorder: true,
+                        title: 'Could not choose a random name.',
+                        message: 'You need to select a tribe first.',
+                      });
+                    }
+                  }}>
+                    <FontAwesomeIcon icon={faDice} />
+                  </ActionIcon>
+                }
               />
               <TextInput
                 label="Pronouns"
