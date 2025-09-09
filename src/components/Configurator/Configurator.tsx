@@ -19,6 +19,7 @@ import {
   faPalette,
   faPeopleGroup,
   fas,
+  faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as t from 'io-ts';
@@ -28,6 +29,7 @@ import {
   Anchor,
   Button,
   Center,
+  Checkbox,
   ColorInput,
   Fieldset,
   Flex,
@@ -38,10 +40,8 @@ import {
   Rating,
   Select,
   SimpleGrid,
-  Slider,
   Stack,
   Stepper,
-  Switch,
   Text,
   TextInput,
   Title,
@@ -128,6 +128,7 @@ export default function Configurator({
 
   const relationStatus = ['Good', 'Estranged', 'Deceased', 'Lost', 'Unknown'];
   const [newRelationSelectorValue, setNewRelationSelectorValue] = useState<string | null>('');
+  const [sameBuilderCreator, setSameBuilderCreator] = useState(dragon.creator == dragon.builder);
 
   const prevButton = () => {
     if (window.screen.width > 630) {
@@ -380,6 +381,31 @@ export default function Configurator({
     if (info == null) return [];
 
     return info.included_tribes;
+  }
+
+  const trait = (name: string) => {
+    return (
+      <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
+        <Text size="sm" fw="bold">
+          {name}
+        </Text>
+        <Rating
+          fractions={2}
+          value={
+            dragon.traits.find((trait) => trait.name === name)?.rating
+          }
+          onChange={(value) => setTrait(name, value)}
+        />
+        <ActionIcon
+          aria-label='Clear'
+          size={'xs'}
+          variant='transparent'
+          onClick={() => setTrait(name, 0)}
+          disabled={dragon.traits.find((trait) => trait.name === name)?.rating == 0}>
+          <FontAwesomeIcon icon={faXmark} />
+        </ActionIcon>
+      </Flex>
+    )
   }
 
   return (
@@ -740,132 +766,18 @@ export default function Configurator({
             <Text>Tell me what this dragon is like.</Text>
             <Center>
               <SimpleGrid cols={{ base: 1, md: 2 }}>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Intelligence
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={
-                      dragon.traits.find((trait) => trait.name === 'Intelligence')?.rating
-                    }
-                    onChange={(value) => setTrait('Intelligence', value)}
-                  />
-                </Flex>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Perception
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={dragon.traits.find((trait) => trait.name === 'Perception')?.rating}
-                    onChange={(value) => setTrait('Perception', value)}
-                  />
-                </Flex>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Charisma
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={dragon.traits.find((trait) => trait.name === 'Charisma')?.rating}
-                    onChange={(value) => setTrait('Charisma', value)}
-                  />
-                </Flex>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Stealth
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={dragon.traits.find((trait) => trait.name === 'Stealth')?.rating}
-                    onChange={(value) => setTrait('Stealth', value)}
-                  />
-                </Flex>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Speed
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={dragon.traits.find((trait) => trait.name === 'Speed')?.rating}
-                    onChange={(value) => setTrait('Speed', value)}
-                  />
-                </Flex>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Agility
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={dragon.traits.find((trait) => trait.name === 'Agility')?.rating}
-                    onChange={(value) => setTrait('Agility', value)}
-                  />
-                </Flex>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Strength
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={dragon.traits.find((trait) => trait.name === 'Strength')?.rating}
-                    onChange={(value) => setTrait('Strength', value)}
-                  />
-                </Flex>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Leadership
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={dragon.traits.find((trait) => trait.name === 'Leadership')?.rating}
-                    onChange={(value) => setTrait('Leadership', value)}
-                  />
-                </Flex>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Teamwork
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={dragon.traits.find((trait) => trait.name === 'Teamwork')?.rating}
-                    onChange={(value) => setTrait('Teamwork', value)}
-                  />
-                </Flex>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Independence
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={
-                      dragon.traits.find((trait) => trait.name === 'Independence')?.rating
-                    }
-                    onChange={(value) => setTrait('Independence', value)}
-                  />
-                </Flex>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Organization
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={
-                      dragon.traits.find((trait) => trait.name === 'Organization')?.rating
-                    }
-                    onChange={(value) => setTrait('Organization', value)}
-                  />
-                </Flex>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Empathy
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={dragon.traits.find((trait) => trait.name === 'Empathy')?.rating}
-                    onChange={(value) => setTrait('Empathy', value)}
-                  />
-                </Flex>
+                {trait('Intelligence')}
+                {trait('Perception')}
+                {trait('Charisma')}
+                {trait('Stealth')}
+                {trait('Speed')}
+                {trait('Agility')}
+                {trait('Strength')}
+                {trait('Leadership')}
+                {trait('Teamwork')}
+                {trait('Independence')}
+                {trait('Organization')}
+                {trait('Empathy')}
               </SimpleGrid>
             </Center>
           </Stack>
@@ -952,17 +864,22 @@ export default function Configurator({
               <TextInput
                 label="Creator"
                 description="The original creator of this character"
-                defaultValue={dragon.creator}
+                value={dragon.creator}
                 onChange={(event) => {
                   let newCreator: string = '';
                   if (event.currentTarget.value != null) newCreator = event.currentTarget.value;
-                  setDragon((prev) => ({ ...prev, creator: newCreator }));
+                  if (sameBuilderCreator) {
+                    setDragon((prev) => ({ ...prev, builder: newCreator, creator: newCreator }));
+                  } else {
+                    setDragon((prev) => ({ ...prev, creator: newCreator }));
+                  }
                 }}
               />
               <TextInput
                 label="Builder"
                 description="The individual who built this in Flight Forge (YOU)"
-                defaultValue={dragon.builder}
+                disabled={sameBuilderCreator}
+                value={dragon.builder}
                 onChange={(event) => {
                   let newBuilder: string = '';
                   if (event.currentTarget.value != null) newBuilder = event.currentTarget.value;
@@ -970,6 +887,16 @@ export default function Configurator({
                 }}
               />
             </SimpleGrid>
+            <Checkbox
+              checked={sameBuilderCreator}
+              onChange={(event) => {
+                const checked = event.currentTarget.checked;
+                setSameBuilderCreator(checked);
+                if (checked) setDragon((prev) => ({ ...prev, builder: dragon.creator }));
+              }}
+              label="Creator and builder are the same"
+              description="If you both created and built this character, use the same name for both"
+            />
           </Stack>
         </Stepper.Step>
 
