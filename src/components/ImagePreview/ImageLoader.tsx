@@ -20,7 +20,7 @@ const typesMap = [
   'primary', 'secondary', 'underscales', 'spikes', 'membranes', 'eyes'
 ];
 
-const imageModules = import.meta.glob('../../images/**/tribe/**/**/*.webp', {
+const imageModules = import.meta.glob('../../images/**/tribe/**/**/*.png', {
   eager: true,
   import: 'default',
 });
@@ -42,14 +42,14 @@ function buildTribeImages(tribe: string, style: string): TribeImages {
 
     const src = imageModules[path] as string;
 
-    if (path.includes('/eyes.webp')) {
+    if (path.includes('/eyes.png')) {
       tribeImages.eyes?.push({ src, type: 'eyes' });
       continue;
     }
 
     for (const part of parts) {
       if (path.includes(`/${part}/`)) {
-        const type: ImageType = typesMap.find((key) => path.includes(`${key}.webp`)) as ImageType;
+        const type: ImageType = typesMap.find((key) => path.includes(`${key}.png`)) as ImageType;
         if (type) {
           tribeImages[part]?.push({ src, type });
         }
