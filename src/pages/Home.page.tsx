@@ -226,7 +226,7 @@ export function HomePage() {
     accessories: [],
     creator: '',
     builder: '',
-    style: 'devloper',
+    style: 'Debug',
   };
 
   function save() {
