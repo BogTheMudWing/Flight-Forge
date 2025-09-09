@@ -601,7 +601,7 @@ export function HomePage() {
             <Title order={1}>Flight Forge</Title>
           </Group>
         }
-        size="100%"
+        size="xxl"
       >
         <Stack>
           <Text style={{ order: -2 }}>
