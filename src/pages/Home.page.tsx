@@ -226,7 +226,7 @@ export function HomePage() {
     accessories: [],
     creator: '',
     builder: '',
-    style: 'devloper',
+    style: 'Debug',
   };
 
   function save() {
@@ -601,7 +601,7 @@ export function HomePage() {
             <Title order={1}>Flight Forge</Title>
           </Group>
         }
-        size="100%"
+        size="xxl"
       >
         <Stack>
           <Text style={{ order: -2 }}>
@@ -854,6 +854,7 @@ export function HomePage() {
             <Container className='configurator-container'>
               <Configurator
                 dragon={dragon}
+                previewDragon={setDragon}
                 setDragon={setDragonWithHistory}
                 collection={collection}
                 dataStr={dataStr}

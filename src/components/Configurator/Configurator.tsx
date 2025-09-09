@@ -4,12 +4,14 @@ import {
   faArrowLeft,
   faArrowRight,
   faArrowUpRightFromSquare,
+  faBackward,
   faChartPie,
   faCode,
   faDice,
   faDownload,
   faFileExport,
   faFloppyDisk,
+  faForward,
   faGlasses,
   faHeartPulse,
   faInfo,
@@ -17,6 +19,7 @@ import {
   faPalette,
   faPeopleGroup,
   fas,
+  faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as t from 'io-ts';
@@ -26,6 +29,7 @@ import {
   Anchor,
   Button,
   Center,
+  Checkbox,
   ColorInput,
   Fieldset,
   Flex,
@@ -36,10 +40,8 @@ import {
   Rating,
   Select,
   SimpleGrid,
-  Slider,
   Stack,
   Stepper,
-  Switch,
   Text,
   TextInput,
   Title,
@@ -62,6 +64,7 @@ library.add(fas);
 
 type ConfiguratorProps = {
   dragon: t.TypeOf<typeof Dragon>;
+  previewDragon: React.Dispatch<React.SetStateAction<t.TypeOf<typeof Dragon>>>;
   setDragon: React.Dispatch<React.SetStateAction<t.TypeOf<typeof Dragon>>>;
   collection: t.TypeOf<typeof Collection>;
   dataStr: string;
@@ -75,6 +78,7 @@ export default function Configurator({
   dragon,
   collection,
   dataStr,
+  previewDragon,
   setDragon,
   page,
   setPage,
@@ -92,9 +96,35 @@ export default function Configurator({
       elements.push(
         <Fieldset legend={relation.relation}>
           <Stack>
-            <TextInput label="Name" value={relation.name} />
-            <Select label="Status" value={relation.status} data={relationStatus} />
-            <Button color="red" variant="light" onClick={notImplemented}>
+            <TextInput
+              label="Name"
+              value={relation.name}
+              onChange={(event) => {
+                let newRelations = dragon.relations;
+                let newRelation = relation;
+                newRelation.name = event.currentTarget.value;
+                newRelations.splice(newRelations.indexOf(relation), 1, newRelation);
+                setDragon((prev) => ({ ...prev, relations: newRelations }));
+              }}
+            />
+            <Select
+              label="Status"
+              value={relation.status}
+              data={relationStatus}
+              onChange={(value) => {
+                if (value == null) return;
+                let newRelations = dragon.relations;
+                let newRelation = relation;
+                newRelation.status = value;
+                newRelations.splice(newRelations.indexOf(relation), 1, newRelation);
+                setDragon((prev) => ({ ...prev, relations: newRelations }));
+              }}
+            />
+            <Button color="red" variant="light" onClick={() => {
+              let newRelations = dragon.relations;
+              newRelations.splice(newRelations.indexOf(relation), 1);
+              setDragon((prev) => ({ ...prev, relations: newRelations }));
+            }}>
               Delete
             </Button>
           </Stack>
@@ -124,11 +154,13 @@ export default function Configurator({
 
   const relationStatus = ['Good', 'Estranged', 'Deceased', 'Lost', 'Unknown'];
   const [newRelationSelectorValue, setNewRelationSelectorValue] = useState<string | null>('');
+  const [sameBuilderCreator, setSameBuilderCreator] = useState(dragon.creator == dragon.builder);
 
   const prevButton = () => {
     if (window.screen.width > 630) {
       return (
         <Button
+          variant='light'
           onClick={prevStep}
           leftSection={<FontAwesomeIcon icon={faArrowLeft} />}
           disabled={page === 0}
@@ -139,6 +171,7 @@ export default function Configurator({
     }
     return (
       <Button
+        variant='light'
         onClick={prevStep}
         disabled={page === 0}
       >
@@ -151,18 +184,45 @@ export default function Configurator({
     if (window.screen.width > 630) {
       return (
         <Button
+          variant='light'
           onClick={nextStep}
-          leftSection={<FontAwesomeIcon icon={faArrowRight} />}
+          rightSection={<FontAwesomeIcon icon={faArrowRight} />}
         >
           Next
         </Button>
       );
     }
     return (
-      <Button onClick={nextStep}>
+      <Button variant='light' onClick={nextStep}>
         <FontAwesomeIcon icon={faArrowRight} />
       </Button>
     );
+  }
+
+  const startButton = () => {
+    return (
+      <ActionIcon
+        variant='subtle'
+        onClick={() => setPage(0)}
+        disabled={page === 0}
+        aria-label='Go to start'
+      >
+        <FontAwesomeIcon icon={faBackward} />
+      </ActionIcon>
+    )
+  }
+
+  const endButton = () => {
+    return (
+      <ActionIcon
+        variant='subtle'
+        onClick={() => setPage(9)}
+        disabled={page === 9}
+        aria-label='Go to end'
+      >
+        <FontAwesomeIcon icon={faForward} />
+      </ActionIcon>
+    )
   }
 
   // const randomButton = () => {
@@ -188,9 +248,11 @@ export default function Configurator({
    */
   const progressButtons = (
     <Group>
+      {startButton()}
       {prevButton()}
       {/* {randomButton()} */}
       {nextButton()}
+      {endButton()}
     </Group>
   );
 
@@ -216,6 +278,7 @@ export default function Configurator({
    */
   const finishedButtons = (
     <Group>
+      {startButton()}
       {prevButton()}
       <Menu shadow="md" width={200} transitionProps={{ transition: 'pop', duration: 200 }}>
         <Menu.Target>
@@ -236,6 +299,7 @@ export default function Configurator({
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>
+      {endButton()}
     </Group>
   );
 
@@ -327,6 +391,121 @@ export default function Configurator({
     const underscalesColorName: string = GetColorName(dragon.underscalesColor);
     const eyeColorName: string = GetColorName(dragon.eyeColor);
 
+    const relations = () => {
+      const elements: JSX.Element[] = [];
+      if (dragon.relations.length == 0) return elements;
+      elements.push(<Title order={3}>Relations</Title>)
+      const relationElements: JSX.Element[] = [];
+      for (let i = 0; i < dragon.relations.length; i++) {
+        const relation = dragon.relations[i];
+        let beTense = 'is';
+        let haveTense = 'has';
+        if (relation.status == 'Deceased') {
+          beTense = 'was';
+          haveTense = 'had';
+        }
+
+        let statusString = '';
+        if (relation.status == 'Estranged') statusString = `${relation.name} is currently estranged from ${dragon.name}.`
+        else if (relation.status == 'Lost') statusString = `${relation.name} is considered lost.`
+
+        if (relation.name == 'Unknown')
+          relationElements.push(
+            <li>{relation.name} {haveTense} a {relation.relation.toLowerCase()} whose name is not known.</li>
+          );
+        else relationElements.push(
+          <li>{relation.name} {beTense} {dragon.name}'s {relation.relation.toLowerCase()}. {statusString}</li>
+        );
+      }
+      elements.push(<ul style={{margin: 0}}>{relationElements}</ul>);
+      return elements;
+    }
+
+    const locations = () => {
+      const elements: JSX.Element[] = [];
+      if (dragon.locations.length == 0) return elements;
+      elements.push(<Title order={3}>Locations</Title>)
+      
+      const hatchingLocation = dragon.locations.find((location) => (location.identifier == 'Hatching location'));
+      const growingUpLocation = dragon.locations.find((location) => (location.identifier == 'Growing up location'));
+      const homeLocation = dragon.locations.find((location) => (location.identifier == 'Home location'));
+      const currentLocation = dragon.locations.find((location) => (location.identifier == 'Current location'));
+
+      let locationString = '';
+      let nextStart = dragon.name;
+
+      if (hatchingLocation != undefined && hatchingLocation.name != '' && growingUpLocation != undefined && growingUpLocation.name != '') {
+
+        nextStart = `. ${dragon.name}`;
+        if (hatchingLocation.name == growingUpLocation.name)
+          locationString = locationString.concat(`${dragon.name} hatched and grew up at ${hatchingLocation.name}`);
+        else locationString = locationString.concat(`${dragon.name} hatched at ${hatchingLocation.name}, but grew up at ${growingUpLocation.name}`);
+      
+      } else {
+
+        if (hatchingLocation != undefined && hatchingLocation.name != '') {
+          nextStart = ' and';
+          locationString = locationString.concat(`${dragon.name} hatched at ${hatchingLocation.name}`);
+        }
+        else if (growingUpLocation != undefined && growingUpLocation.name != '') {
+          nextStart = ' and';
+          locationString = locationString.concat(`${dragon.name} grew up at ${growingUpLocation.name}`);
+        }
+      }
+
+      if (homeLocation != undefined && homeLocation.name != '' && currentLocation != undefined && currentLocation.name != '') {
+        
+        if (homeLocation.name == currentLocation.name)
+          locationString = locationString.concat(`${nextStart} currently resides at ${homeLocation.name}`);
+        else locationString = locationString.concat(`${nextStart} lives at ${homeLocation.name}, but currently ${dragon.name} is at ${currentLocation.name}`);
+      
+      } else {
+
+        if (homeLocation != undefined && homeLocation.name != '')
+          locationString = locationString.concat(`${nextStart} lives at ${homeLocation.name}`);
+        else if (currentLocation != undefined && currentLocation.name != '')
+          locationString = locationString.concat(`${nextStart} is currently at ${currentLocation.name}`);
+      }
+
+      if (locationString == '') return;
+      locationString = locationString.concat('.')
+
+      elements.push(<Text>{locationString}</Text>);
+      return elements;
+    }
+
+    const traits = () => {
+      const elements: JSX.Element[] = [];
+      if (dragon.traits.length == 0) return elements;
+      elements.push(<Title order={3}>Traits</Title>)
+      
+      let string = `${dragon.name} has`;
+
+      for (let i = 0; i < dragon.traits.length; i++) {
+        const trait = dragon.traits[i];
+        if (trait == undefined || trait.rating == 0) continue;
+
+        let quality = 'impossible';
+        if (trait.rating <= 0.5) quality = 'awful';
+        else if (trait.rating <= 1) quality = 'poor';
+        else if (trait.rating <= 2) quality = 'below-average';
+        else if (trait.rating <= 3) quality = 'average';
+        else if (trait.rating <= 4) quality = 'above-average';
+        else if (trait.rating <= 4.5) quality = 'exceptional';
+        else if (trait.rating <= 5) quality = 'extraordinary';
+
+        if (dragon.traits.length > 1 && i == dragon.traits.length - 1) string = string.concat(' and');
+
+        string = string.concat(` ${quality} ${trait.name.toLowerCase()},`)
+      }
+
+      if (string == `${dragon.name} has`) return;
+      string = string.substring(0, string.length - 1).concat('.')
+
+      elements.push(<Text>{string}</Text>);
+      return elements;
+    }
+
     // Build it!
     return (
       <Stack>
@@ -334,7 +513,9 @@ export default function Configurator({
         <Text>{ageString.concat(gender).concat(tribeString)}</Text>
         <Title order={3}>Appearance</Title>
         <Text>{name} is a {tribeString} with scales the color of {primaryColorName.toLowerCase()} and {secondaryColorName.toLowerCase()}. {name} has underscales are the color of {underscalesColorName.toLowerCase()} and eyes of {eyeColorName.toLowerCase()}.</Text>
-        <Text></Text>
+        {relations()}
+        {locations()}
+        {traits()}
       </Stack>
     )
   }
@@ -346,6 +527,31 @@ export default function Configurator({
     if (info == null) return [];
 
     return info.included_tribes;
+  }
+
+  const trait = (name: string) => {
+    return (
+      <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
+        <Text size="sm" fw="bold">
+          {name}
+        </Text>
+        <Rating
+          fractions={2}
+          value={
+            dragon.traits.find((trait) => trait.name === name)?.rating
+          }
+          onChange={(value) => setTrait(name, value)}
+        />
+        <ActionIcon
+          aria-label='Clear'
+          size={'xs'}
+          variant='transparent'
+          onClick={() => setTrait(name, 0)}
+          disabled={dragon.traits.find((trait) => trait.name === name)?.rating == 0}>
+          <FontAwesomeIcon icon={faXmark} />
+        </ActionIcon>
+      </Flex>
+    )
   }
 
   return (
@@ -402,7 +608,8 @@ export default function Configurator({
                 value={ageFeild()}
                 onChange={(newAge) => {
                   recordTelemetry("age", newAge);
-                  setDragon((prev) => ({ ...prev, age: Number(newAge) }));
+                  if (newAge == '') setDragon((prev) => ({ ...prev, age: -1 }));
+                  else setDragon((prev) => ({ ...prev, age: Number(newAge) }));
                 }}
               />
               <TextInput
@@ -441,6 +648,9 @@ export default function Configurator({
               <ColorInput
                 label="Primary"
                 value={dragon.primaryColor}
+                onChange={(newColor) => {
+                  previewDragon((prev) => ({ ...prev, primaryColor: newColor }));
+                }}
                 onChangeEnd={(newColor) => {
                   setDragon((prev) => ({ ...prev, primaryColor: newColor }));
                 }}
@@ -452,6 +662,9 @@ export default function Configurator({
               <ColorInput
                 label="Secondary"
                 value={dragon.secondaryColor}
+                onChange={(newColor) => {
+                  previewDragon((prev) => ({ ...prev, secondaryColor: newColor }));
+                }}
                 onChangeEnd={(newColor) => {
                   setDragon((prev) => ({ ...prev, secondaryColor: newColor }));
                 }}
@@ -463,6 +676,9 @@ export default function Configurator({
               <ColorInput
                 label="Underscales"
                 value={dragon.underscalesColor}
+                onChange={(newColor) => {
+                  previewDragon((prev) => ({ ...prev, underscalesColor: newColor }));
+                }}
                 onChangeEnd={(newColor) => {
                   setDragon((prev) => ({ ...prev, underscalesColor: newColor }));
                 }}
@@ -477,6 +693,9 @@ export default function Configurator({
               <ColorInput
                 label="Start Color"
                 value={dragon.membraneColor1}
+                onChange={(newColor) => {
+                  previewDragon((prev) => ({ ...prev, membraneColor1: newColor }));
+                }}
                 onChangeEnd={(newColor) => {
                   setDragon((prev) => ({ ...prev, membraneColor1: newColor }));
                 }}
@@ -487,6 +706,9 @@ export default function Configurator({
               <ColorInput
                 label="End Color"
                 value={dragon.membraneColor2}
+                onChange={(newColor) => {
+                  previewDragon((prev) => ({ ...prev, membraneColor2: newColor }));
+                }}
                 onChangeEnd={(newColor) => {
                   setDragon((prev) => ({ ...prev, membraneColor2: newColor }));
                 }}
@@ -500,6 +722,9 @@ export default function Configurator({
               <ColorInput
                 label="Eyes"
                 value={dragon.eyeColor}
+                onChange={(newColor) => {
+                  previewDragon((prev) => ({ ...prev, eyeColor: newColor }));
+                }}
                 onChangeEnd={(newColor) => {
                   setDragon((prev) => ({ ...prev, eyeColor: newColor }));
                 }}
@@ -511,6 +736,9 @@ export default function Configurator({
               <ColorInput
                 label="Spikes"
                 value={dragon.spikesColor}
+                onChange={(newColor) => {
+                  previewDragon((prev) => ({ ...prev, spikesColor: newColor }));
+                }}
                 onChangeEnd={(newColor) => {
                   setDragon((prev) => ({ ...prev, spikesColor: newColor }));
                 }}
@@ -684,132 +912,18 @@ export default function Configurator({
             <Text>Tell me what this dragon is like.</Text>
             <Center>
               <SimpleGrid cols={{ base: 1, md: 2 }}>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Intelligence
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={
-                      dragon.traits.find((trait) => trait.name === 'Intelligence')?.rating
-                    }
-                    onChange={(value) => setTrait('Intelligence', value)}
-                  />
-                </Flex>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Perception
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={dragon.traits.find((trait) => trait.name === 'Perception')?.rating}
-                    onChange={(value) => setTrait('Perception', value)}
-                  />
-                </Flex>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Charisma
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={dragon.traits.find((trait) => trait.name === 'Charisma')?.rating}
-                    onChange={(value) => setTrait('Charisma', value)}
-                  />
-                </Flex>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Stealth
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={dragon.traits.find((trait) => trait.name === 'Stealth')?.rating}
-                    onChange={(value) => setTrait('Stealth', value)}
-                  />
-                </Flex>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Speed
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={dragon.traits.find((trait) => trait.name === 'Speed')?.rating}
-                    onChange={(value) => setTrait('Speed', value)}
-                  />
-                </Flex>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Agility
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={dragon.traits.find((trait) => trait.name === 'Agility')?.rating}
-                    onChange={(value) => setTrait('Agility', value)}
-                  />
-                </Flex>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Strength
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={dragon.traits.find((trait) => trait.name === 'Strength')?.rating}
-                    onChange={(value) => setTrait('Strength', value)}
-                  />
-                </Flex>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Leadership
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={dragon.traits.find((trait) => trait.name === 'Leadership')?.rating}
-                    onChange={(value) => setTrait('Leadership', value)}
-                  />
-                </Flex>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Teamwork
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={dragon.traits.find((trait) => trait.name === 'Teamwork')?.rating}
-                    onChange={(value) => setTrait('Teamwork', value)}
-                  />
-                </Flex>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Independence
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={
-                      dragon.traits.find((trait) => trait.name === 'Independence')?.rating
-                    }
-                    onChange={(value) => setTrait('Independence', value)}
-                  />
-                </Flex>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Organization
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={
-                      dragon.traits.find((trait) => trait.name === 'Organization')?.rating
-                    }
-                    onChange={(value) => setTrait('Organization', value)}
-                  />
-                </Flex>
-                <Flex gap="md" justify="flex-end" align="flex-end" direction="row" wrap="nowrap">
-                  <Text size="sm" fw="bold">
-                    Empathy
-                  </Text>
-                  <Rating
-                    fractions={2}
-                    defaultValue={dragon.traits.find((trait) => trait.name === 'Empathy')?.rating}
-                    onChange={(value) => setTrait('Empathy', value)}
-                  />
-                </Flex>
+                {trait('Intelligence')}
+                {trait('Perception')}
+                {trait('Charisma')}
+                {trait('Stealth')}
+                {trait('Speed')}
+                {trait('Agility')}
+                {trait('Strength')}
+                {trait('Leadership')}
+                {trait('Teamwork')}
+                {trait('Independence')}
+                {trait('Organization')}
+                {trait('Empathy')}
               </SimpleGrid>
             </Center>
           </Stack>
@@ -896,17 +1010,22 @@ export default function Configurator({
               <TextInput
                 label="Creator"
                 description="The original creator of this character"
-                defaultValue={dragon.creator}
+                value={dragon.creator}
                 onChange={(event) => {
                   let newCreator: string = '';
                   if (event.currentTarget.value != null) newCreator = event.currentTarget.value;
-                  setDragon((prev) => ({ ...prev, creator: newCreator }));
+                  if (sameBuilderCreator) {
+                    setDragon((prev) => ({ ...prev, builder: newCreator, creator: newCreator }));
+                  } else {
+                    setDragon((prev) => ({ ...prev, creator: newCreator }));
+                  }
                 }}
               />
               <TextInput
                 label="Builder"
                 description="The individual who built this in Flight Forge (YOU)"
-                defaultValue={dragon.builder}
+                disabled={sameBuilderCreator}
+                value={dragon.builder}
                 onChange={(event) => {
                   let newBuilder: string = '';
                   if (event.currentTarget.value != null) newBuilder = event.currentTarget.value;
@@ -914,6 +1033,16 @@ export default function Configurator({
                 }}
               />
             </SimpleGrid>
+            <Checkbox
+              checked={sameBuilderCreator}
+              onChange={(event) => {
+                const checked = event.currentTarget.checked;
+                setSameBuilderCreator(checked);
+                if (checked) setDragon((prev) => ({ ...prev, builder: dragon.creator }));
+              }}
+              label="Creator and builder are the same"
+              description="If you both created and built this character, use the same name for both"
+            />
           </Stack>
         </Stepper.Step>
 
