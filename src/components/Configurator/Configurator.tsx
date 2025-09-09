@@ -391,6 +391,121 @@ export default function Configurator({
     const underscalesColorName: string = GetColorName(dragon.underscalesColor);
     const eyeColorName: string = GetColorName(dragon.eyeColor);
 
+    const relations = () => {
+      const elements: JSX.Element[] = [];
+      if (dragon.relations.length == 0) return elements;
+      elements.push(<Title order={3}>Relations</Title>)
+      const relationElements: JSX.Element[] = [];
+      for (let i = 0; i < dragon.relations.length; i++) {
+        const relation = dragon.relations[i];
+        let beTense = 'is';
+        let haveTense = 'has';
+        if (relation.status == 'Deceased') {
+          beTense = 'was';
+          haveTense = 'had';
+        }
+
+        let statusString = '';
+        if (relation.status == 'Estranged') statusString = `${relation.name} is currently estranged from ${dragon.name}.`
+        else if (relation.status == 'Lost') statusString = `${relation.name} is considered lost.`
+
+        if (relation.name == 'Unknown')
+          relationElements.push(
+            <li>{relation.name} {haveTense} a {relation.relation.toLowerCase()} whose name is not known.</li>
+          );
+        else relationElements.push(
+          <li>{relation.name} {beTense} {dragon.name}'s {relation.relation.toLowerCase()}. {statusString}</li>
+        );
+      }
+      elements.push(<ul style={{margin: 0}}>{relationElements}</ul>);
+      return elements;
+    }
+
+    const locations = () => {
+      const elements: JSX.Element[] = [];
+      if (dragon.locations.length == 0) return elements;
+      elements.push(<Title order={3}>Locations</Title>)
+      
+      const hatchingLocation = dragon.locations.find((location) => (location.identifier == 'Hatching location'));
+      const growingUpLocation = dragon.locations.find((location) => (location.identifier == 'Growing up location'));
+      const homeLocation = dragon.locations.find((location) => (location.identifier == 'Home location'));
+      const currentLocation = dragon.locations.find((location) => (location.identifier == 'Current location'));
+
+      let locationString = '';
+      let nextStart = dragon.name;
+
+      if (hatchingLocation != undefined && hatchingLocation.name != '' && growingUpLocation != undefined && growingUpLocation.name != '') {
+
+        nextStart = `. ${dragon.name}`;
+        if (hatchingLocation.name == growingUpLocation.name)
+          locationString = locationString.concat(`${dragon.name} hatched and grew up at ${hatchingLocation.name}`);
+        else locationString = locationString.concat(`${dragon.name} hatched at ${hatchingLocation.name}, but grew up at ${growingUpLocation.name}`);
+      
+      } else {
+
+        if (hatchingLocation != undefined && hatchingLocation.name != '') {
+          nextStart = ' and';
+          locationString = locationString.concat(`${dragon.name} hatched at ${hatchingLocation.name}`);
+        }
+        else if (growingUpLocation != undefined && growingUpLocation.name != '') {
+          nextStart = ' and';
+          locationString = locationString.concat(`${dragon.name} grew up at ${growingUpLocation.name}`);
+        }
+      }
+
+      if (homeLocation != undefined && homeLocation.name != '' && currentLocation != undefined && currentLocation.name != '') {
+        
+        if (homeLocation.name == currentLocation.name)
+          locationString = locationString.concat(`${nextStart} currently resides at ${homeLocation.name}`);
+        else locationString = locationString.concat(`${nextStart} lives at ${homeLocation.name}, but currently ${dragon.name} is at ${currentLocation.name}`);
+      
+      } else {
+
+        if (homeLocation != undefined && homeLocation.name != '')
+          locationString = locationString.concat(`${nextStart} lives at ${homeLocation.name}`);
+        else if (currentLocation != undefined && currentLocation.name != '')
+          locationString = locationString.concat(`${nextStart} is currently at ${currentLocation.name}`);
+      }
+
+      if (locationString == '') return;
+      locationString = locationString.concat('.')
+
+      elements.push(<Text>{locationString}</Text>);
+      return elements;
+    }
+
+    const traits = () => {
+      const elements: JSX.Element[] = [];
+      if (dragon.traits.length == 0) return elements;
+      elements.push(<Title order={3}>Traits</Title>)
+      
+      let string = `${dragon.name} has`;
+
+      for (let i = 0; i < dragon.traits.length; i++) {
+        const trait = dragon.traits[i];
+        if (trait == undefined || trait.rating == 0) continue;
+
+        let quality = 'impossible';
+        if (trait.rating <= 0.5) quality = 'awful';
+        else if (trait.rating <= 1) quality = 'poor';
+        else if (trait.rating <= 2) quality = 'below-average';
+        else if (trait.rating <= 3) quality = 'average';
+        else if (trait.rating <= 4) quality = 'above-average';
+        else if (trait.rating <= 4.5) quality = 'exceptional';
+        else if (trait.rating <= 5) quality = 'extraordinary';
+
+        if (dragon.traits.length > 1 && i == dragon.traits.length - 1) string = string.concat(' and');
+
+        string = string.concat(` ${quality} ${trait.name.toLowerCase()},`)
+      }
+
+      if (string == `${dragon.name} has`) return;
+      string = string.substring(0, string.length - 1).concat('.')
+
+      elements.push(<Text>{string}</Text>);
+      return elements;
+    }
+
     // Build it!
     return (
       <Stack>
@@ -398,7 +513,9 @@ export default function Configurator({
         <Text>{ageString.concat(gender).concat(tribeString)}</Text>
         <Title order={3}>Appearance</Title>
         <Text>{name} is a {tribeString} with scales the color of {primaryColorName.toLowerCase()} and {secondaryColorName.toLowerCase()}. {name} has underscales are the color of {underscalesColorName.toLowerCase()} and eyes of {eyeColorName.toLowerCase()}.</Text>
-        <Text></Text>
+        {relations()}
+        {locations()}
+        {traits()}
       </Stack>
     )
   }
