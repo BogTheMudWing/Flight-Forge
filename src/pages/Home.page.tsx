@@ -14,7 +14,7 @@ import ImagePreview from '@/components/ImagePreview/ImagePreview';
 import notImplemented, { myJoin } from '../components/AppUtils/AppUtils';
 import { Collection, defaultCollection } from '../components/Collection/Collection';
 import Configurator from '../components/Configurator/Configurator';
-import { defaultDragon1, Dragon } from '../components/Dragon/Dragon';
+import { defaultDragon, Dragon } from '../components/Dragon/Dragon';
 import icon from '../images/icon.png';
 import Telemetry, { allowTelemetry, denyTelemetry, isTelemetryEnabled, recordTelemetry } from '@/components/Telemetry/Telemetry';
 import './Home.page.css'
@@ -207,22 +207,6 @@ export function HomePage() {
     health: '',
     occupation: '',
     size: 50,
-    injuries: {
-      leftArm: false,
-      rightArm: false,
-      leftLeg: false,
-      rightLeg: false,
-      leftWing: false,
-      rightWing: false,
-      leftEye: false,
-      rightEye: false,
-      leftHorn: false,
-      rightHorn: false,
-      rigthEar: false,
-      leftEar: false,
-      rightEar: false,
-      tail: false,
-    },
     accessories: [],
     creator: '',
     builder: '',
@@ -235,7 +219,7 @@ export function HomePage() {
   }
 
   // setDragon should not be used directly. setHistory should be used instead, which allows the undo function.
-  const [dragon, setDragon] = useState<t.TypeOf<typeof Dragon>>(defaultDragon1);
+  const [dragon, setDragon] = useState<t.TypeOf<typeof Dragon>>(defaultDragon);
   const [history, setHistory] = useState<t.TypeOf<typeof Dragon>[]>([]);
 
   /**
