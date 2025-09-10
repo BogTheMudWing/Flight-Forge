@@ -1008,6 +1008,7 @@ export default function Configurator({
                   'Brother',
                   'Friend',
                   'Mentor',
+                  'Partner',
                   'Ex-partner',
                   'Dragonet',
                 ]}
