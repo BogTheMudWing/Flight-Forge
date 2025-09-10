@@ -744,7 +744,7 @@ export default function Configurator({
             </Group>
             <Stack style={dragon.tribe.length > 1 ? { display: 'block' } : { display: 'none' }}>
               <Text>Choose which body parts to use.</Text>
-              <SimpleGrid cols={2}>
+              <SimpleGrid cols={3}>
                 <Select
                   label="Head"
                   data={dragon.tribe}
