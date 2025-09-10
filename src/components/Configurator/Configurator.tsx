@@ -1154,7 +1154,7 @@ export default function Configurator({
         >
           <Stack>
             <Title order={2}>Traits</Title>
-            <Text>Tell me what this dragon is like.</Text>
+            <Text>How does this dragon behave?</Text>
             <Center>
               <SimpleGrid cols={{ base: 1, md: 2 }}>
                 {trait('Intelligence')}
