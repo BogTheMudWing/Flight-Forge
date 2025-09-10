@@ -877,9 +877,6 @@ export function HomePage() {
                   {/* This only appears on desktop */}
                   <Group>
                     <Anchor href='https://code.macver.org/Bog/Flight-Forge/src/branch/main/docs/ARTWORK.md' target='new'><Text size='sm' c="dimmed">Interested in creating a style pack? <FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Text></Anchor>
-                    <FileButton onChange={uploadStylePack} accept="application/zip">
-                      {(props) => <ActionIcon {...props} variant='subtle' c='dimmed'><FontAwesomeIcon icon={faUpload} /></ActionIcon>}
-                    </FileButton>
                   </Group>
                 </Center>
               </Stack>
