@@ -50,6 +50,7 @@ import {
   Text,
   TextInput,
   Title,
+  Tooltip,
 } from '@mantine/core';
 import notImplemented, { myJoin } from '../AppUtils/AppUtils';
 import { Collection } from '../Collection/Collection';
@@ -1007,6 +1008,8 @@ export default function Configurator({
                   'Brother',
                   'Friend',
                   'Mentor',
+                  'Employer',
+                  'Partner',
                   'Ex-partner',
                   'Dragonet',
                 ]}
@@ -1014,7 +1017,7 @@ export default function Configurator({
                 onChange={setNewRelationSelectorValue}
                 searchable
               />
-              <Button onClick={addRelation}>Add</Button>
+              <Button leftSection={<FontAwesomeIcon icon={faPlus} />} onClick={addRelation}>Add</Button>
             </Flex>
 
             <SimpleGrid cols={2}>{relations()}</SimpleGrid>
@@ -1128,9 +1131,18 @@ export default function Configurator({
             <hr style={{ width: '100%' }} />
             {customLocations()}
             <Center>
-              <ActionIcon onClick={() => addLocation()}>
-                <FontAwesomeIcon icon={faPlus} />
-              </ActionIcon>
+              <Tooltip
+                label='You need to set type for the empty location before adding more.'
+                disabled={dragon.locations.at(-1)?.identifier != ''}
+              >
+                <Button
+                  disabled={dragon.locations.at(-1)?.identifier == ''}
+                  onClick={() => addLocation()}
+                  leftSection={<FontAwesomeIcon icon={faPlus} />}
+                >
+                  Add
+                </Button>
+              </Tooltip>
             </Center>
           </Stack>
         </Stepper.Step>
@@ -1142,7 +1154,7 @@ export default function Configurator({
         >
           <Stack>
             <Title order={2}>Traits</Title>
-            <Text>Tell me what this dragon is like.</Text>
+            <Text>How does this dragon behave?</Text>
             <Center>
               <SimpleGrid cols={{ base: 1, md: 2 }}>
                 {trait('Intelligence')}
