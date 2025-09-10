@@ -25,7 +25,7 @@ If you want to contribute, please feel free to open a pull request!
   - [x] Night
   - [x] Rain
   - [x] Sand
-  - [ ] Sea
+  - [x] Sea
   - [ ] Silk
   - [x] Sky
 - [ ] Accessories
