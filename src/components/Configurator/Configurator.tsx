@@ -50,6 +50,7 @@ import {
   Text,
   TextInput,
   Title,
+  Tooltip,
 } from '@mantine/core';
 import notImplemented, { myJoin } from '../AppUtils/AppUtils';
 import { Collection } from '../Collection/Collection';
@@ -1128,9 +1129,18 @@ export default function Configurator({
             <hr style={{ width: '100%' }} />
             {customLocations()}
             <Center>
-              <ActionIcon onClick={() => addLocation()}>
-                <FontAwesomeIcon icon={faPlus} />
-              </ActionIcon>
+              <Tooltip
+                label='You need to set type for the empty location before adding more.'
+                disabled={dragon.locations.at(-1)?.identifier != ''}
+              >
+                <Button
+                  disabled={dragon.locations.at(-1)?.identifier == ''}
+                  onClick={() => addLocation()}
+                  leftSection={<FontAwesomeIcon icon={faPlus} />}
+                >
+                  Add
+                </Button>
+              </Tooltip>
             </Center>
           </Stack>
         </Stepper.Step>
