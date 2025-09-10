@@ -21,7 +21,7 @@ If you want to contribute, please feel free to open a pull request!
   - [ ] Hive
   - [x] Ice
   - [ ] Leaf
-  - [ ] Mud
+  - [x] Mud
   - [ ] Night
   - [ ] Rain
   - [ ] Sand
