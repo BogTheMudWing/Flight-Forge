@@ -42,7 +42,6 @@ If you want to contribute, please feel free to open a pull request!
 - [ ] Local style pack uploading
 - [ ] Body part selection for hybrids
 - [ ] Accurate hue shifting
-- [ ] Share via URL
 - [ ] Credits modal
 
 ## Run it Locally
