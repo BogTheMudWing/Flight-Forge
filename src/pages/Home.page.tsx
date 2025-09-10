@@ -41,7 +41,7 @@ export function HomePage() {
   const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(collection, null, 2))}`;
   const [lastSave, setLastSave] = useState<Date | null>(null);
   const [timeDiff, setTimeDiff] = useState<number | null>(null);
-  let dragonIndex = -1;
+  const [dragonIndex, setDragonIndex] = useState<number>(0);
   const latestUpdate = 0;
 
   const seenUpdate = () => {
@@ -70,9 +70,15 @@ export function HomePage() {
 
     // Add listener
     window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
+
+    const beforeUnload = (event: BeforeUnloadEvent) => {
+      if (navigator.userActivation.hasBeenActive) {
+        event.preventDefault();
+      }
+    }
+
+    window.addEventListener("beforeunload", beforeUnload);
+    
   }, []);
 
   // Read and parse collectionFile
@@ -111,7 +117,7 @@ export function HomePage() {
               .concat(decodedCollection.dragons.length.toString())
               .concat(' dragons.'),
           });
-          dragonIndex = 0;
+          setDragonIndex(0);
           setDragon(decodedCollection.dragons[0]);
         }
       };
@@ -278,6 +284,7 @@ export function HomePage() {
     const newCollection = collection;
     newCollection.dragons.push(emptyDragon);
     setCollection(newCollection);
+    setDragonIndex(newCollection.dragons.indexOf(emptyDragon));
     setConfiguratorPage(0);
   }
 
@@ -302,8 +309,8 @@ export function HomePage() {
    * @param dragonToLoad the dragon to load as the active dragon
    */
   function loadDragon(dragonToLoad: t.TypeOf<typeof Dragon>): void {
-    dragonIndex = collection.dragons.indexOf(dragonToLoad);
-    setDragonWithHistory(dragonToLoad);
+    setDragonIndex(collection.dragons.indexOf(dragonToLoad));
+    setDragon(dragonToLoad);
     closeWelcomeModal();
   }
 
