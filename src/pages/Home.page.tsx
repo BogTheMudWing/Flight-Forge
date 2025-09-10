@@ -70,9 +70,15 @@ export function HomePage() {
 
     // Add listener
     window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
+
+    const beforeUnload = (event: BeforeUnloadEvent) => {
+      if (navigator.userActivation.hasBeenActive) {
+        event.preventDefault();
+      }
+    }
+
+    window.addEventListener("beforeunload", beforeUnload);
+    
   }, []);
 
   // Read and parse collectionFile
