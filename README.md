@@ -22,7 +22,7 @@ If you want to contribute, please feel free to open a pull request!
   - [x] Ice
   - [ ] Leaf
   - [x] Mud
-  - [ ] Night
+  - [x] Night
   - [ ] Rain
   - [ ] Sand
   - [ ] Sea
