@@ -40,9 +40,9 @@ If you want to contribute, please feel free to open a pull request!
   - [ ] Crown
   - [ ] Bag
 - [ ] Local style pack uploading
-- [ ] Body part selection for hybrids
+- [x] Body part selection for hybrids
 - [ ] Accurate hue shifting
-- [ ] Credits modal
+- [x] Credits modal
 
 ## Run it Locally
 
