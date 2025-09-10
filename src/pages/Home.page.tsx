@@ -2,12 +2,12 @@ import { JSX, useEffect, useState } from 'react';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 /* import all the icons in Free Solid, Free Regular, and Brands styles */
-import { faArrowUpRightFromSquare, faBan, faBars, faBug, faCheck, faCircleInfo, faClone, faCode, faDownload, faEllipsis, faFileExport, faGear, faHome, faNewspaper, faPlus, faRotateLeft, fas, faTrash, faUpload } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUpRightFromSquare, faBan, faBars, faBug, faCheck, faCircleInfo, faClone, faCode, faDownload, faEllipsis, faFileExport, faGear, faHome, faNewspaper, faPlus, faRotateLeft, fas, faTrash, faUpload, faUsersRectangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isLeft } from 'fp-ts/lib/Either';
 import * as t from 'io-ts';
 import { PathReporter } from 'io-ts/PathReporter';
-import { ActionIcon, Anchor, AppShell, Button, Card, Center, ColorSwatch, Container, FileButton, Flex, Group, Image, Indicator, JsonInput, Menu, Modal, Overlay, SegmentedControl, Select, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
+import { ActionIcon, Anchor, AppShell, Avatar, Button, Card, Center, ColorSwatch, Container, FileButton, Flex, Group, Image, Indicator, JsonInput, Menu, Modal, Overlay, SegmentedControl, Select, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications, Notifications } from '@mantine/notifications';
 import ImagePreview from '@/components/ImagePreview/ImagePreview';
@@ -34,6 +34,7 @@ export function HomePage() {
     useDisclosure(true);
   const [updatesModalOpened, { open: openUpdatesModal, close: closeUpdatesModal }] = useDisclosure(false);
   const [aboutModalOpened, { open: openAboutModal, close: closeAboutModal }] = useDisclosure(false);
+  const [creditsModalOpened, { open: openCreditsModal, close: closeCreditsModal }] = useDisclosure(false);
   const [configuratorPage, setConfiguratorPage] = useState<number>(0);
   const [collectionFile, setCollectionFile] = useState<File | null>(null);
   const [collection, setCollection] = useState<t.TypeOf<typeof Collection>>(defaultCollection);
@@ -210,7 +211,7 @@ export function HomePage() {
     accessories: [],
     creator: '',
     builder: '',
-    style: 'Debug',
+    style: 'developer',
   };
 
   function save() {
@@ -495,6 +496,30 @@ export function HomePage() {
     return (matches == dragon.tribe.length);
   }
 
+  function stylePackCredits(styleInfo: typeof styleInfoDebug) {
+    const elements = [];
+    elements.push(<Title order={3}>{styleInfo.name}</Title>)
+    elements.push(<Text>{styleInfo.description}</Text>)
+
+    const creatorElements = [];
+    for (let i = 0; i < styleInfo.creators.length; i++) {
+      const creator = styleInfo.creators[i];
+      creatorElements.push(
+        <Group>
+          <Avatar src={creator.image_url} />
+          <Stack gap={0}>
+            <Text fw={'bold'}>{creator.name}</Text>
+            <Anchor href={creator.link} target='new'>
+              <Text>{creator.link} <FontAwesomeIcon icon={faArrowUpRightFromSquare} /></Text>
+            </Anchor>
+          </Stack>
+        </Group>
+      )
+    }
+    elements.push(creatorElements);
+    return elements;
+  }
+
   return (
     <>
       <Notifications />
@@ -667,6 +692,18 @@ export function HomePage() {
         </Stack>
       </Modal>
 
+      <Modal opened={creditsModalOpened} onClose={closeCreditsModal} title="Credits" centered>
+        <Stack>
+          <Title order={2}>App</Title>
+          <Text>
+            Built by <Anchor href="https://blog.macver.org/about-me" target='new'>Bog The MudWing <FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor>.
+          </Text>
+          <Title order={2}>Style Packs</Title>
+          {stylePackCredits(styleInfoDebug)}
+          {stylePackCredits(styleInfoDeveloper)}
+        </Stack>
+      </Modal>
+
       <Modal opened={updatesModalOpened} onClose={closeUpdatesModal} title="Updates" centered>
         <Stack>
           <Text>No updates yet.</Text>
@@ -771,7 +808,12 @@ export function HomePage() {
                       Updates
                     </Menu.Item>
                   </Indicator>
-
+                  <Menu.Item
+                    onClick={openCreditsModal}
+                    leftSection={<FontAwesomeIcon icon={faUsersRectangle} size="sm" />}
+                  >
+                    Credits
+                  </Menu.Item>
                   <Menu.Item
                     onClick={openAboutModal}
                     leftSection={<FontAwesomeIcon icon={faCircleInfo} size="sm" />}

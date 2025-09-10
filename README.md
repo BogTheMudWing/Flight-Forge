@@ -21,7 +21,7 @@ If you want to contribute, please feel free to open a pull request!
   - [ ] Hive
   - [x] Ice
   - [ ] Leaf
-  - [ ] Mud
+  - [x] Mud
   - [ ] Night
   - [ ] Rain
   - [ ] Sand
@@ -40,10 +40,9 @@ If you want to contribute, please feel free to open a pull request!
   - [ ] Crown
   - [ ] Bag
 - [ ] Local style pack uploading
-- [ ] Body part selection for hybrids
+- [x] Body part selection for hybrids
 - [ ] Accurate hue shifting
-- [ ] Share via URL
-- [ ] Credits modal
+- [x] Credits modal
 
 ## Run it Locally
 

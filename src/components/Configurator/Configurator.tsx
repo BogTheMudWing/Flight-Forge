@@ -18,7 +18,9 @@ import {
   faLocationDot,
   faPalette,
   faPeopleGroup,
+  faPlus,
   fas,
+  faTrash,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -27,10 +29,12 @@ import { JSX } from 'react/jsx-runtime';
 import {
   ActionIcon,
   Anchor,
+  Autocomplete,
   Button,
   Center,
   Checkbox,
   ColorInput,
+  Container,
   Fieldset,
   Flex,
   Group,
@@ -54,7 +58,7 @@ import { recordTelemetry } from '../Telemetry/Telemetry';
 import { useEffect, useState } from 'react';
 import './Configurator.css'
 import { GetColorName } from 'hex-color-to-color-name';
-import { names } from '../Random/Random';
+import { locations, names } from '../Random/Random';
 import { notifications } from '@mantine/notifications';
 
 // Style Info
@@ -181,17 +185,17 @@ export default function Configurator({
           checked={dragonHasAccessory(element)}
           onChange={(event) => {
             let newAccessories = dragon.accessories;
-            let accessory = newAccessories.find((accessory) => {(accessory.file == element.image)});
+            let accessory = newAccessories.find((accessory) => { (accessory.file == element.image) });
 
             if (event.currentTarget.value) {
               // if enabled, set the accessory and add it
-              accessory = {file: element.image, name: element.name, color: '#ffffff'};
+              accessory = { file: element.image, name: element.name, color: '#ffffff' };
               newAccessories.push(accessory);
             } else if (accessory != undefined) {
               // if disabled, remove it from the list
               newAccessories.splice(newAccessories.indexOf(accessory), 1);
-              setDragon((prev) => ({...prev, accessories: newAccessories}));
-            } 
+              setDragon((prev) => ({ ...prev, accessories: newAccessories }));
+            }
           }}
           label={element.name}
         />
@@ -373,6 +377,84 @@ export default function Configurator({
     setDragon((prev) => ({ ...prev, locations: locations }));
   }
 
+  const addLocation = () => {
+    setLocation('', '');
+  }
+
+  const customLocations = () => {
+    const knownLocations = [
+      'Hatching location',
+      'Growing up location',
+      'Home location',
+      'Current location'
+    ]
+    const elements: JSX.Element[] = [];
+    for (let i = 0; i < dragon.locations.length; i++) {
+      const location = dragon.locations[i];
+      if (knownLocations.includes(location.identifier)) continue;
+      elements.push(
+        <Group align='flex-end'>
+          <Group grow flex={1}>
+            <TextInput
+              label='Type'
+              value={location.identifier}
+              onChange={(event) => {
+                const index = dragon.locations.indexOf(location);
+                let newLocation = location;
+                newLocation.identifier = event.currentTarget.value;
+                const newLocationList = dragon.locations;
+                newLocationList.splice(index, 1, newLocation)
+                setLocation(event.currentTarget.value, location.name)
+              }}
+              placeholder='You can write anything here'
+            />
+            <Autocomplete
+              label="Name"
+              placeholder="You can write anything here"
+              value={location.name}
+              data={locations}
+              onChange={(value) => { setLocation(location.identifier, value); }}
+              rightSection={
+                <ActionIcon
+                  aria-label="Randomize"
+                  variant='subtle'
+                  color="gray"
+                  onClick={() => {
+                    const index = Math.floor(Math.random() * locations.length);
+                    setLocation(location.identifier, locations[index]);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faDice} />
+                </ActionIcon>
+              }
+            />
+          </Group>
+          <Group>
+            <ActionIcon variant='outline' size={'lg'} onClick={(event) => {
+              const newLocations = dragon.locations;
+              const i = newLocations.indexOf(location);
+              if (i == -1) {
+                notifications.show({
+                  color: 'red',
+                  withBorder: true,
+                  title: 'Could not delete the location.',
+                  message: 'That location does not exist.',
+                });
+                return;
+              }
+              newLocations.splice(i, 1);
+              setDragon((prev) => ({ ...prev, locations: newLocations }));
+            }}
+            >
+              <FontAwesomeIcon icon={faTrash} />
+            </ActionIcon>
+          </Group>
+        </Group>
+      )
+    }
+    return elements;
+  }
+
   /**
  * Create or overwrite a trait for the active dragon.
  * @param name the name of the trait (i.e. "Intelligence")
@@ -455,7 +537,7 @@ export default function Configurator({
           <li>{relation.name} {beTense} {dragon.name}'s {relation.relation.toLowerCase()}. {statusString}</li>
         );
       }
-      elements.push(<ul style={{margin: 0}}>{relationElements}</ul>);
+      elements.push(<ul style={{ margin: 0 }}>{relationElements}</ul>);
       return elements;
     }
 
@@ -463,7 +545,7 @@ export default function Configurator({
       const elements: JSX.Element[] = [];
       if (dragon.locations.length == 0) return elements;
       elements.push(<Title order={3}>Locations</Title>)
-      
+
       const hatchingLocation = dragon.locations.find((location) => (location.identifier == 'Hatching location'));
       const growingUpLocation = dragon.locations.find((location) => (location.identifier == 'Growing up location'));
       const homeLocation = dragon.locations.find((location) => (location.identifier == 'Home location'));
@@ -478,7 +560,7 @@ export default function Configurator({
         if (hatchingLocation.name == growingUpLocation.name)
           locationString = locationString.concat(`${dragon.name} hatched and grew up at ${hatchingLocation.name}`);
         else locationString = locationString.concat(`${dragon.name} hatched at ${hatchingLocation.name}, but grew up at ${growingUpLocation.name}`);
-      
+
       } else {
 
         if (hatchingLocation != undefined && hatchingLocation.name != '') {
@@ -492,11 +574,11 @@ export default function Configurator({
       }
 
       if (homeLocation != undefined && homeLocation.name != '' && currentLocation != undefined && currentLocation.name != '') {
-        
+
         if (homeLocation.name == currentLocation.name)
           locationString = locationString.concat(`${nextStart} currently resides at ${homeLocation.name}`);
         else locationString = locationString.concat(`${nextStart} lives at ${homeLocation.name}, but currently ${dragon.name} is at ${currentLocation.name}`);
-      
+
       } else {
 
         if (homeLocation != undefined && homeLocation.name != '')
@@ -516,7 +598,7 @@ export default function Configurator({
       const elements: JSX.Element[] = [];
       if (dragon.traits.length == 0) return elements;
       elements.push(<Title order={3}>Traits</Title>)
-      
+
       let string = `${dragon.name} has`;
 
       for (let i = 0; i < dragon.traits.length; i++) {
@@ -662,12 +744,62 @@ export default function Configurator({
             </Group>
             <Stack style={dragon.tribe.length > 1 ? { display: 'block' } : { display: 'none' }}>
               <Text>Choose which body parts to use.</Text>
-              <SimpleGrid cols={2}>
-                <Select label="Head" data={dragon.tribe} />
-                <Select label="Body" data={dragon.tribe} />
-                <Select label="Wings" data={dragon.tribe} />
-                <Select label="Legs" data={dragon.tribe} />
-                <Select label="Tails" data={dragon.tribe} />
+              <SimpleGrid cols={3}>
+                <Select
+                  label="Head"
+                  data={dragon.tribe}
+                  value={dragon.bodyParts.head}
+                  onChange={(value) => {
+                    let newBodyParts = dragon.bodyParts;
+                    if (value == null) return;
+                    newBodyParts.head = value;
+                    setDragon((prev) => ({ ...prev, newBodyParts}));
+                  }}
+                />
+                <Select
+                  label="Body"
+                  data={dragon.tribe}
+                  value={dragon.bodyParts.body}
+                  onChange={(value) => {
+                    let newBodyParts = dragon.bodyParts;
+                    if (value == null) return;
+                    newBodyParts.body = value;
+                    setDragon((prev) => ({ ...prev, newBodyParts}));
+                  }}
+                />
+                <Select
+                  label="Wings"
+                  data={dragon.tribe}
+                  value={dragon.bodyParts.wings}
+                  onChange={(value) => {
+                    let newBodyParts = dragon.bodyParts;
+                    if (value == null) return;
+                    newBodyParts.wings = value;
+                    setDragon((prev) => ({ ...prev, newBodyParts}));
+                  }}
+                />
+                <Select
+                  label="Legs"
+                  data={dragon.tribe}
+                  value={dragon.bodyParts.legs}
+                  onChange={(value) => {
+                    let newBodyParts = dragon.bodyParts;
+                    if (value == null) return;
+                    newBodyParts.legs = value;
+                    setDragon((prev) => ({ ...prev, newBodyParts}));
+                  }}
+                />
+                <Select
+                  label="Tail"
+                  data={dragon.tribe}
+                  value={dragon.bodyParts.tail}
+                  onChange={(value) => {
+                    let newBodyParts = dragon.bodyParts;
+                    if (value == null) return;
+                    newBodyParts.tail = value;
+                    setDragon((prev) => ({ ...prev, newBodyParts}));
+                  }}
+                />
               </SimpleGrid>
             </Stack>
           </Stack>
@@ -900,43 +1032,106 @@ export default function Configurator({
               <Text>Check the <Anchor href='https://wingsoffire.fandom.com/wiki/Map:Pyrrhia' target='new'>Pyrrhia map<FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor> or <Anchor href='https://wingsoffire.fandom.com/wiki/Map:Pantala' target='new'>Pantala map<FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor> for help.</Text>
             </Stack>
             <SimpleGrid cols={2}>
-              <TextInput
+              <Autocomplete
                 label="Hatching location"
+                placeholder="You can write anything here"
                 // This line below finds the location with identifier "Hatching location" and gets its value
-                defaultValue={
+                value={
                   dragon.locations.find((location) => location.identifier === 'Hatching location')
                     ?.name
                 }
-                onChange={(event) => { setLocation('Hatching location', event.currentTarget.value); }}
-              // TODO: Display random placeholder
+                data={locations}
+                onChange={(value) => { setLocation('Hatching location', value); }}
+                rightSection={
+                  <ActionIcon
+                    aria-label="Randomize"
+                    variant='subtle'
+                    color="gray"
+                    onClick={() => {
+                      const index = Math.floor(Math.random() * locations.length);
+                      setLocation('Hatching location', locations[index]);
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faDice} />
+                  </ActionIcon>
+                }
               />
-              <TextInput
+              <Autocomplete
                 label="Growing up location"
-                defaultValue={
+                placeholder="You can write anything here"
+                value={
                   dragon.locations.find((location) => location.identifier === 'Growing up location')
                     ?.name
                 }
-                onChange={(event) => { setLocation('Growing up location', event.currentTarget.value); }}
-              // TODO: Display random placeholder
+                data={locations}
+                onChange={(value) => { setLocation('Growing up location', value); }}
+                rightSection={
+                  <ActionIcon
+                    aria-label="Randomize"
+                    variant='subtle'
+                    color="gray"
+                    onClick={() => {
+                      const index = Math.floor(Math.random() * locations.length);
+                      setLocation('Growing up location', locations[index]);
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faDice} />
+                  </ActionIcon>
+                }
               />
-              <TextInput
+              <Autocomplete
                 label="Home location"
-                defaultValue={
+                placeholder="You can write anything here"
+                value={
                   dragon.locations.find((location) => location.identifier === 'Home location')?.name
                 }
-                onChange={(event) => { setLocation('Home location', event.currentTarget.value); }}
-              // TODO: Display random placeholder
+                data={locations}
+                onChange={(value) => { setLocation('Home location', value); }}
+                rightSection={
+                  <ActionIcon
+                    aria-label="Randomize"
+                    variant='subtle'
+                    color="gray"
+                    onClick={() => {
+                      const index = Math.floor(Math.random() * locations.length);
+                      setLocation('Home location', locations[index]);
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faDice} />
+                  </ActionIcon>
+                }
               />
-              <TextInput
+              <Autocomplete
                 label="Current location"
-                defaultValue={
+                placeholder="You can write anything here"
+                value={
                   dragon.locations.find((location) => location.identifier === 'Current location')
                     ?.name
                 }
-                onChange={(event) => { setLocation('Current location', event.currentTarget.value); }}
-              // TODO: Display random placeholder
+                data={locations}
+                onChange={(value) => { setLocation('Current location', value); }}
+                rightSection={
+                  <ActionIcon
+                    aria-label="Randomize"
+                    variant='subtle'
+                    color="gray"
+                    onClick={() => {
+                      const index = Math.floor(Math.random() * locations.length);
+                      setLocation('Current location', locations[index]);
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faDice} />
+                  </ActionIcon>
+                }
               />
             </SimpleGrid>
+            <hr style={{ width: '100%' }} />
+            {customLocations()}
+            <Center>
+              <ActionIcon onClick={() => addLocation()}>
+                <FontAwesomeIcon icon={faPlus} />
+              </ActionIcon>
+            </Center>
           </Stack>
         </Stepper.Step>
 
@@ -983,7 +1178,7 @@ export default function Configurator({
                 placeholder="Pick value"
                 data={['Well', 'Injured', 'Deteriorating', 'Ill', 'Dying']}
                 searchable
-                defaultValue={dragon.health}
+                value={dragon.health}
                 onChange={(value) => {
                   let newHealth: string = '';
                   if (value != null) newHealth = value;
@@ -992,7 +1187,7 @@ export default function Configurator({
               />
               <TextInput
                 label="Occupation"
-                defaultValue={dragon.occupation}
+                value={dragon.occupation}
                 onChange={(event) => {
                   let newOccupation: string = '';
                   if (event.currentTarget.value != null) newOccupation = event.currentTarget.value;

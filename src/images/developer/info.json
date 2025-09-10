@@ -11,6 +11,8 @@
     ],
     "included_tribes": [
         "Ice",
+        "Mud",
         "Sky"
-    ]
+    ],
+    "included_accessories": []
 }
