@@ -39,7 +39,6 @@ If you want to contribute, please feel free to open a pull request!
   - [ ] Necklace
   - [ ] Crown
   - [ ] Bag
-- [ ] Local style pack uploading
 - [x] Body part selection for hybrids
 - [ ] Accurate hue shifting
 - [x] Credits modal
