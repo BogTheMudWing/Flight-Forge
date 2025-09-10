@@ -903,7 +903,7 @@ export default function Configurator({
               <TextInput
                 label="Hatching location"
                 // This line below finds the location with identifier "Hatching location" and gets its value
-                defaultValue={
+                value={
                   dragon.locations.find((location) => location.identifier === 'Hatching location')
                     ?.name
                 }
@@ -912,7 +912,7 @@ export default function Configurator({
               />
               <TextInput
                 label="Growing up location"
-                defaultValue={
+                value={
                   dragon.locations.find((location) => location.identifier === 'Growing up location')
                     ?.name
                 }
@@ -921,7 +921,7 @@ export default function Configurator({
               />
               <TextInput
                 label="Home location"
-                defaultValue={
+                value={
                   dragon.locations.find((location) => location.identifier === 'Home location')?.name
                 }
                 onChange={(event) => { setLocation('Home location', event.currentTarget.value); }}
@@ -929,7 +929,7 @@ export default function Configurator({
               />
               <TextInput
                 label="Current location"
-                defaultValue={
+                value={
                   dragon.locations.find((location) => location.identifier === 'Current location')
                     ?.name
                 }
@@ -983,7 +983,7 @@ export default function Configurator({
                 placeholder="Pick value"
                 data={['Well', 'Injured', 'Deteriorating', 'Ill', 'Dying']}
                 searchable
-                defaultValue={dragon.health}
+                value={dragon.health}
                 onChange={(value) => {
                   let newHealth: string = '';
                   if (value != null) newHealth = value;
@@ -992,7 +992,7 @@ export default function Configurator({
               />
               <TextInput
                 label="Occupation"
-                defaultValue={dragon.occupation}
+                value={dragon.occupation}
                 onChange={(event) => {
                   let newOccupation: string = '';
                   if (event.currentTarget.value != null) newOccupation = event.currentTarget.value;
