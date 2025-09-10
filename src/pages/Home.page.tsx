@@ -211,7 +211,7 @@ export function HomePage() {
     accessories: [],
     creator: '',
     builder: '',
-    style: 'Debug',
+    style: 'developer',
   };
 
   function save() {
