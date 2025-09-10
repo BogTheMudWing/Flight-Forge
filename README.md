@@ -4,6 +4,8 @@ A guided Wings of Fire character generator.
 
 <https://flightforge.app>
 
+[![](./images/cover.png)](https://flightforge.app)
+
  > [!NOTE]
  > This repository is mirrored to [GitHub](https://github.com/BogTheMudWing/Flight-Forge) for visibility. Issues and pull requests should be made on [Macver Code Athenaeum](https://code.macver.org/Bog/Flight-Forge).
 
@@ -11,7 +13,37 @@ Flight Forge **is not currently but will eventually be** a web program that guid
 
 *Interested in creating a style pack? See [ARTWORK.md](ARTWORK.md).*
 
-If you want to contribute, please feel free to open a pull request! Please use a tab size of 2 spaces and follow good code cleanliness.
+If you want to contribute, please feel free to open a pull request!
+
+## Roadmap
+
+- [ ] All ten dragon tribes
+  - [ ] Hive
+  - [x] Ice
+  - [ ] Leaf
+  - [ ] Mud
+  - [ ] Night
+  - [ ] Rain
+  - [ ] Sand
+  - [ ] Sea
+  - [ ] Silk
+  - [x] Sky
+- [ ] Accessories
+  - [ ] Left Arm Band
+  - [ ] Right Arm Band
+  - [ ] Left Earring
+  - [ ] Right Earring
+  - [ ] Nose Ring
+  - [ ] Chestplate
+  - [ ] Glasses
+  - [ ] Necklace
+  - [ ] Crown
+  - [ ] Bag
+- [ ] Local style pack uploading
+- [ ] Body part selection for hybrids
+- [ ] Accurate hue shifting
+- [ ] Share via URL
+- [ ] Credits modal
 
 ## Run it Locally
 
