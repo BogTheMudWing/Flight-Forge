@@ -745,11 +745,61 @@ export default function Configurator({
             <Stack style={dragon.tribe.length > 1 ? { display: 'block' } : { display: 'none' }}>
               <Text>Choose which body parts to use.</Text>
               <SimpleGrid cols={2}>
-                <Select label="Head" data={dragon.tribe} />
-                <Select label="Body" data={dragon.tribe} />
-                <Select label="Wings" data={dragon.tribe} />
-                <Select label="Legs" data={dragon.tribe} />
-                <Select label="Tails" data={dragon.tribe} />
+                <Select
+                  label="Head"
+                  data={dragon.tribe}
+                  value={dragon.bodyParts.head}
+                  onChange={(value) => {
+                    let newBodyParts = dragon.bodyParts;
+                    if (value == null) return;
+                    newBodyParts.head = value;
+                    setDragon((prev) => ({ ...prev, newBodyParts}));
+                  }}
+                />
+                <Select
+                  label="Body"
+                  data={dragon.tribe}
+                  value={dragon.bodyParts.body}
+                  onChange={(value) => {
+                    let newBodyParts = dragon.bodyParts;
+                    if (value == null) return;
+                    newBodyParts.body = value;
+                    setDragon((prev) => ({ ...prev, newBodyParts}));
+                  }}
+                />
+                <Select
+                  label="Wings"
+                  data={dragon.tribe}
+                  value={dragon.bodyParts.wings}
+                  onChange={(value) => {
+                    let newBodyParts = dragon.bodyParts;
+                    if (value == null) return;
+                    newBodyParts.wings = value;
+                    setDragon((prev) => ({ ...prev, newBodyParts}));
+                  }}
+                />
+                <Select
+                  label="Legs"
+                  data={dragon.tribe}
+                  value={dragon.bodyParts.legs}
+                  onChange={(value) => {
+                    let newBodyParts = dragon.bodyParts;
+                    if (value == null) return;
+                    newBodyParts.legs = value;
+                    setDragon((prev) => ({ ...prev, newBodyParts}));
+                  }}
+                />
+                <Select
+                  label="Tail"
+                  data={dragon.tribe}
+                  value={dragon.bodyParts.tail}
+                  onChange={(value) => {
+                    let newBodyParts = dragon.bodyParts;
+                    if (value == null) return;
+                    newBodyParts.tail = value;
+                    setDragon((prev) => ({ ...prev, newBodyParts}));
+                  }}
+                />
               </SimpleGrid>
             </Stack>
           </Stack>
@@ -1075,7 +1125,7 @@ export default function Configurator({
                 }
               />
             </SimpleGrid>
-            <hr style={{width: '100%'}} />
+            <hr style={{ width: '100%' }} />
             {customLocations()}
             <Center>
               <ActionIcon onClick={() => addLocation()}>
