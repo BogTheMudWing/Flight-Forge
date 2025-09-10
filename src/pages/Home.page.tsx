@@ -876,7 +876,7 @@ export function HomePage() {
                 <Center display={(window.innerWidth <= 991) ? 'none' : 'flex'}>
                   {/* This only appears on desktop */}
                   <Group>
-                    <Anchor href='https://code.macver.org/Bog/Flight-Forge/src/branch/main/ARTWORK.md' target='new'><Text size='sm' c="dimmed">Interested in creating a style pack? <FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Text></Anchor>
+                    <Anchor href='https://code.macver.org/Bog/Flight-Forge/src/branch/main/docs/ARTWORK.md' target='new'><Text size='sm' c="dimmed">Interested in creating a style pack? <FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Text></Anchor>
                     <FileButton onChange={uploadStylePack} accept="application/zip">
                       {(props) => <ActionIcon {...props} variant='subtle' c='dimmed'><FontAwesomeIcon icon={faUpload} /></ActionIcon>}
                     </FileButton>
