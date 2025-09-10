@@ -23,8 +23,8 @@ If you want to contribute, please feel free to open a pull request!
   - [ ] Leaf
   - [x] Mud
   - [x] Night
-  - [ ] Rain
-  - [ ] Sand
+  - [x] Rain
+  - [x] Sand
   - [ ] Sea
   - [ ] Silk
   - [x] Sky
