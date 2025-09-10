@@ -1017,7 +1017,7 @@ export default function Configurator({
                 onChange={setNewRelationSelectorValue}
                 searchable
               />
-              <Button onClick={addRelation}>Add</Button>
+              <Button leftSection={<FontAwesomeIcon icon={faPlus} />} onClick={addRelation}>Add</Button>
             </Flex>
 
             <SimpleGrid cols={2}>{relations()}</SimpleGrid>
