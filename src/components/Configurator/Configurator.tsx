@@ -210,7 +210,7 @@ export default function Configurator({
   const prevStep = () => setPage((current: number) => (current > 0 ? current - 1 : current));
 
   const relationStatus = ['Good', 'Estranged', 'Deceased', 'Lost', 'Unknown'];
-  const [newRelationSelectorValue, setNewRelationSelectorValue] = useState<string | null>('');
+  const [newRelationSelectorValue, setNewRelationSelectorValue] = useState<string>('');
   const [sameBuilderCreator, setSameBuilderCreator] = useState(dragon.creator == dragon.builder);
 
   useEffect(() => {
@@ -407,11 +407,11 @@ export default function Configurator({
                 newLocationList.splice(index, 1, newLocation)
                 setLocation(event.currentTarget.value, location.name)
               }}
-              placeholder='You can write anything here'
+              placeholder='Write anything here'
             />
             <Autocomplete
               label="Name"
-              placeholder="You can write anything here"
+              placeholder="Write anything here"
               value={location.name}
               data={locations}
               onChange={(value) => { setLocation(location.identifier, value); }}
@@ -986,11 +986,11 @@ export default function Configurator({
               <Text>Dragons are social creatures!</Text>
             </Stack>
             <Flex gap="md" justify="flex-start" align="flex-end" direction="row" wrap="nowrap">
-              <Select
+              <Autocomplete
                 id='newRelationSelector'
                 flex={1}
                 label="Add relation"
-                placeholder="Pick value"
+                placeholder="Write anything here"
                 data={[
                   'Mother',
                   'Father',
@@ -1006,16 +1006,20 @@ export default function Configurator({
                   'Sibling',
                   'Sister',
                   'Brother',
+                  'Cousin',
+                  'Aunt',
+                  'Uncle',
                   'Friend',
                   'Mentor',
                   'Employer',
+                  'Crush',
                   'Partner',
                   'Ex-partner',
                   'Dragonet',
+                  'Pet',
                 ]}
                 value={newRelationSelectorValue}
                 onChange={setNewRelationSelectorValue}
-                searchable
               />
               <Button leftSection={<FontAwesomeIcon icon={faPlus} />} onClick={addRelation}>Add</Button>
             </Flex>
@@ -1037,7 +1041,7 @@ export default function Configurator({
             <SimpleGrid cols={2}>
               <Autocomplete
                 label="Hatching location"
-                placeholder="You can write anything here"
+                placeholder="Write anything here"
                 // This line below finds the location with identifier "Hatching location" and gets its value
                 value={
                   dragon.locations.find((location) => location.identifier === 'Hatching location')
@@ -1061,7 +1065,7 @@ export default function Configurator({
               />
               <Autocomplete
                 label="Growing up location"
-                placeholder="You can write anything here"
+                placeholder="Write anything here"
                 value={
                   dragon.locations.find((location) => location.identifier === 'Growing up location')
                     ?.name
@@ -1084,7 +1088,7 @@ export default function Configurator({
               />
               <Autocomplete
                 label="Home location"
-                placeholder="You can write anything here"
+                placeholder="Write anything here"
                 value={
                   dragon.locations.find((location) => location.identifier === 'Home location')?.name
                 }
@@ -1106,7 +1110,7 @@ export default function Configurator({
               />
               <Autocomplete
                 label="Current location"
-                placeholder="You can write anything here"
+                placeholder="Write anything here"
                 value={
                   dragon.locations.find((location) => location.identifier === 'Current location')
                     ?.name
