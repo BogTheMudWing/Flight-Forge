@@ -20,63 +20,6 @@ type ImagePreviewProps = {
 
 export default function ImagePreview({ dragon, page, style }: ImagePreviewProps) {
 
-  function calculate(hexColor: string, angle: number) {
-    // Get the RGB and angle to work with.
-    if (! /^[0-9A-F]{6}$/i.test(hexColor)) return alert('Bad color!');
-    var r = parseInt(hexColor.substr(0, 2), 16);
-    var g = parseInt(hexColor.substr(2, 2), 16);
-    var b = parseInt(hexColor.substr(4, 2), 16);
-    var angle = (angle % 360 + 360) % 360;
-
-    // Hold your breath because what follows isn't flowers.
-
-    var matrix = [ // Just remember this is the identity matrix for
-      1, 0, 0,   // Reds
-      0, 1, 0,   // Greens
-      0, 0, 1    // Blues
-    ];
-
-    // Luminance coefficients.
-    var lumR = 0.2126;
-    var lumG = 0.7152;
-    var lumB = 0.0722;
-
-    // Hue rotate coefficients.
-    var hueRotateR = 0.143;
-    var hueRotateG = 0.140;
-    var hueRotateB = 0.283;
-
-    var cos = Math.cos(angle * Math.PI / 180);
-    var sin = Math.sin(angle * Math.PI / 180);
-
-    matrix[0] = lumR + (1 - lumR) * cos - lumR * sin;
-    matrix[1] = lumG - lumG * cos - lumG * sin;
-    matrix[2] = lumB - lumB * cos + (1 - lumB) * sin;
-
-    matrix[3] = lumR - lumR * cos + hueRotateR * sin;
-    matrix[4] = lumG + (1 - lumG) * cos + hueRotateG * sin;
-    matrix[5] = lumB - lumB * cos - hueRotateB * sin;
-
-    matrix[6] = lumR - lumR * cos - (1 - lumR) * sin;
-    matrix[7] = lumG - lumG * cos + lumG * sin;
-    matrix[8] = lumB + (1 - lumB) * cos + lumB * sin;
-
-    function clamp(num: number) {
-      return Math.round(Math.max(0, Math.min(255, num)));
-    }
-
-    var R = clamp(matrix[0] * r + matrix[1] * g + matrix[2] * b);
-    var G = clamp(matrix[3] * r + matrix[4] * g + matrix[5] * b);
-    var B = clamp(matrix[6] * r + matrix[7] * g + matrix[8] * b);
-
-    // Output the result
-    var result = 'The original color, rgb(' + [r, g, b] + '), '
-      + 'when rotated by ' + angle + ' degrees '
-      + 'by the devil\'s logic, gives you '
-      + 'rgb(' + [R, G, B] + '). If I got it right.';
-    // document.getElementById('result').innerText = result;
-  }
-
   /**
    * Get CSS properties for a given image part
    * @param type the color layer (primary, secondary, etc.)
@@ -85,7 +28,7 @@ export default function ImagePreview({ dragon, page, style }: ImagePreviewProps)
    */
   function getLayerStyle(type: ImageLayer['type'], dragon: t.TypeOf<typeof Dragon>): React.CSSProperties {
 
-    const returnStyle = (hexColor: string, log: boolean) => {
+    const returnStyle = (hexColor: string) => {
 
       // The hue-shift CSS filter doesn't conserve saturation and brightness like expected, so some colors look really inaccurate.
       // To compensate, the code below recreates the end result of the hue-rotate filter, then finds the difference in saturation and brightness and adds it.
@@ -151,22 +94,20 @@ export default function ImagePreview({ dragon, page, style }: ImagePreviewProps)
       const saturate = ((originalHsv[1] + sDiff)/2)+50 // we add the difference to get what we actually want
       const brightness = ((originalHsv[2] + vDiff) / 100)+1 // we add the difference to get what we actually want. Also div by 50
 
-      if (log) console.log(hueRotate, saturate, brightness);
-
       return { filter: `hue-rotate(${hueRotate}deg) saturate(${saturate}%) brightness(${brightness}` };
     }
 
     switch (type) {
       case 'primary':
-        return returnStyle(dragon.primaryColor, true);
+        return returnStyle(dragon.primaryColor);
       case 'secondary':
-        return returnStyle(dragon.secondaryColor, false);
+        return returnStyle(dragon.secondaryColor);
       case 'underscales':
-        return returnStyle(dragon.underscalesColor, false);
+        return returnStyle(dragon.underscalesColor);
       case 'spikes':
-        return returnStyle(dragon.spikesColor, false);
+        return returnStyle(dragon.spikesColor);
       case 'eyes':
-        return returnStyle(dragon.eyeColor, false);
+        return returnStyle(dragon.eyeColor);
       case 'membranes':
         return { backgroundColor: dragon.membraneColor1 };
       default:
@@ -203,21 +144,6 @@ export default function ImagePreview({ dragon, page, style }: ImagePreviewProps)
           />
         );
       }
-
-      // let hueRotate = 0;
-
-      // switch (type) {
-      //   case 'primary':
-      //     hueRotate = convert.hex.hsv(dragon.primaryColor)[0];
-      //   case 'secondary':
-      //     hueRotate = convert.hex.hsv(dragon.secondaryColor)[0];
-      //   case 'underscales':
-      //     hueRotate = convert.hex.hsv(dragon.underscalesColor)[0];
-      //   case 'eyes':
-      //     hueRotate = convert.hex.hsv(dragon.eyeColor)[0];
-      //   case 'spikes':
-      //     hueRotate = convert.hex.hsv(dragon.spikesColor)[0];
-      // }
 
       return (
         <img
