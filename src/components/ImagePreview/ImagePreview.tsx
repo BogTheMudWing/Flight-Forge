@@ -92,7 +92,7 @@ export default function ImagePreview({ dragon, page, style }: ImagePreviewProps)
 
       const hueRotate = originalHsv[0];
       const saturate = ((originalHsv[1] + sDiff)/2)+50 // we add the difference to get what we actually want
-      const brightness = ((originalHsv[2] + vDiff) / 100)+1 // we add the difference to get what we actually want. Also div by 50
+      const brightness = ((originalHsv[2] + vDiff) / 100)+1 // we add the difference to get what we actually want.
 
       return { filter: `hue-rotate(${hueRotate}deg) saturate(${saturate}%) brightness(${brightness}` };
     }
