@@ -40,7 +40,7 @@ If you want to contribute, please feel free to open a pull request!
   - [ ] Crown
   - [ ] Bag
 - [x] Body part selection for hybrids
-- [ ] Accurate hue shifting
+- [x] Accurate hue shifting
 - [x] Credits modal
 
 ## Run it Locally
