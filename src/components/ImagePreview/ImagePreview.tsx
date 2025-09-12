@@ -205,9 +205,9 @@ export default function ImagePreview({ dragon, page, style }: ImagePreviewProps)
     <div id='image-preview' className="image-preview">
       {/* <img src={Background} alt="background" /> */}
       {renderPart(getTribePart('body'), style, 'body')}
-      {renderPart(getTribePart('wings'), style, 'wings')}
-      {renderPart(getTribePart('legs'), style, 'legs')}
       {renderPart(getTribePart('tail'), style, 'tail')}
+      {renderPart(getTribePart('legs'), style, 'legs')}
+      {renderPart(getTribePart('wings'), style, 'wings')}
       {renderPart(getTribePart('head'), style, 'head')}
       {renderPart(getTribePart('head'), style, 'eyes')}
       {renderAccessories(style)}

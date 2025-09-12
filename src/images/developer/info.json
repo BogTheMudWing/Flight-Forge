@@ -10,6 +10,7 @@
         }
     ],
     "includedTribes": [
+        "Hive",
         "Ice",
         "Mud",
         "Night",
