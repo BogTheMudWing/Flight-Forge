@@ -1,3 +1,7 @@
+import { Accessory, Dragon } from "../Dragon/Dragon";
+import { AccessoryImage, styleInfo } from "../StyleHandler";
+import * as t from 'io-ts'
+
 type BodyPart = 'head' | 'body' | 'legs' | 'wings' | 'tail';
 export type ImageType = 'primary' | 'secondary' | 'underscales' | 'spikes' | 'membranes' | 'eyes';
 
@@ -20,7 +24,12 @@ const typesMap = [
   'primary', 'secondary', 'underscales', 'spikes', 'membranes', 'eyes'
 ];
 
-const imageModules = import.meta.glob('../../images/**/tribe/**/**/*.png', {
+const tribeImageModules = import.meta.glob('../../images/**/tribe/**/**/*.png', {
+  eager: true,
+  import: 'default',
+});
+
+const accessoryImageModules = import.meta.glob('../../images/**/accessory/**/*.png', {
   eager: true,
   import: 'default',
 });
@@ -35,12 +44,12 @@ function buildTribeImages(tribe: string, style: string): TribeImages {
     tail: [],
   };
 
-  for (const path in imageModules) {
+  for (const path in tribeImageModules) {
     if (!path.includes(`/${style}/tribe/${tribe}/`)) {
       continue;
     }
 
-    const src = imageModules[path] as string;
+    const src = tribeImageModules[path] as string;
 
     if (path.includes('/eyes.png')) {
       tribeImages.eyes?.push({ src, type: 'eyes' });
@@ -63,3 +72,28 @@ function buildTribeImages(tribe: string, style: string): TribeImages {
 export function imageAssets(tribe: string, style: string): TribeImages {
   return buildTribeImages(tribe, style);
 };
+
+export function accessoryAssets(style: string, dragonAccessories: { file: string; name: string; color: string; }[]) {
+  const accessoryImages = styleInfo(style);
+  if (accessoryImages == null) return;
+
+  const assets = [];
+
+  for (const path in accessoryImageModules) {
+    if (!path.includes(`/${style}/accessory/`)) {
+      continue;
+    }
+    const src = accessoryImageModules[path] as string;
+
+    for (let i = 0; i < dragonAccessories.length; i++) {
+      const accessory = dragonAccessories[i];
+      if (!path.includes(`${accessory.file}.png`)) {
+        continue;
+      }
+      assets.push({src: src, name: accessoryImages?.name});
+    }
+
+  }
+
+  return assets;
+}

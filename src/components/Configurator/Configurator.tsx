@@ -65,6 +65,7 @@ import { notifications } from '@mantine/notifications';
 // Style Info
 import styleInfoDebug from '@/images/debug/info.json';
 import styleInfoDeveloper from '@/images/developer/info.json';
+import { styleInfo } from '../StyleHandler';
 
 library.add(fas);
 
@@ -155,53 +156,88 @@ export default function Configurator({
     setDragon(newDragon);
   }
 
-  const accessories = () => {
-    let info = null;
-    if (dragon.style == 'debug') info = styleInfoDebug;
-    else if (dragon.style == 'developer') info = styleInfoDeveloper;
-    if (info == null) return (<Text>It seems like you have an invalid style pack applied. Select one of the provided style packs.</Text>);
+  const dragonHasAccessory = (accessory: { image: string; }) => {
+    dragon.accessories.forEach((dergAccessory) => {
+      if (accessory.image == dergAccessory.file) {
+        console.log("YEAH");
+        return true;
+      }
+    })
+    return false;
+  }
 
-    // const accessories = info.included_accessories;
-    const accessories: string | any[] | null | undefined = [];
-    if (accessories == undefined || accessories == null || accessories.length == 0) return <Text>There are no accessories provided by the current style pack.</Text>
+  const accessories = () => {
+
+    let info = styleInfo(dragon.style);
+    if (info == null) return (<Text>It seems like you have an invalid style pack applied. Select one of the provided style packs.</Text>);
 
     const accessoryElements: JSX.Element[] = [];
 
-    const dragonHasAccessory = (accessory: { image: string; }) => {
-      dragon.accessories.forEach((dergAccessory) => {
-        console.log(accessory.image);
-        console.log(dergAccessory.file);
-        if (accessory.image == dergAccessory.file) {
-          console.log('match');
-          return true;
-        }
-      })
-      return false;
-    }
-
-    for (let i = 0; i < accessories.length; i++) {
-      const element = accessories[i];
+    info.includedAccessories.forEach((availableAccessory) => {
+      const isChecked = dragon.accessories.some(
+        (dergAccessory) => availableAccessory.image === dergAccessory.file
+      );
+      const color = isChecked ? dragon.accessories.find(((dergAccessory) => availableAccessory.image === dergAccessory.file))?.color : '#ffffff';
       accessoryElements.push(
-        <Switch
-          checked={dragonHasAccessory(element)}
-          onChange={(event) => {
-            let newAccessories = dragon.accessories;
-            let accessory = newAccessories.find((accessory) => { (accessory.file == element.image) });
+        <Group>
+          <Switch
+            checked={isChecked}
+            onChange={(event) => {
+              const checked = event.currentTarget.checked;
 
-            if (event.currentTarget.value) {
-              // if enabled, set the accessory and add it
-              accessory = { file: element.image, name: element.name, color: '#ffffff' };
-              newAccessories.push(accessory);
-            } else if (accessory != undefined) {
-              // if disabled, remove it from the list
-              newAccessories.splice(newAccessories.indexOf(accessory), 1);
-              setDragon((prev) => ({ ...prev, accessories: newAccessories }));
-            }
-          }}
-          label={element.name}
-        />
-      )
-    }
+              setDragon((prev) => {
+                const newAccessories = [...prev.accessories]; // create copy
+
+                const existingIndex = newAccessories.findIndex(
+                  (a) => a.file === availableAccessory.image
+                );
+
+                if (checked && existingIndex === -1) {
+                  // Add accessory
+                  newAccessories.push({
+                    file: availableAccessory.image,
+                    name: availableAccessory.name,
+                    color: "#ffffff",
+                  });
+                } else if (!checked && existingIndex !== -1) {
+                  // Remove accessory
+                  newAccessories.splice(existingIndex, 1);
+                }
+
+                return { ...prev, accessories: newAccessories };
+              });
+            }}
+            label={availableAccessory.name}
+          />
+          <ColorInput
+            disabled={!isChecked}
+            value={color}
+            onChange={(value) => {
+              setDragon((prev) => {
+                const newAccessories = [...prev.accessories]; // create copy
+
+                const existingIndex = newAccessories.findIndex(
+                  (a) => a.file === availableAccessory.image
+                );
+
+                // Add accessory
+                newAccessories.splice(
+                  existingIndex,
+                  1,
+                  {
+                    file: availableAccessory.image,
+                    name: availableAccessory.name,
+                    color: value,
+                  }
+                );
+
+                return { ...prev, accessories: newAccessories };
+              });
+            }}
+          />
+        </Group>
+      );
+    });
 
     return <SimpleGrid cols={2}>{accessoryElements}</SimpleGrid>;
   }
@@ -647,7 +683,7 @@ export default function Configurator({
     else if (dragon.style == 'developer') info = styleInfoDeveloper;
     if (info == null) return [];
 
-    return info.included_tribes;
+    return info.includedTribes;
   }
 
   const trait = (name: string) => {
@@ -754,7 +790,7 @@ export default function Configurator({
                     let newBodyParts = dragon.bodyParts;
                     if (value == null) return;
                     newBodyParts.head = value;
-                    setDragon((prev) => ({ ...prev, newBodyParts}));
+                    setDragon((prev) => ({ ...prev, newBodyParts }));
                   }}
                 />
                 <Select
@@ -765,7 +801,7 @@ export default function Configurator({
                     let newBodyParts = dragon.bodyParts;
                     if (value == null) return;
                     newBodyParts.body = value;
-                    setDragon((prev) => ({ ...prev, newBodyParts}));
+                    setDragon((prev) => ({ ...prev, newBodyParts }));
                   }}
                 />
                 <Select
@@ -776,7 +812,7 @@ export default function Configurator({
                     let newBodyParts = dragon.bodyParts;
                     if (value == null) return;
                     newBodyParts.wings = value;
-                    setDragon((prev) => ({ ...prev, newBodyParts}));
+                    setDragon((prev) => ({ ...prev, newBodyParts }));
                   }}
                 />
                 <Select
@@ -787,7 +823,7 @@ export default function Configurator({
                     let newBodyParts = dragon.bodyParts;
                     if (value == null) return;
                     newBodyParts.legs = value;
-                    setDragon((prev) => ({ ...prev, newBodyParts}));
+                    setDragon((prev) => ({ ...prev, newBodyParts }));
                   }}
                 />
                 <Select
@@ -798,7 +834,7 @@ export default function Configurator({
                     let newBodyParts = dragon.bodyParts;
                     if (value == null) return;
                     newBodyParts.tail = value;
-                    setDragon((prev) => ({ ...prev, newBodyParts}));
+                    setDragon((prev) => ({ ...prev, newBodyParts }));
                   }}
                 />
               </SimpleGrid>

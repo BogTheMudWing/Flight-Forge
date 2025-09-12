@@ -19,9 +19,9 @@ import icon from '../images/icon.png';
 import Telemetry, { allowTelemetry, denyTelemetry, isTelemetryEnabled, recordTelemetry } from '@/components/Telemetry/Telemetry';
 import './Home.page.css'
 import { exportImage } from '@/components/Exporter/Exporter';
+import { styleInfo, StylePackInfo } from '@/components/StyleHandler';
 // Style Info
-import styleInfoDebug from '@/images/debug/info.json';
-import styleInfoDeveloper from '@/images/developer/info.json';
+
 
 library.add(fas, fab);
 
@@ -485,12 +485,10 @@ export function HomePage() {
   }
 
   const styleAllowedWithCurrentTribes = (style: string) => {
-    let info = null;
-    if (style == 'debug') info = styleInfoDebug;
-    else if (style == 'developer') info = styleInfoDeveloper;
+    let info = styleInfo(style);
     if (info == null) return false;
 
-    const includedTribes: string[] = info.included_tribes;
+    const includedTribes: string[] = info.includedTribes;
     let matches = 0;
     for (let i = 0; i < dragon.tribe.length; i++) {
       const tribe = dragon.tribe[i];
@@ -503,8 +501,9 @@ export function HomePage() {
     return (matches == dragon.tribe.length);
   }
 
-  function stylePackCredits(styleInfo: typeof styleInfoDebug) {
+  function stylePackCredits(styleInfo: t.TypeOf<typeof StylePackInfo> | null) {
     const elements = [];
+    if (styleInfo == null) return;
     elements.push(<Title order={3}>{styleInfo.name}</Title>)
     elements.push(<Text>{styleInfo.description}</Text>)
 
@@ -513,7 +512,7 @@ export function HomePage() {
       const creator = styleInfo.creators[i];
       creatorElements.push(
         <Group>
-          <Avatar src={creator.image_url} />
+          <Avatar src={creator.imageUrl} />
           <Stack gap={0}>
             <Text fw={'bold'}>{creator.name}</Text>
             <Anchor href={creator.link} target='new'>
@@ -706,8 +705,8 @@ export function HomePage() {
             Built by <Anchor href="https://blog.macver.org/about-me" target='new'>Bog The MudWing <FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor>.
           </Text>
           <Title order={2}>Style Packs</Title>
-          {stylePackCredits(styleInfoDebug)}
-          {stylePackCredits(styleInfoDeveloper)}
+          {stylePackCredits(styleInfo('debug'))}
+          {stylePackCredits(styleInfo('developer'))}
         </Stack>
       </Modal>
 
@@ -845,7 +844,7 @@ export function HomePage() {
                       label: (
                         <Tooltip
                           disabled={styleAllowedWithCurrentTribes('developer')}
-                          label={"Only compatible with tribes " + styleInfoDeveloper.included_tribes.toString().replaceAll(',', ', ')}
+                          label={"Only compatible with tribes " + styleInfo('developer')?.includedTribes.toString().replaceAll(',', ', ')}
                         >
                           <span>Developer</span>
                         </Tooltip>
@@ -857,7 +856,7 @@ export function HomePage() {
                       label: (
                         <Tooltip
                           disabled={styleAllowedWithCurrentTribes('debug')}
-                          label={"Only compatible with tribes " + styleInfoDebug.included_tribes.toString().replaceAll(',', ', ')}
+                          label={"Only compatible with tribes " + styleInfo('debug')?.includedTribes.toString().replaceAll(',', ', ')}
                         >
                           <span>Debug</span>
                         </Tooltip>

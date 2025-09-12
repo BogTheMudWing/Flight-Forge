@@ -1,15 +1,15 @@
 {
     "name": "Developer", 
     "description": "Used during development to test and debug Flight Forge.",
-    "pack_version": "1",
+    "packVersion": "1",
     "creators": [
         {
             "name": "Bog",
-            "image_url": "https://blog.macver.org/content/images/2025/03/Compute-Cube-Medium.png",
+            "imageUrl": "https://blog.macver.org/content/images/2025/03/Compute-Cube-Medium.png",
             "link": "https://blog.macver.org/about-me"
         }
     ],
-    "included_tribes": [
+    "includedTribes": [
         "Ice",
         "Mud",
         "Night",
@@ -18,5 +18,26 @@
         "Sea",
         "Sky"
     ],
-    "included_accessories": []
+    "includedAccessories": [
+        {
+            "name": "Arm Band",
+            "image": "arm_band"
+        },
+        {
+            "name": "Earring",
+            "image": "earring"
+        },
+        {
+            "name": "Glasses",
+            "image": "glasses"
+        },
+        {
+            "name": "Necklace",
+            "image": "necklace"
+        },
+        {
+            "name": "Chestplate",
+            "image": "chestplate"
+        }
+    ]
 }

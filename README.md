@@ -28,17 +28,12 @@ If you want to contribute, please feel free to open a pull request!
   - [x] Sea
   - [ ] Silk
   - [x] Sky
-- [ ] Accessories
-  - [ ] Left Arm Band
-  - [ ] Right Arm Band
-  - [ ] Left Earring
-  - [ ] Right Earring
-  - [ ] Nose Ring
-  - [ ] Chestplate
-  - [ ] Glasses
-  - [ ] Necklace
-  - [ ] Crown
-  - [ ] Bag
+- [x] Accessories
+  - [x] Arm Band
+  - [x] Earring
+  - [x] Chestplate
+  - [x] Glasses
+  - [x] Necklace
 - [x] Body part selection for hybrids
 - [x] Accurate hue shifting
 - [x] Credits modal
