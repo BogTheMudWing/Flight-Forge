@@ -42,7 +42,7 @@ export function HomePage() {
   const [lastSave, setLastSave] = useState<Date | null>(null);
   const [timeDiff, setTimeDiff] = useState<number | null>(null);
   const [dragonIndex, setDragonIndex] = useState<number>(0);
-  const latestUpdate = 0;
+  const latestUpdate = 1;
 
   const seenUpdate = () => {
     let lastUpdateSeen = 0;
@@ -725,7 +725,12 @@ export function HomePage() {
 
       <Modal opened={updatesModalOpened} onClose={closeUpdatesModal} title="Updates" centered>
         <Stack>
-          <Text>No updates yet.</Text>
+          <Text size="sm">September 12, 2025</Text>
+          <Title order={3}>Flight Forge is now in beta!</Title>
+          <Text>All of the ideas I wanted to implement have been added, including all ten tribes and five acessories. Hooray!</Text>
+          <Text>If you like Flight Forge, please share it with other people who might like it! I worked really hard on it and I want lots of people to be able to use it.</Text>
+          <Text>As always, if you find any bugs or frustations or have any suggestions, click the "Bug Report" button in the menu to let me know.</Text>
+          <Text>Thanks to everyone who tested the alpha and gave me feedback!</Text>
         </Stack>
       </Modal>
 
