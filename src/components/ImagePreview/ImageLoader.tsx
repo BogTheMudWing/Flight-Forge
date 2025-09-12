@@ -1,5 +1,3 @@
-import { styleInfo } from "../StyleHandler";
-
 type BodyPart = 'head' | 'body' | 'legs' | 'wings' | 'tail';
 export type ImageType = 'primary' | 'secondary' | 'underscales' | 'spikes' | 'membranes' | 'eyes';
 
@@ -27,7 +25,7 @@ const tribeImageModules = import.meta.glob('../../images/**/tribe/**/**/*.png', 
   import: 'default',
 });
 
-const accessoryImageModules = import.meta.glob('../../images/**/accessory/**/*.png', {
+const accessoryImageModules = import.meta.glob('../../images/**/accessory/*.png', {
   eager: true,
   import: 'default',
 });
@@ -72,8 +70,6 @@ export function imageAssets(tribe: string, style: string): TribeImages {
 };
 
 export function accessoryAssets(style: string, dragonAccessories: { file: string; name: string; color: string; }[]) {
-  const accessoryImages = styleInfo(style);
-  if (accessoryImages == null) return;
 
   const assets = [];
 
@@ -88,7 +84,7 @@ export function accessoryAssets(style: string, dragonAccessories: { file: string
       if (!path.includes(`${accessory.file}.png`)) {
         continue;
       }
-      assets.push({src: src, name: accessoryImages?.name});
+      assets.push({src: src, name: accessory.name, file: accessory.file});
     }
 
   }
