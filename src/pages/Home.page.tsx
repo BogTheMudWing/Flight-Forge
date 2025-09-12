@@ -2,12 +2,12 @@ import { JSX, useEffect, useState } from 'react';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 /* import all the icons in Free Solid, Free Regular, and Brands styles */
-import { faArrowUpRightFromSquare, faBan, faBars, faBug, faCheck, faCircleInfo, faClone, faCode, faDownload, faEllipsis, faFileExport, faGear, faHome, faNewspaper, faPlus, faRotateLeft, fas, faTrash, faUpload, faUsersRectangle } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUpRightFromSquare, faBan, faBars, faBug, faCheck, faCircleInfo, faClone, faCode, faCopy, faDownload, faEllipsis, faFileExport, faGear, faHome, faNewspaper, faPlus, faRotateLeft, fas, faTrash, faUpload, faUsersRectangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isLeft } from 'fp-ts/lib/Either';
 import * as t from 'io-ts';
 import { PathReporter } from 'io-ts/PathReporter';
-import { ActionIcon, Anchor, AppShell, Avatar, Button, Card, Center, ColorSwatch, Container, FileButton, Flex, Group, Image, Indicator, JsonInput, Menu, Modal, SegmentedControl, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
+import { ActionIcon, Anchor, AppShell, Avatar, Button, Card, Center, ColorSwatch, Container, CopyButton, FileButton, Flex, Group, Image, Indicator, JsonInput, Menu, Modal, SegmentedControl, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications, Notifications } from '@mantine/notifications';
 import ImagePreview from '@/components/ImagePreview/ImagePreview';
@@ -78,7 +78,7 @@ export function HomePage() {
     }
 
     window.addEventListener("beforeunload", beforeUnload);
-    
+
   }, []);
 
   // Read and parse collectionFile
@@ -598,9 +598,20 @@ export function HomePage() {
             >
               Discard
             </Button>
-            <Button leftSection={<FontAwesomeIcon icon={faCheck} />} onClick={applyJson}>
-              Apply
-            </Button>
+            <Group>
+              <CopyButton value={json}>
+                {({ copied, copy }) => (
+                  <Tooltip label={copied ? 'Copied' : 'Copy to clipboard'}>
+                    <ActionIcon variant='subtle' onClick={copy} aria-label='Copy to clipboard'>
+                      {copied ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faCopy} />}
+                    </ActionIcon>
+                  </Tooltip>
+                )}
+              </CopyButton>
+              <Button leftSection={<FontAwesomeIcon icon={faCheck} />} onClick={applyJson}>
+                Apply
+              </Button>
+            </Group>
           </Group>
         </Stack>
       </Modal>
