@@ -1,6 +1,4 @@
-import { Accessory, Dragon } from "../Dragon/Dragon";
-import { AccessoryImage, styleInfo } from "../StyleHandler";
-import * as t from 'io-ts'
+import { styleInfo } from "../StyleHandler";
 
 type BodyPart = 'head' | 'body' | 'legs' | 'wings' | 'tail';
 export type ImageType = 'primary' | 'secondary' | 'underscales' | 'spikes' | 'membranes' | 'eyes';

@@ -1,9 +1,8 @@
 import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Group, Button, Dialog, TextInput, Text, Progress, Stack, Anchor } from "@mantine/core";
+import { Group, Button, Dialog, Text, Progress, Stack, Anchor } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { init, track } from "@plausible-analytics/tracker";
-import React from "react";
 import { useEffect, useState } from "react";
 
 let telemetryEnabled = false;

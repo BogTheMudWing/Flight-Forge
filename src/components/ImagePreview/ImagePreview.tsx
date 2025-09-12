@@ -2,15 +2,12 @@ import { Dragon, BodyParts } from '../Dragon/Dragon';
 
 import './ImagePreview.css';
 
-import { JSX, useState } from 'react';
-import Background from '@/images/debug/background/white.png';
+import { JSX } from 'react';
 // import { imageAssets, ImageLayer, ImageType } from './ImageAssets';
 import { accessoryAssets, imageAssets, ImageLayer, ImageType, TribeImages } from './ImageLoader';
 import convert, { HSV, RGB } from 'color-convert';
 
 import * as t from 'io-ts';
-import { LoadingOverlay } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
 
 type ImagePreviewProps = {
   dragon: t.TypeOf<typeof Dragon>;
