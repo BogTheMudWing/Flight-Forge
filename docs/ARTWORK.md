@@ -16,7 +16,14 @@ These images are use for each of the ten tribes. You don't need to include all o
 |           | spikes.png       | spikes.png       | spikes.png       | spikes.png       | spikes.png       |
 |           | underscales.png  | underscales.png  | underscales.png  | underscales.png  |                  |
 
-This is easiest to do if you utilize layers in an art program.
+This is easiest to do if you utilize layers in an art program. Below is the layer order, from highest to lowest:
+
+- Eyes
+- Head
+- Wings
+- Legs
+- Tail
+- Body
 
 ## Accessories
 
