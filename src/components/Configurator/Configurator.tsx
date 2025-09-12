@@ -851,7 +851,7 @@ export default function Configurator({
             <Title order={2}>Colors</Title>
             <Text>Choose the colors for this dragon.</Text>
             <Title order={3}>Scales</Title>
-            <SimpleGrid cols={2}>
+            <SimpleGrid cols={{ base: 1, md: 2 }}>
               <Stack>
                 <ColorInput
                   label="Primary"
@@ -929,7 +929,7 @@ export default function Configurator({
               </Stack>
             </SimpleGrid>
             <Title order={3}>Membrane</Title>
-            <SimpleGrid cols={2}>
+            <SimpleGrid cols={{ base: 1, md: 2 }}>
               <Stack>
                 <ColorInput
                   label="Start"
@@ -984,7 +984,7 @@ export default function Configurator({
               </Stack>
             </SimpleGrid>
             <Title order={3}>Other</Title>
-            <SimpleGrid cols={2}>
+            <SimpleGrid cols={{ base: 1, md: 2 }}>
               <Stack>
                 <ColorInput
                   label="Eyes"
@@ -1142,7 +1142,7 @@ export default function Configurator({
               <Button leftSection={<FontAwesomeIcon icon={faPlus} />} onClick={addRelation}>Add</Button>
             </Flex>
 
-            <SimpleGrid cols={2}>{relations()}</SimpleGrid>
+            <SimpleGrid cols={{ base: 1, md: 2 }}>{relations()}</SimpleGrid>
           </Stack>
         </Stepper.Step>
 
@@ -1156,7 +1156,7 @@ export default function Configurator({
               <Title order={2}>Locations</Title>
               <Text>Check the <Anchor href='https://wingsoffire.fandom.com/wiki/Map:Pyrrhia' target='new'>Pyrrhia map<FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor> or <Anchor href='https://wingsoffire.fandom.com/wiki/Map:Pantala' target='new'>Pantala map<FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor> for help.</Text>
             </Stack>
-            <SimpleGrid cols={2}>
+            <SimpleGrid cols={{ base: 1, md: 2 }}>
               <Autocomplete
                 label="Hatching location"
                 placeholder="Write anything here"
