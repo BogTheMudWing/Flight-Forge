@@ -1,15 +1,26 @@
 import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Group, Button, Dialog, TextInput, Text, Progress, Stack, Anchor } from "@mantine/core";
+import { Group, Button, Dialog, Text, Progress, Stack, Anchor } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { init, track } from "@plausible-analytics/tracker";
-import React from "react";
 import { useEffect, useState } from "react";
 
 let telemetryEnabled = false;
 
 export function isTelemetryEnabled() {
     return telemetryEnabled;
+}
+
+export function recordTelemetryEvent(event: string) {
+    // If telemetry is disabled, do nothing.
+    if (!telemetryEnabled) return;
+    // Get telemetry URL from env.
+    let plausibleUrl: string | undefined = import.meta.env.VITE_PLAUSIBLE_URL;
+    // If undefined, do nothing.
+    if (plausibleUrl == undefined) return;
+
+    // Otherwise, send data
+    track("test", {});
 }
 
 export function recordTelemetry(event: string, value: any) {

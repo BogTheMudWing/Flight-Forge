@@ -2,12 +2,12 @@ import { JSX, useEffect, useState } from 'react';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 /* import all the icons in Free Solid, Free Regular, and Brands styles */
-import { faArrowUpRightFromSquare, faBan, faBars, faBug, faCheck, faCircleInfo, faClone, faCode, faDownload, faEllipsis, faFileExport, faGear, faHome, faNewspaper, faPlus, faRotateLeft, fas, faTrash, faUpload, faUsersRectangle } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUpRightFromSquare, faBan, faBars, faBug, faCheck, faCircleInfo, faClone, faCode, faCopy, faDownload, faEllipsis, faFileExport, faGear, faHome, faNewspaper, faPlus, faRotateLeft, fas, faTrash, faUpload, faUsersRectangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isLeft } from 'fp-ts/lib/Either';
 import * as t from 'io-ts';
 import { PathReporter } from 'io-ts/PathReporter';
-import { ActionIcon, Anchor, AppShell, Avatar, Button, Card, Center, ColorSwatch, Container, FileButton, Flex, Group, Image, Indicator, JsonInput, Menu, Modal, Overlay, SegmentedControl, Select, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
+import { ActionIcon, Anchor, AppShell, Avatar, Button, Card, Center, ColorSwatch, Container, CopyButton, FileButton, Flex, Group, Image, Indicator, JsonInput, Menu, Modal, SegmentedControl, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications, Notifications } from '@mantine/notifications';
 import ImagePreview from '@/components/ImagePreview/ImagePreview';
@@ -16,12 +16,12 @@ import { Collection, defaultCollection } from '../components/Collection/Collecti
 import Configurator from '../components/Configurator/Configurator';
 import { defaultDragon, Dragon } from '../components/Dragon/Dragon';
 import icon from '../images/icon.png';
-import Telemetry, { allowTelemetry, denyTelemetry, isTelemetryEnabled, recordTelemetry } from '@/components/Telemetry/Telemetry';
+import Telemetry, { allowTelemetry, denyTelemetry, isTelemetryEnabled, recordTelemetry, recordTelemetryEvent } from '@/components/Telemetry/Telemetry';
 import './Home.page.css'
 import { exportImage } from '@/components/Exporter/Exporter';
+import { styleInfo, StylePackInfo } from '@/components/StyleHandler';
 // Style Info
-import styleInfoDebug from '@/images/debug/info.json';
-import styleInfoDeveloper from '@/images/developer/info.json';
+
 
 library.add(fas, fab);
 
@@ -42,7 +42,7 @@ export function HomePage() {
   const [lastSave, setLastSave] = useState<Date | null>(null);
   const [timeDiff, setTimeDiff] = useState<number | null>(null);
   const [dragonIndex, setDragonIndex] = useState<number>(0);
-  const latestUpdate = 0;
+  const latestUpdate = 1;
 
   const seenUpdate = () => {
     let lastUpdateSeen = 0;
@@ -78,7 +78,7 @@ export function HomePage() {
     }
 
     window.addEventListener("beforeunload", beforeUnload);
-    
+
   }, []);
 
   // Read and parse collectionFile
@@ -221,6 +221,7 @@ export function HomePage() {
   };
 
   function save() {
+    recordTelemetry("dragonCountInCollection", collection.dragons.length);
     setLastSave(new Date());
     setTimeDiff(0);
   }
@@ -469,6 +470,7 @@ export function HomePage() {
       return;
     }
     let images = imagePreview.children;
+    recordTelemetryEvent("export");
     exportImage(images, dragon.name, dragon.membraneColor1, dragon.membraneColor2);
   }
 
@@ -485,12 +487,10 @@ export function HomePage() {
   }
 
   const styleAllowedWithCurrentTribes = (style: string) => {
-    let info = null;
-    if (style == 'debug') info = styleInfoDebug;
-    else if (style == 'developer') info = styleInfoDeveloper;
+    let info = styleInfo(style);
     if (info == null) return false;
 
-    const includedTribes: string[] = info.included_tribes;
+    const includedTribes: string[] = info.includedTribes;
     let matches = 0;
     for (let i = 0; i < dragon.tribe.length; i++) {
       const tribe = dragon.tribe[i];
@@ -503,8 +503,9 @@ export function HomePage() {
     return (matches == dragon.tribe.length);
   }
 
-  function stylePackCredits(styleInfo: typeof styleInfoDebug) {
+  function stylePackCredits(styleInfo: t.TypeOf<typeof StylePackInfo> | null) {
     const elements = [];
+    if (styleInfo == null) return;
     elements.push(<Title order={3}>{styleInfo.name}</Title>)
     elements.push(<Text>{styleInfo.description}</Text>)
 
@@ -513,7 +514,7 @@ export function HomePage() {
       const creator = styleInfo.creators[i];
       creatorElements.push(
         <Group>
-          <Avatar src={creator.image_url} />
+          <Avatar src={creator.imageUrl} />
           <Stack gap={0}>
             <Text fw={'bold'}>{creator.name}</Text>
             <Anchor href={creator.link} target='new'>
@@ -599,9 +600,20 @@ export function HomePage() {
             >
               Discard
             </Button>
-            <Button leftSection={<FontAwesomeIcon icon={faCheck} />} onClick={applyJson}>
-              Apply
-            </Button>
+            <Group>
+              <CopyButton value={json}>
+                {({ copied, copy }) => (
+                  <Tooltip label={copied ? 'Copied' : 'Copy to clipboard'}>
+                    <ActionIcon variant='subtle' onClick={copy} aria-label='Copy to clipboard'>
+                      {copied ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faCopy} />}
+                    </ActionIcon>
+                  </Tooltip>
+                )}
+              </CopyButton>
+              <Button leftSection={<FontAwesomeIcon icon={faCheck} />} onClick={applyJson}>
+                Apply
+              </Button>
+            </Group>
           </Group>
         </Stack>
       </Modal>
@@ -706,14 +718,19 @@ export function HomePage() {
             Built by <Anchor href="https://blog.macver.org/about-me" target='new'>Bog The MudWing <FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor>.
           </Text>
           <Title order={2}>Style Packs</Title>
-          {stylePackCredits(styleInfoDebug)}
-          {stylePackCredits(styleInfoDeveloper)}
+          {stylePackCredits(styleInfo('debug'))}
+          {stylePackCredits(styleInfo('developer'))}
         </Stack>
       </Modal>
 
       <Modal opened={updatesModalOpened} onClose={closeUpdatesModal} title="Updates" centered>
         <Stack>
-          <Text>No updates yet.</Text>
+          <Text size="sm">September 12, 2025</Text>
+          <Title order={3}>Flight Forge is now in beta!</Title>
+          <Text>All of the ideas I wanted to implement have been added, including all ten tribes and five acessories. Hooray!</Text>
+          <Text>If you like Flight Forge, please share it with other people who might like it! I worked really hard on it and I want lots of people to be able to use it.</Text>
+          <Text>As always, if you find any bugs or frustations or have any suggestions, click the "Bug Report" button in the menu to let me know.</Text>
+          <Text>Thanks to everyone who tested the alpha and gave me feedback!</Text>
         </Stack>
       </Modal>
 
@@ -845,7 +862,7 @@ export function HomePage() {
                       label: (
                         <Tooltip
                           disabled={styleAllowedWithCurrentTribes('developer')}
-                          label={"Only compatible with tribes " + styleInfoDeveloper.included_tribes.toString().replaceAll(',', ', ')}
+                          label={"Only compatible with tribes " + styleInfo('developer')?.includedTribes.toString().replaceAll(',', ', ')}
                         >
                           <span>Developer</span>
                         </Tooltip>
@@ -857,7 +874,7 @@ export function HomePage() {
                       label: (
                         <Tooltip
                           disabled={styleAllowedWithCurrentTribes('debug')}
-                          label={"Only compatible with tribes " + styleInfoDebug.included_tribes.toString().replaceAll(',', ', ')}
+                          label={"Only compatible with tribes " + styleInfo('debug')?.includedTribes.toString().replaceAll(',', ', ')}
                         >
                           <span>Debug</span>
                         </Tooltip>

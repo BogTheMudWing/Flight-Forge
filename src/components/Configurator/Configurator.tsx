@@ -34,7 +34,7 @@ import {
   Center,
   Checkbox,
   ColorInput,
-  Container,
+  ColorPicker,
   Fieldset,
   Flex,
   Group,
@@ -52,7 +52,7 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core';
-import notImplemented, { myJoin } from '../AppUtils/AppUtils';
+import { myJoin } from '../AppUtils/AppUtils';
 import { Collection } from '../Collection/Collection';
 import { Dragon, Relation } from '../Dragon/Dragon';
 import { recordTelemetry } from '../Telemetry/Telemetry';
@@ -65,6 +65,7 @@ import { notifications } from '@mantine/notifications';
 // Style Info
 import styleInfoDebug from '@/images/debug/info.json';
 import styleInfoDeveloper from '@/images/developer/info.json';
+import { styleInfo } from '../StyleHandler';
 
 library.add(fas);
 
@@ -155,53 +156,88 @@ export default function Configurator({
     setDragon(newDragon);
   }
 
-  const accessories = () => {
-    let info = null;
-    if (dragon.style == 'debug') info = styleInfoDebug;
-    else if (dragon.style == 'developer') info = styleInfoDeveloper;
-    if (info == null) return (<Text>It seems like you have an invalid style pack applied. Select one of the provided style packs.</Text>);
+  const dragonHasAccessory = (accessory: { image: string; }) => {
+    dragon.accessories.forEach((dergAccessory) => {
+      if (accessory.image == dergAccessory.file) {
+        console.log("YEAH");
+        return true;
+      }
+    })
+    return false;
+  }
 
-    // const accessories = info.included_accessories;
-    const accessories: string | any[] | null | undefined = [];
-    if (accessories == undefined || accessories == null || accessories.length == 0) return <Text>There are no accessories provided by the current style pack.</Text>
+  const accessories = () => {
+
+    let info = styleInfo(dragon.style);
+    if (info == null) return (<Text>It seems like you have an invalid style pack applied. Select one of the provided style packs.</Text>);
 
     const accessoryElements: JSX.Element[] = [];
 
-    const dragonHasAccessory = (accessory: { image: string; }) => {
-      dragon.accessories.forEach((dergAccessory) => {
-        console.log(accessory.image);
-        console.log(dergAccessory.file);
-        if (accessory.image == dergAccessory.file) {
-          console.log('match');
-          return true;
-        }
-      })
-      return false;
-    }
-
-    for (let i = 0; i < accessories.length; i++) {
-      const element = accessories[i];
+    info.includedAccessories.forEach((availableAccessory) => {
+      const isChecked = dragon.accessories.some(
+        (dergAccessory) => availableAccessory.image === dergAccessory.file
+      );
+      const color = isChecked ? dragon.accessories.find(((dergAccessory) => availableAccessory.image === dergAccessory.file))?.color : '#ffffff';
       accessoryElements.push(
-        <Switch
-          checked={dragonHasAccessory(element)}
-          onChange={(event) => {
-            let newAccessories = dragon.accessories;
-            let accessory = newAccessories.find((accessory) => { (accessory.file == element.image) });
+        <Group>
+          <Switch
+            checked={isChecked}
+            onChange={(event) => {
+              const checked = event.currentTarget.checked;
 
-            if (event.currentTarget.value) {
-              // if enabled, set the accessory and add it
-              accessory = { file: element.image, name: element.name, color: '#ffffff' };
-              newAccessories.push(accessory);
-            } else if (accessory != undefined) {
-              // if disabled, remove it from the list
-              newAccessories.splice(newAccessories.indexOf(accessory), 1);
-              setDragon((prev) => ({ ...prev, accessories: newAccessories }));
-            }
-          }}
-          label={element.name}
-        />
-      )
-    }
+              setDragon((prev) => {
+                const newAccessories = [...prev.accessories]; // create copy
+
+                const existingIndex = newAccessories.findIndex(
+                  (a) => a.file === availableAccessory.image
+                );
+
+                if (checked && existingIndex === -1) {
+                  // Add accessory
+                  newAccessories.push({
+                    file: availableAccessory.image,
+                    name: availableAccessory.name,
+                    color: "#ffffff",
+                  });
+                } else if (!checked && existingIndex !== -1) {
+                  // Remove accessory
+                  newAccessories.splice(existingIndex, 1);
+                }
+
+                return { ...prev, accessories: newAccessories };
+              });
+            }}
+            label={availableAccessory.name}
+          />
+          <ColorInput
+            disabled={!isChecked}
+            value={color}
+            onChange={(value) => {
+              setDragon((prev) => {
+                const newAccessories = [...prev.accessories]; // create copy
+
+                const existingIndex = newAccessories.findIndex(
+                  (a) => a.file === availableAccessory.image
+                );
+
+                // Add accessory
+                newAccessories.splice(
+                  existingIndex,
+                  1,
+                  {
+                    file: availableAccessory.image,
+                    name: availableAccessory.name,
+                    color: value,
+                  }
+                );
+
+                return { ...prev, accessories: newAccessories };
+              });
+            }}
+          />
+        </Group>
+      );
+    });
 
     return <SimpleGrid cols={2}>{accessoryElements}</SimpleGrid>;
   }
@@ -210,7 +246,7 @@ export default function Configurator({
   const prevStep = () => setPage((current: number) => (current > 0 ? current - 1 : current));
 
   const relationStatus = ['Good', 'Estranged', 'Deceased', 'Lost', 'Unknown'];
-  const [newRelationSelectorValue, setNewRelationSelectorValue] = useState<string | null>('');
+  const [newRelationSelectorValue, setNewRelationSelectorValue] = useState<string>('');
   const [sameBuilderCreator, setSameBuilderCreator] = useState(dragon.creator == dragon.builder);
 
   useEffect(() => {
@@ -407,11 +443,11 @@ export default function Configurator({
                 newLocationList.splice(index, 1, newLocation)
                 setLocation(event.currentTarget.value, location.name)
               }}
-              placeholder='You can write anything here'
+              placeholder='Write anything here'
             />
             <Autocomplete
               label="Name"
-              placeholder="You can write anything here"
+              placeholder="Write anything here"
               value={location.name}
               data={locations}
               onChange={(value) => { setLocation(location.identifier, value); }}
@@ -647,7 +683,7 @@ export default function Configurator({
     else if (dragon.style == 'developer') info = styleInfoDeveloper;
     if (info == null) return [];
 
-    return info.included_tribes;
+    return info.includedTribes;
   }
 
   const trait = (name: string) => {
@@ -754,7 +790,7 @@ export default function Configurator({
                     let newBodyParts = dragon.bodyParts;
                     if (value == null) return;
                     newBodyParts.head = value;
-                    setDragon((prev) => ({ ...prev, newBodyParts}));
+                    setDragon((prev) => ({ ...prev, newBodyParts }));
                   }}
                 />
                 <Select
@@ -765,7 +801,7 @@ export default function Configurator({
                     let newBodyParts = dragon.bodyParts;
                     if (value == null) return;
                     newBodyParts.body = value;
-                    setDragon((prev) => ({ ...prev, newBodyParts}));
+                    setDragon((prev) => ({ ...prev, newBodyParts }));
                   }}
                 />
                 <Select
@@ -776,7 +812,7 @@ export default function Configurator({
                     let newBodyParts = dragon.bodyParts;
                     if (value == null) return;
                     newBodyParts.wings = value;
-                    setDragon((prev) => ({ ...prev, newBodyParts}));
+                    setDragon((prev) => ({ ...prev, newBodyParts }));
                   }}
                 />
                 <Select
@@ -787,7 +823,7 @@ export default function Configurator({
                     let newBodyParts = dragon.bodyParts;
                     if (value == null) return;
                     newBodyParts.legs = value;
-                    setDragon((prev) => ({ ...prev, newBodyParts}));
+                    setDragon((prev) => ({ ...prev, newBodyParts }));
                   }}
                 />
                 <Select
@@ -798,7 +834,7 @@ export default function Configurator({
                     let newBodyParts = dragon.bodyParts;
                     if (value == null) return;
                     newBodyParts.tail = value;
-                    setDragon((prev) => ({ ...prev, newBodyParts}));
+                    setDragon((prev) => ({ ...prev, newBodyParts }));
                   }}
                 />
               </SimpleGrid>
@@ -811,113 +847,195 @@ export default function Configurator({
           icon={<FontAwesomeIcon icon={faPalette} />}
           completedIcon={<FontAwesomeIcon icon={faPalette} />}
         >
-          <Stack>
+          <Stack style={{overflowX: 'hidden'}}>
             <Title order={2}>Colors</Title>
             <Text>Choose the colors for this dragon.</Text>
             <Title order={3}>Scales</Title>
-            <SimpleGrid cols={2}>
-              <ColorInput
-                label="Primary"
-                value={dragon.primaryColor}
-                onChange={(newColor) => {
-                  previewDragon((prev) => ({ ...prev, primaryColor: newColor }));
-                }}
-                onChangeEnd={(newColor) => {
-                  setDragon((prev) => ({ ...prev, primaryColor: newColor }));
-                }}
-                description="Primary scales color"
-                popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-                swatches={colorSwatches}
-              // TODO: Dyanmically change swatches based on tribe
-              />
-              <ColorInput
-                label="Secondary"
-                value={dragon.secondaryColor}
-                onChange={(newColor) => {
-                  previewDragon((prev) => ({ ...prev, secondaryColor: newColor }));
-                }}
-                onChangeEnd={(newColor) => {
-                  setDragon((prev) => ({ ...prev, secondaryColor: newColor }));
-                }}
-                description="Secondary scales color"
-                popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-                swatches={colorSwatches}
-              // TODO: Dyanmically change swatches based on tribe
-              />
-              <ColorInput
-                label="Underscales"
-                value={dragon.underscalesColor}
-                onChange={(newColor) => {
-                  previewDragon((prev) => ({ ...prev, underscalesColor: newColor }));
-                }}
-                onChangeEnd={(newColor) => {
-                  setDragon((prev) => ({ ...prev, underscalesColor: newColor }));
-                }}
-                description="Underscales color"
-                popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-                swatches={colorSwatches}
-              // TODO: Dyanmically change swatches based on tribe
-              />
+            <SimpleGrid cols={{ base: 1, md: 2 }}>
+              <Stack>
+                <ColorInput
+                  label="Primary"
+                  withPicker={false}
+                  value={dragon.primaryColor}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, primaryColor: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, primaryColor: newColor }));
+                  }}
+                  description="Primary scales color"
+                />
+                <ColorPicker
+                  fullWidth
+                  swatches={colorSwatches}
+                  value={dragon.primaryColor}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, primaryColor: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, primaryColor: newColor }));
+                  }}
+                />
+              </Stack>
+              <Stack>
+                <ColorInput
+                  label="Secondary"
+                  withPicker={false}
+                  value={dragon.secondaryColor}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, secondaryColor: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, secondaryColor: newColor }));
+                  }}
+                  description="Secondary scales color"
+                />
+                <ColorPicker
+                  fullWidth
+                  swatches={colorSwatches}
+                  value={dragon.secondaryColor}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, secondaryColor: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, secondaryColor: newColor }));
+                  }}
+                />
+              </Stack>
+              <Stack>
+                <ColorInput
+                  label="Underscales"
+                  withPicker={false}
+                  value={dragon.underscalesColor}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, underscalesColor: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, underscalesColor: newColor }));
+                  }}
+                  description="Underscales color"
+                />
+                <ColorPicker
+                  fullWidth
+                  swatches={colorSwatches}
+                  value={dragon.secondaryColor}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, underscalesColor: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, underscalesColor: newColor }));
+                  }}
+                />
+              </Stack>
             </SimpleGrid>
             <Title order={3}>Membrane</Title>
-            <SimpleGrid cols={2}>
-              <ColorInput
-                label="Start Color"
-                value={dragon.membraneColor1}
-                onChange={(newColor) => {
-                  previewDragon((prev) => ({ ...prev, membraneColor1: newColor }));
-                }}
-                onChangeEnd={(newColor) => {
-                  setDragon((prev) => ({ ...prev, membraneColor1: newColor }));
-                }}
-                popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-                swatches={colorSwatches}
-              // TODO: Dyanmically change swatches based on tribe
-              />
-              <ColorInput
-                label="End Color"
-                value={dragon.membraneColor2}
-                onChange={(newColor) => {
-                  previewDragon((prev) => ({ ...prev, membraneColor2: newColor }));
-                }}
-                onChangeEnd={(newColor) => {
-                  setDragon((prev) => ({ ...prev, membraneColor2: newColor }));
-                }}
-                popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-                swatches={colorSwatches}
-              // TODO: Dyanmically change swatches based on tribe
-              />
+            <SimpleGrid cols={{ base: 1, md: 2 }}>
+              <Stack>
+                <ColorInput
+                  label="Start"
+                  withPicker={false}
+                  value={dragon.membraneColor1}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, membraneColor1: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, membraneColor1: newColor }));
+                  }}
+                  description="The top of the gradient"
+                />
+                <ColorPicker
+                  fullWidth
+                  format="hexa"
+                  swatches={colorSwatches}
+                  value={dragon.membraneColor1}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, membraneColor1: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, membraneColor1: newColor }));
+                  }}
+                />
+              </Stack>
+              <Stack>
+                <ColorInput
+                  label="End"
+                  withPicker={false}
+                  value={dragon.membraneColor2}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, membraneColor2: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, membraneColor2: newColor }));
+                  }}
+                  description="The bottom of the gradient"
+                />
+                <ColorPicker
+                  fullWidth
+                  format="hexa"
+                  swatches={colorSwatches}
+                  value={dragon.membraneColor2}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, membraneColor2: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, membraneColor2: newColor }));
+                  }}
+                />
+              </Stack>
             </SimpleGrid>
             <Title order={3}>Other</Title>
-            <SimpleGrid cols={2}>
-              <ColorInput
-                label="Eyes"
-                value={dragon.eyeColor}
-                onChange={(newColor) => {
-                  previewDragon((prev) => ({ ...prev, eyeColor: newColor }));
-                }}
-                onChangeEnd={(newColor) => {
-                  setDragon((prev) => ({ ...prev, eyeColor: newColor }));
-                }}
-                description="Eye color"
-                popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-                swatches={colorSwatches}
-              // TODO: Dyanmically change swatches based on tribe
-              />
-              <ColorInput
-                label="Spikes"
-                value={dragon.spikesColor}
-                onChange={(newColor) => {
-                  previewDragon((prev) => ({ ...prev, spikesColor: newColor }));
-                }}
-                onChangeEnd={(newColor) => {
-                  setDragon((prev) => ({ ...prev, spikesColor: newColor }));
-                }}
-                description="Spikes and talons"
-                popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-                swatches={colorSwatches}
-              // TODO: Dyanmically change swatches based on tribe
-              />
+            <SimpleGrid cols={{ base: 1, md: 2 }}>
+              <Stack>
+                <ColorInput
+                  label="Eyes"
+                  withPicker={false}
+                  value={dragon.eyeColor}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, eyeColor: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, eyeColor: newColor }));
+                  }}
+                  description="Eye color"
+                />
+                <ColorPicker
+                  fullWidth
+                  swatches={colorSwatches}
+                  value={dragon.eyeColor}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, eyeColor: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, eyeColor: newColor }));
+                  }}
+                />
+              </Stack>
+              <Stack>
+                <ColorInput
+                  label="Spikes"
+                  withPicker={false}
+                  value={dragon.spikesColor}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, spikesColor: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, spikesColor: newColor }));
+                  }}
+                  description="Spikes and talons"
+                />
+
+                <ColorPicker
+                  fullWidth
+                  swatches={colorSwatches}
+                  value={dragon.spikesColor}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, spikesColor: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, spikesColor: newColor }));
+                  }}
+                />
+              </Stack>
             </SimpleGrid>
           </Stack>
         </Stepper.Step>
@@ -986,11 +1104,11 @@ export default function Configurator({
               <Text>Dragons are social creatures!</Text>
             </Stack>
             <Flex gap="md" justify="flex-start" align="flex-end" direction="row" wrap="nowrap">
-              <Select
+              <Autocomplete
                 id='newRelationSelector'
                 flex={1}
                 label="Add relation"
-                placeholder="Pick value"
+                placeholder="Write anything here"
                 data={[
                   'Mother',
                   'Father',
@@ -1006,21 +1124,25 @@ export default function Configurator({
                   'Sibling',
                   'Sister',
                   'Brother',
+                  'Cousin',
+                  'Aunt',
+                  'Uncle',
                   'Friend',
                   'Mentor',
                   'Employer',
+                  'Crush',
                   'Partner',
                   'Ex-partner',
                   'Dragonet',
+                  'Pet',
                 ]}
                 value={newRelationSelectorValue}
                 onChange={setNewRelationSelectorValue}
-                searchable
               />
               <Button leftSection={<FontAwesomeIcon icon={faPlus} />} onClick={addRelation}>Add</Button>
             </Flex>
 
-            <SimpleGrid cols={2}>{relations()}</SimpleGrid>
+            <SimpleGrid cols={{ base: 1, md: 2 }}>{relations()}</SimpleGrid>
           </Stack>
         </Stepper.Step>
 
@@ -1034,10 +1156,10 @@ export default function Configurator({
               <Title order={2}>Locations</Title>
               <Text>Check the <Anchor href='https://wingsoffire.fandom.com/wiki/Map:Pyrrhia' target='new'>Pyrrhia map<FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor> or <Anchor href='https://wingsoffire.fandom.com/wiki/Map:Pantala' target='new'>Pantala map<FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor> for help.</Text>
             </Stack>
-            <SimpleGrid cols={2}>
+            <SimpleGrid cols={{ base: 1, md: 2 }}>
               <Autocomplete
                 label="Hatching location"
-                placeholder="You can write anything here"
+                placeholder="Write anything here"
                 // This line below finds the location with identifier "Hatching location" and gets its value
                 value={
                   dragon.locations.find((location) => location.identifier === 'Hatching location')
@@ -1061,7 +1183,7 @@ export default function Configurator({
               />
               <Autocomplete
                 label="Growing up location"
-                placeholder="You can write anything here"
+                placeholder="Write anything here"
                 value={
                   dragon.locations.find((location) => location.identifier === 'Growing up location')
                     ?.name
@@ -1084,7 +1206,7 @@ export default function Configurator({
               />
               <Autocomplete
                 label="Home location"
-                placeholder="You can write anything here"
+                placeholder="Write anything here"
                 value={
                   dragon.locations.find((location) => location.identifier === 'Home location')?.name
                 }
@@ -1106,7 +1228,7 @@ export default function Configurator({
               />
               <Autocomplete
                 label="Current location"
-                placeholder="You can write anything here"
+                placeholder="Write anything here"
                 value={
                   dragon.locations.find((location) => location.identifier === 'Current location')
                     ?.name

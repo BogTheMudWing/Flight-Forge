@@ -16,7 +16,14 @@ These images are use for each of the ten tribes. You don't need to include all o
 |           | spikes.png       | spikes.png       | spikes.png       | spikes.png       | spikes.png       |
 |           | underscales.png  | underscales.png  | underscales.png  | underscales.png  |                  |
 
-This is easiest to do if you utilize layers in an art program.
+This is easiest to do if you utilize layers in an art program. Below is the layer order, from highest to lowest:
+
+- Eyes
+- Head
+- Wings
+- Legs
+- Tail
+- Body
 
 ## Accessories
 
@@ -32,14 +39,6 @@ You may also choose to provide accessories. Below are the accessories included i
 - necklace.png
 - crown.png
 - bag.png
-
-## Backgrounds
-
-You may also choose to provide backgrounds. Below are the backgrounds included in the default pixel style, but you can omit any or all of them. You may also add your own.
-
-> 🚧 **This section is incomplete.**
-> 
-> I'm not yet sure what background will be included by default.
 
 ## Coloring
 
@@ -399,11 +398,11 @@ The `info.json` file contains information about the style pack. See the example 
 {
     "name": "Pixel", 
     "description": "A pixel art pack inspired by the sprites of Super Nintento Entertainment System games.",
-    "pack_version": "1",
+    "packVersion": "1",
     "creators": [
         {
             "name": "Bog",
-            "image_url": "https://blog.macver.org/content/images/2025/03/Compute-Cube-Medium.png",
+            "imageUrl": "https://blog.macver.org/content/images/2025/03/Compute-Cube-Medium.png",
             "link": "https://blog.macver.org/about-me"
         }
     ],
@@ -419,49 +418,27 @@ The `info.json` file contains information about the style pack. See the example 
         "Silk",
         "Sky"
     ],
-    "included_accessories": [
+    "includedAccessories": [
         {
-            "name": "Left Arm Band",
-            "image": "left_arm_band"
+            "name": "Arm Band",
+            "image": "arm_band"
         },
         {
-            "name": "Right Arm Band",
-            "image": "right_arm_band"
-        },
-        {
-            "name": "Left Earring",
-            "image": "left_earring"
+            "name": "Earring",
+            "image": "earring"
         },
         {
             "name": "Glasses",
             "image": "glasses"
         },
         {
-            "name": "Right Earring",
-            "image": "left_earring"
-        },
-        {
-            "name": "Nose Ring",
-            "image": "nose_ring"
-        },
-        {
-            "name": "Crown",
-            "image": "crown"
-        },
-        {
             "name": "Necklace",
             "image": "necklace"
-        },
-        {
-            "name": "Bag",
-            "image": "bag"
         },
         {
             "name": "Chestplate",
             "image": "chestplate"
         }
-    ],
-    "included_backgrounds": [
     ]
 }
 ```
@@ -470,26 +447,15 @@ Below is an explanation of the file. Elements which are *required* cannot be omi
 
 * `name`: **Required String** - The name of the style pack. This is displayed in the app.
 * `description`: **Optional String** - A short description of the style pack in one or two sentences. This is displayed in the app.
-* `pack_version`: **Required String** - Used by Flight Forge internally to figure out how the pack is structured. If the pack structure follows this guide, it should be `1`.
+* `packVersion`: **Required String** - Used by Flight Forge internally to figure out how the pack is structured. If the pack structure follows this guide, it should be `1`.
 * `creators`: **Optional Object List** - A list of creators of the pack. Must have at least one creator.
   * `name`: **Required String** - The name of the creator. This can be real name, a name you use online, or any way you want to be recognized. This is displayed in the app.
   * `image_url`: **Optional String** - A URL that points to an image to represent you. This is displayed in the app.
   * `link`: **Optional String** - A URL to your website or social profile. This is displayed in the app.
-* `included_tribes`: **Required String List** - A list of tribes that the pack supports. This is usually just the ten canon tribes, but you can add or remove whatever you want here if you aren't submitting it to be added to the app.
-* `included_accessories`: **Optional Object List** - A list of accessories. You can have as many or as few accessories as you like, and they can be whatever you want. I recommend including all accessories in the Pixel style to ensure the best compatibility.
+* `includedTribes`: **Required String List** - A list of tribes that the pack supports. This is usually just the ten canon tribes, but you can add or remove whatever you want here if you aren't submitting it to be added to the app.
+* `includedAccessories`: **Optional Object List** - A list of accessories. You can have as many or as few accessories as you like, and they can be whatever you want. I recommend including all accessories in the Pixel style to ensure the best compatibility.
   * `name`: **Required String** - The name of the accessory. This is displayed in the app. It doesn't have to match the image name.
   * `image`: **Required String** - The name of the image of the accessory without the file extension. It doesn't have to match the display name.
-* `included_backgrounds`: **Optional Object List** - A list of backgrounds. You can have as many or as few backgrounds as you like, and they can be whatever you want. I recommend including all backgrounds in the Pixel style to ensure the best compatibility.
-  * `name`: **Required String** - The name of the background. This is displayed in the app. It doesn't have to match the image name.
-  * `image`: **Required String** - The name of the image of the background without the file extension. It doesn't have to match the display name.
-
-## Testing
-
-> ⚠️ **Functionality described below does not exist yet.**
->
-> Style pack selection is not yet implemented in the app. In the future, this is how I would like it to work.
-
-To test your style pack, open Flight Forge, load a dragon, and open the style pack menu. Click the *Load from folder* and upload the folder. You will need to re-upload the folder to show new changes, and reloading the page will make Flight Forge forget the folder.
 
 ## Submission
 
