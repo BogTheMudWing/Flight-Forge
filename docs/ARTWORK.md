@@ -40,14 +40,6 @@ You may also choose to provide accessories. Below are the accessories included i
 - crown.png
 - bag.png
 
-## Backgrounds
-
-You may also choose to provide backgrounds. Below are the backgrounds included in the default pixel style, but you can omit any or all of them. You may also add your own.
-
-> 🚧 **This section is incomplete.**
-> 
-> I'm not yet sure what background will be included by default.
-
 ## Coloring
 
 It's very important that the images are **not black and white.** Instead, use red (#ff0000) as the base color. This is because Flight Forge coloring works using hue rotation, saturtion, and brightness filters.
@@ -464,14 +456,6 @@ Below is an explanation of the file. Elements which are *required* cannot be omi
 * `includedAccessories`: **Optional Object List** - A list of accessories. You can have as many or as few accessories as you like, and they can be whatever you want. I recommend including all accessories in the Pixel style to ensure the best compatibility.
   * `name`: **Required String** - The name of the accessory. This is displayed in the app. It doesn't have to match the image name.
   * `image`: **Required String** - The name of the image of the accessory without the file extension. It doesn't have to match the display name.
-
-## Testing
-
-> ⚠️ **Functionality described below does not exist yet.**
->
-> Style pack selection is not yet implemented in the app. In the future, this is how I would like it to work.
-
-To test your style pack, open Flight Forge, load a dragon, and open the style pack menu. Click the *Load from folder* and upload the folder. You will need to re-upload the folder to show new changes, and reloading the page will make Flight Forge forget the folder.
 
 ## Submission
 
