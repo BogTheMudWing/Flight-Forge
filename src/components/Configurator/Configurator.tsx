@@ -903,6 +903,31 @@ export default function Configurator({
                   }}
                 />
               </Stack>
+              <Stack>
+                <ColorInput
+                  label="Underscales"
+                  withPicker={false}
+                  value={dragon.underscalesColor}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, underscalesColor: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, underscalesColor: newColor }));
+                  }}
+                  description="Underscales color"
+                />
+                <ColorPicker
+                  fullWidth
+                  swatches={colorSwatches}
+                  value={dragon.secondaryColor}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, underscalesColor: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, underscalesColor: newColor }));
+                  }}
+                />
+              </Stack>
             </SimpleGrid>
             <Title order={3}>Membrane</Title>
             <SimpleGrid cols={2}>
