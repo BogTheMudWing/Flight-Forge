@@ -179,7 +179,7 @@ export default function Configurator({
       );
       const color = isChecked ? dragon.accessories.find(((dergAccessory) => availableAccessory.image === dergAccessory.file))?.color : '#ffffff';
       accessoryElements.push(
-        <Group>
+        <Group grow>
           <Switch
             checked={isChecked}
             onChange={(event) => {
@@ -239,7 +239,7 @@ export default function Configurator({
       );
     });
 
-    return <SimpleGrid cols={2}>{accessoryElements}</SimpleGrid>;
+    return <Stack>{accessoryElements}</Stack>;
   }
 
   const nextStep = () => setPage((current: number) => (current < 9 ? current + 1 : current));
@@ -568,10 +568,10 @@ export default function Configurator({
 
         if (relation.name == 'Unknown')
           relationElements.push(
-            <li>{relation.name} {haveTense} a {relation.relation.toLowerCase()} whose name is not known.</li>
+            <li key={`relation${i}`}>{relation.name} {haveTense} a {relation.relation.toLowerCase()} whose name is not known.</li>
           );
         else relationElements.push(
-          <li>{relation.name} {beTense} {dragon.name}'s {relation.relation.toLowerCase()}. {statusString}</li>
+          <li key={`relation${i}`}>{relation.name} {beTense} {dragon.name}'s {relation.relation.toLowerCase()}. {statusString}</li>
         );
       }
       elements.push(<ul style={{ margin: 0 }}>{relationElements}</ul>);
@@ -1345,22 +1345,6 @@ export default function Configurator({
             </Stack>
             <Title order={3}>Accessories</Title>
             {accessories()}
-            <SimpleGrid cols={2}>
-              {/* TODO: Generate accessory toggles (with preview?) based on pack info.json. */}
-              {/* <Switch label="Left arm" defaultChecked={dragon.injuries.leftArm} />
-              <Switch label="Right arm" defaultChecked={dragon.injuries.rightArm} />
-              <Switch label="Left leg" defaultChecked={dragon.injuries.leftLeg} />
-              <Switch label="Right leg" defaultChecked={dragon.injuries.rightLeg} />
-              <Switch label="Left wing" defaultChecked={dragon.injuries.leftWing} />
-              <Switch label="Right wing" defaultChecked={dragon.injuries.rightWing} />
-              <Switch label="Left eye" defaultChecked={dragon.injuries.leftEye} />
-              <Switch label="Right eye" defaultChecked={dragon.injuries.rightEye} />
-              <Switch label="Left horn" defaultChecked={dragon.injuries.leftHorn} />
-              <Switch label="Right horn" defaultChecked={dragon.injuries.rightHorn} />
-              <Switch label="Left ear" defaultChecked={dragon.injuries.leftEar} />
-              <Switch label="Right ear" defaultChecked={dragon.injuries.rightEar} />
-              <Switch label="Tail" defaultChecked={dragon.injuries.tail} /> */}
-            </SimpleGrid>
           </Stack>
         </Stepper.Step>
 

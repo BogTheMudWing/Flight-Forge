@@ -151,7 +151,7 @@ export default function ImagePreview({ dragon, page, style }: ImagePreviewProps)
 
       return (
         <img
-          key={i}
+          key={`layer${i}`}
           src={src}
           alt={`${bodyPart} ${type}`}
           style={style}
@@ -172,11 +172,9 @@ export default function ImagePreview({ dragon, page, style }: ImagePreviewProps)
       return [];
     }
 
-    const appliedAccessories = dragon.accessories;
-
-    return layers.map(({ src, name }: { src: string; name: string }, i: number) => {
+    return layers.map(({ src, name, file }: { src: string; name: string, file: string }, i: number) => {
       
-      const accessoryData = dragon.accessories.find((appliedAccessory) => src.includes(`${appliedAccessory.file}.png`));
+      const accessoryData = dragon.accessories.find((appliedAccessory) => (file === appliedAccessory.file));
       if (accessoryData == undefined || accessoryData == null) return <></>;
 
       const hsv = adjustedHsv(accessoryData?.color);
@@ -185,7 +183,7 @@ export default function ImagePreview({ dragon, page, style }: ImagePreviewProps)
 
       return (
         <img
-          key={i}
+          key={`accessory${i}`}
           src={src}
           alt={`${name}`}
           style={style}
