@@ -568,10 +568,10 @@ export default function Configurator({
 
         if (relation.name == 'Unknown')
           relationElements.push(
-            <li>{relation.name} {haveTense} a {relation.relation.toLowerCase()} whose name is not known.</li>
+            <li key={`relation${i}`}>{relation.name} {haveTense} a {relation.relation.toLowerCase()} whose name is not known.</li>
           );
         else relationElements.push(
-          <li>{relation.name} {beTense} {dragon.name}'s {relation.relation.toLowerCase()}. {statusString}</li>
+          <li key={`relation${i}`}>{relation.name} {beTense} {dragon.name}'s {relation.relation.toLowerCase()}. {statusString}</li>
         );
       }
       elements.push(<ul style={{ margin: 0 }}>{relationElements}</ul>);
