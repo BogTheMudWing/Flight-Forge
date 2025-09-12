@@ -848,7 +848,7 @@ export default function Configurator({
           icon={<FontAwesomeIcon icon={faPalette} />}
           completedIcon={<FontAwesomeIcon icon={faPalette} />}
         >
-          <Stack>
+          <Stack style={{overflowX: 'hidden'}}>
             <Title order={2}>Colors</Title>
             <Text>Choose the colors for this dragon.</Text>
             <Title order={3}>Scales</Title>
@@ -946,6 +946,7 @@ export default function Configurator({
                 />
                 <ColorPicker
                   fullWidth
+                  format="hexa"
                   swatches={colorSwatches}
                   value={dragon.membraneColor1}
                   onChange={(newColor) => {
@@ -971,6 +972,7 @@ export default function Configurator({
                 />
                 <ColorPicker
                   fullWidth
+                  format="hexa"
                   swatches={colorSwatches}
                   value={dragon.membraneColor2}
                   onChange={(newColor) => {
