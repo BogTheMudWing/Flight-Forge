@@ -34,6 +34,7 @@ import {
   Center,
   Checkbox,
   ColorInput,
+  ColorPicker,
   Container,
   Fieldset,
   Flex,
@@ -852,108 +853,163 @@ export default function Configurator({
             <Text>Choose the colors for this dragon.</Text>
             <Title order={3}>Scales</Title>
             <SimpleGrid cols={2}>
-              <ColorInput
-                label="Primary"
-                value={dragon.primaryColor}
-                onChange={(newColor) => {
-                  previewDragon((prev) => ({ ...prev, primaryColor: newColor }));
-                }}
-                onChangeEnd={(newColor) => {
-                  setDragon((prev) => ({ ...prev, primaryColor: newColor }));
-                }}
-                description="Primary scales color"
-                popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-                swatches={colorSwatches}
-              // TODO: Dyanmically change swatches based on tribe
-              />
-              <ColorInput
-                label="Secondary"
-                value={dragon.secondaryColor}
-                onChange={(newColor) => {
-                  previewDragon((prev) => ({ ...prev, secondaryColor: newColor }));
-                }}
-                onChangeEnd={(newColor) => {
-                  setDragon((prev) => ({ ...prev, secondaryColor: newColor }));
-                }}
-                description="Secondary scales color"
-                popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-                swatches={colorSwatches}
-              // TODO: Dyanmically change swatches based on tribe
-              />
-              <ColorInput
-                label="Underscales"
-                value={dragon.underscalesColor}
-                onChange={(newColor) => {
-                  previewDragon((prev) => ({ ...prev, underscalesColor: newColor }));
-                }}
-                onChangeEnd={(newColor) => {
-                  setDragon((prev) => ({ ...prev, underscalesColor: newColor }));
-                }}
-                description="Underscales color"
-                popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-                swatches={colorSwatches}
-              // TODO: Dyanmically change swatches based on tribe
-              />
+              <Stack>
+                <ColorInput
+                  label="Primary"
+                  withPicker={false}
+                  value={dragon.primaryColor}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, primaryColor: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, primaryColor: newColor }));
+                  }}
+                  description="Primary scales color"
+                />
+                <ColorPicker
+                  fullWidth
+                  swatches={colorSwatches}
+                  value={dragon.primaryColor}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, primaryColor: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, primaryColor: newColor }));
+                  }}
+                />
+              </Stack>
+              <Stack>
+                <ColorInput
+                  label="Secondary"
+                  withPicker={false}
+                  value={dragon.secondaryColor}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, secondaryColor: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, secondaryColor: newColor }));
+                  }}
+                  description="Secondary scales color"
+                />
+                <ColorPicker
+                  fullWidth
+                  swatches={colorSwatches}
+                  value={dragon.secondaryColor}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, secondaryColor: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, secondaryColor: newColor }));
+                  }}
+                />
+              </Stack>
             </SimpleGrid>
             <Title order={3}>Membrane</Title>
             <SimpleGrid cols={2}>
-              <ColorInput
-                label="Start Color"
-                value={dragon.membraneColor1}
-                onChange={(newColor) => {
-                  previewDragon((prev) => ({ ...prev, membraneColor1: newColor }));
-                }}
-                onChangeEnd={(newColor) => {
-                  setDragon((prev) => ({ ...prev, membraneColor1: newColor }));
-                }}
-                popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-                swatches={colorSwatches}
-              // TODO: Dyanmically change swatches based on tribe
-              />
-              <ColorInput
-                label="End Color"
-                value={dragon.membraneColor2}
-                onChange={(newColor) => {
-                  previewDragon((prev) => ({ ...prev, membraneColor2: newColor }));
-                }}
-                onChangeEnd={(newColor) => {
-                  setDragon((prev) => ({ ...prev, membraneColor2: newColor }));
-                }}
-                popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-                swatches={colorSwatches}
-              // TODO: Dyanmically change swatches based on tribe
-              />
+              <Stack>
+                <ColorInput
+                  label="Start"
+                  withPicker={false}
+                  value={dragon.membraneColor1}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, membraneColor1: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, membraneColor1: newColor }));
+                  }}
+                  description="The top of the gradient"
+                />
+                <ColorPicker
+                  fullWidth
+                  swatches={colorSwatches}
+                  value={dragon.membraneColor1}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, membraneColor1: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, membraneColor1: newColor }));
+                  }}
+                />
+              </Stack>
+              <Stack>
+                <ColorInput
+                  label="End"
+                  withPicker={false}
+                  value={dragon.membraneColor2}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, membraneColor2: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, membraneColor2: newColor }));
+                  }}
+                  description="The bottom of the gradient"
+                />
+                <ColorPicker
+                  fullWidth
+                  swatches={colorSwatches}
+                  value={dragon.membraneColor2}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, membraneColor2: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, membraneColor2: newColor }));
+                  }}
+                />
+              </Stack>
             </SimpleGrid>
             <Title order={3}>Other</Title>
             <SimpleGrid cols={2}>
-              <ColorInput
-                label="Eyes"
-                value={dragon.eyeColor}
-                onChange={(newColor) => {
-                  previewDragon((prev) => ({ ...prev, eyeColor: newColor }));
-                }}
-                onChangeEnd={(newColor) => {
-                  setDragon((prev) => ({ ...prev, eyeColor: newColor }));
-                }}
-                description="Eye color"
-                popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-                swatches={colorSwatches}
-              // TODO: Dyanmically change swatches based on tribe
-              />
-              <ColorInput
-                label="Spikes"
-                value={dragon.spikesColor}
-                onChange={(newColor) => {
-                  previewDragon((prev) => ({ ...prev, spikesColor: newColor }));
-                }}
-                onChangeEnd={(newColor) => {
-                  setDragon((prev) => ({ ...prev, spikesColor: newColor }));
-                }}
-                description="Spikes and talons"
-                popoverProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-                swatches={colorSwatches}
-              // TODO: Dyanmically change swatches based on tribe
-              />
+              <Stack>
+                <ColorInput
+                  label="Eyes"
+                  withPicker={false}
+                  value={dragon.eyeColor}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, eyeColor: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, eyeColor: newColor }));
+                  }}
+                  description="Eye color"
+                />
+                <ColorPicker
+                  fullWidth
+                  swatches={colorSwatches}
+                  value={dragon.eyeColor}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, eyeColor: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, eyeColor: newColor }));
+                  }}
+                />
+              </Stack>
+              <Stack>
+                <ColorInput
+                  label="Spikes"
+                  withPicker={false}
+                  value={dragon.spikesColor}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, spikesColor: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, spikesColor: newColor }));
+                  }}
+                  description="Spikes and talons"
+                />
+
+                <ColorPicker
+                  fullWidth
+                  swatches={colorSwatches}
+                  value={dragon.spikesColor}
+                  onChange={(newColor) => {
+                    previewDragon((prev) => ({ ...prev, spikesColor: newColor }));
+                  }}
+                  onChangeEnd={(newColor) => {
+                    setDragon((prev) => ({ ...prev, spikesColor: newColor }));
+                  }}
+                />
+              </Stack>
             </SimpleGrid>
           </Stack>
         </Stepper.Step>
