@@ -16,7 +16,7 @@ import { Collection, defaultCollection } from '../components/Collection/Collecti
 import Configurator from '../components/Configurator/Configurator';
 import { defaultDragon, Dragon } from '../components/Dragon/Dragon';
 import icon from '../images/icon.png';
-import Telemetry, { allowTelemetry, denyTelemetry, isTelemetryEnabled, recordTelemetry } from '@/components/Telemetry/Telemetry';
+import Telemetry, { allowTelemetry, denyTelemetry, isTelemetryEnabled, recordTelemetry, recordTelemetryEvent } from '@/components/Telemetry/Telemetry';
 import './Home.page.css'
 import { exportImage } from '@/components/Exporter/Exporter';
 import { styleInfo, StylePackInfo } from '@/components/StyleHandler';
@@ -221,6 +221,7 @@ export function HomePage() {
   };
 
   function save() {
+    recordTelemetry("dragonCountInCollection", collection.dragons.length);
     setLastSave(new Date());
     setTimeDiff(0);
   }
@@ -469,6 +470,7 @@ export function HomePage() {
       return;
     }
     let images = imagePreview.children;
+    recordTelemetryEvent("export");
     exportImage(images, dragon.name, dragon.membraneColor1, dragon.membraneColor2);
   }
 

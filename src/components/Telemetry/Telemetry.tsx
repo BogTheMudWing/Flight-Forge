@@ -11,6 +11,18 @@ export function isTelemetryEnabled() {
     return telemetryEnabled;
 }
 
+export function recordTelemetryEvent(event: string) {
+    // If telemetry is disabled, do nothing.
+    if (!telemetryEnabled) return;
+    // Get telemetry URL from env.
+    let plausibleUrl: string | undefined = import.meta.env.VITE_PLAUSIBLE_URL;
+    // If undefined, do nothing.
+    if (plausibleUrl == undefined) return;
+
+    // Otherwise, send data
+    track("test", {});
+}
+
 export function recordTelemetry(event: string, value: any) {
     // If telemetry is disabled, do nothing.
     if (!telemetryEnabled) return;
