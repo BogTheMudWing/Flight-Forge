@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isLeft } from 'fp-ts/lib/Either';
 import * as t from 'io-ts';
 import { PathReporter } from 'io-ts/PathReporter';
-import { ActionIcon, Anchor, AppShell, Avatar, Button, Card, Center, ColorSwatch, Container, CopyButton, FileButton, Flex, Group, Image, Indicator, JsonInput, Menu, Modal, SegmentedControl, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
+import { ActionIcon, Anchor, AppShell, Avatar, Button, Card, Center, ColorSwatch, Container, CopyButton, FileButton, Flex, Group, Image, Indicator, JsonInput, List, Menu, Modal, SegmentedControl, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
 import { useClipboard, useDisclosure } from '@mantine/hooks';
 import { notifications, Notifications } from '@mantine/notifications';
 import ImagePreview from '@/components/ImagePreview/ImagePreview';
@@ -42,7 +42,7 @@ export function HomePage() {
   const [lastSave, setLastSave] = useState<Date | null>(null);
   const [timeDiff, setTimeDiff] = useState<number | null>(null);
   const [dragonIndex, setDragonIndex] = useState<number>(0);
-  const latestUpdate = 1;
+  const latestUpdate = 2;
 
   const seenUpdate = () => {
     if (hideUpdateIndicatorSettingChecked) return true;
@@ -756,8 +756,14 @@ export function HomePage() {
       </Modal>
 
       <Modal opened={updatesModalOpened} onClose={closeUpdatesModal} title="Updates" centered>
+      {/* TODO: this but better */}
         <Stack>
-          <Text size="sm">September 12, 2025</Text>
+          <Text size="sm">Update 2: September 13, 2025</Text>
+          <Title order={3}>Beta 3 Updates</Title>
+          <Text>You can now choose to copy JSON as either minimized or beautified. Minimized removes all unecessary whitespace (spaces and line breaks) so that you can share the JSON with fewer characters. Beautified JSON is the format you see in the JSON editor, which is much easier to read.</Text>
+          <Text>You can now disable the unread update indicator. If you don't like having a little dot on the menu button whenever there's an update, you can turn it off in the settings.</Text>
+
+          <Text size="sm">Update 1: September 12, 2025</Text>
           <Title order={3}>Flight Forge is now in beta!</Title>
           <Text>All of the ideas I wanted to implement have been added, including all ten tribes and five acessories. Hooray!</Text>
           <Text>If you like Flight Forge, please share it with other people who might like it! I worked really hard on it and I want lots of people to be able to use it.</Text>
