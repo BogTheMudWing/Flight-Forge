@@ -2,13 +2,13 @@ import { JSX, useEffect, useState } from 'react';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 /* import all the icons in Free Solid, Free Regular, and Brands styles */
-import { faArrowUpRightFromSquare, faBan, faBars, faBug, faCheck, faCircleInfo, faClone, faCode, faCopy, faDownload, faEllipsis, faFileExport, faGear, faHome, faNewspaper, faPlus, faRotateLeft, fas, faTrash, faUpload, faUsersRectangle } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUpRightFromSquare, faBan, faBars, faBug, faCheck, faCircleInfo, faClone, faCode, faCopy, faDownload, faEllipsis, faExpand, faFileExport, faGear, faHome, faMinimize, faNewspaper, faPlus, faRotateLeft, fas, faTrash, faUpload, faUsersRectangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { isLeft } from 'fp-ts/lib/Either';
 import * as t from 'io-ts';
 import { PathReporter } from 'io-ts/PathReporter';
 import { ActionIcon, Anchor, AppShell, Avatar, Button, Card, Center, ColorSwatch, Container, CopyButton, FileButton, Flex, Group, Image, Indicator, JsonInput, Menu, Modal, SegmentedControl, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { useClipboard, useDisclosure } from '@mantine/hooks';
 import { notifications, Notifications } from '@mantine/notifications';
 import ImagePreview from '@/components/ImagePreview/ImagePreview';
 import notImplemented, { myJoin } from '../components/AppUtils/AppUtils';
@@ -45,6 +45,7 @@ export function HomePage() {
   const latestUpdate = 1;
 
   const seenUpdate = () => {
+    if (hideUpdateIndicatorSettingChecked) return true;
     let lastUpdateSeen = 0;
     const storedLastUpdate = window.localStorage.getItem("lastUpdateSeen");
     if (storedLastUpdate == null) {
@@ -268,6 +269,7 @@ export function HomePage() {
   }
 
   const [json, setJson] = useState<string>('{"error":"This should not be empty!!"}');
+  const clipboard = useClipboard({ timeout: 2000 });
 
   /**
    * Reset configurator and close welcome modal
@@ -476,6 +478,7 @@ export function HomePage() {
 
   const [lightModeSettingChecked, setlightModeSettingChecked] = useState(useMantineColorScheme().colorScheme === 'light');
   const [telemetrySettingChecked, setTelemetrySettingChecked] = useState(isTelemetryEnabled());
+  const [hideUpdateIndicatorSettingChecked, setHideUpdateIndicatorSettingChecked] = useState(window.localStorage.getItem("hideUpdateIndicator") === 'true');
 
   function uploadStylePack(payload: File | null): void {
     notImplemented();
@@ -570,6 +573,15 @@ export function HomePage() {
             label="Allow telemetry"
             description="If enabled, anonymous usage data will be sent to the developer."
           />
+          <Switch
+            checked={hideUpdateIndicatorSettingChecked}
+            onChange={(event) => {
+              const checked: boolean = event.currentTarget.checked;
+              setHideUpdateIndicatorSettingChecked(checked);
+            }}
+            label="Hide unread update indicator"
+            description="If enabled, no indicator will be shown when there is a new update."
+          />
         </Stack>
       </Modal>
 
@@ -601,15 +613,35 @@ export function HomePage() {
               Discard
             </Button>
             <Group>
-              <CopyButton value={json}>
-                {({ copied, copy }) => (
-                  <Tooltip label={copied ? 'Copied' : 'Copy to clipboard'}>
-                    <ActionIcon variant='subtle' onClick={copy} aria-label='Copy to clipboard'>
-                      {copied ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faCopy} />}
+              <Tooltip label={clipboard.copied ? 'Copied' : 'Copy to clipboard'}>
+                <Menu transitionProps={{ transition: 'pop', duration: 150 }}>
+                  <Menu.Target>
+                    <ActionIcon variant='subtle' aria-label='Copy to clipboard'>
+                      {clipboard.copied ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faCopy} />}
                     </ActionIcon>
-                  </Tooltip>
-                )}
-              </CopyButton>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Item
+                      onClick={() => {
+                        try {
+                          const minimized = JSON.stringify(JSON.parse(json));
+                          clipboard.copy(minimized);
+                        } catch (e) {
+                          console.error('Invalid JSON:', e);
+                        }
+                      }}
+                      leftSection={<FontAwesomeIcon icon={faMinimize} />}
+                    >
+                      Copy minimized
+                      <Text size='xs' c={'dimmed'}>Reduces the number of characters used</Text>
+                    </Menu.Item>
+                    <Menu.Item onClick={() => clipboard.copy(json)} leftSection={<FontAwesomeIcon icon={faExpand} />}>
+                      Copy beautified
+                      <Text size='xs' c={'dimmed'}>Easier to read and edit</Text>
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+              </Tooltip>
               <Button leftSection={<FontAwesomeIcon icon={faCheck} />} onClick={applyJson}>
                 Apply
               </Button>
