@@ -15,29 +15,6 @@ Flight Forge **is not currently but will eventually be** a web program that guid
 
 If you want to contribute, please feel free to open a pull request!
 
-## Roadmap
-
-- [ ] All ten dragon tribes
-  - [ ] Hive
-  - [x] Ice
-  - [ ] Leaf
-  - [x] Mud
-  - [x] Night
-  - [x] Rain
-  - [x] Sand
-  - [x] Sea
-  - [ ] Silk
-  - [x] Sky
-- [x] Accessories
-  - [x] Arm Band
-  - [x] Earring
-  - [x] Chestplate
-  - [x] Glasses
-  - [x] Necklace
-- [x] Body part selection for hybrids
-- [x] Accurate hue shifting
-- [x] Credits modal
-
 ## Run it Locally
 
 You'll need npm installed. The best way to install npm is using nvm.
