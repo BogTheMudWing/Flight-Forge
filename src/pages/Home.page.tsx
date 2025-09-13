@@ -45,6 +45,7 @@ export function HomePage() {
   const latestUpdate = 1;
 
   const seenUpdate = () => {
+    if (hideUpdateIndicatorSettingChecked) return true;
     let lastUpdateSeen = 0;
     const storedLastUpdate = window.localStorage.getItem("lastUpdateSeen");
     if (storedLastUpdate == null) {
@@ -477,6 +478,7 @@ export function HomePage() {
 
   const [lightModeSettingChecked, setlightModeSettingChecked] = useState(useMantineColorScheme().colorScheme === 'light');
   const [telemetrySettingChecked, setTelemetrySettingChecked] = useState(isTelemetryEnabled());
+  const [hideUpdateIndicatorSettingChecked, setHideUpdateIndicatorSettingChecked] = useState(window.localStorage.getItem("hideUpdateIndicator") === 'true');
 
   function uploadStylePack(payload: File | null): void {
     notImplemented();
@@ -570,6 +572,15 @@ export function HomePage() {
             }}
             label="Allow telemetry"
             description="If enabled, anonymous usage data will be sent to the developer."
+          />
+          <Switch
+            checked={hideUpdateIndicatorSettingChecked}
+            onChange={(event) => {
+              const checked: boolean = event.currentTarget.checked;
+              setHideUpdateIndicatorSettingChecked(checked);
+            }}
+            label="Hide unread update indicator"
+            description="If enabled, no indicator will be shown when there is a new update."
           />
         </Stack>
       </Modal>
