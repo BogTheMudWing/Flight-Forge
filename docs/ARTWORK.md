@@ -50,6 +50,8 @@ White (#ffffff) will always appear as white and black (#000000) will always appe
 > 
 > This concept is difficult to understand and I would like to provide more information, including images.
 
+Open the [source file](https://code.macver.org/Bog/Flight-Forge/raw/branch/main/src/images/developer/source/pixel.kra) for the developer style in Krita if you are looking for an example.
+
 ## Requirements
 
 
