@@ -662,7 +662,7 @@ export default function Configurator({
                 <Title order={3}>Appearance</Title>
                 <Text>{name} is a {tribeString} with scales the color
                     of {primaryColorName.toLowerCase()} and {secondaryColorName.toLowerCase()}. {name} has underscales
-                    are the color of {underscalesColorName.toLowerCase()} and eyes
+                    that are the color of {underscalesColorName.toLowerCase()} and eyes
                     of {eyeColorName.toLowerCase()}.</Text>
                 {relations()}
                 {locations()}

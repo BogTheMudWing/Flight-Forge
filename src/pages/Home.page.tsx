@@ -825,7 +825,7 @@ export function HomePage() {
                     <Text size="sm">Update 2: September 13, 2025</Text>
                     <Title order={3}>Beta 3 Updates</Title>
                     <Text>You can now choose to copy JSON as either minimized or beautified. Minimized removes all
-                        unecessary whitespace (spaces and line breaks) so that you can share the JSON with fewer
+                        unnecessary whitespace (spaces and line breaks) so that you can share the JSON with fewer
                         characters. Beautified JSON is the format you see in the JSON editor, which is much easier to
                         read.</Text>
                     <Text>You can now disable the unread update indicator. If you don't like having a little dot on the
@@ -834,10 +834,10 @@ export function HomePage() {
                     <Text size="sm">Update 1: September 12, 2025</Text>
                     <Title order={3}>Flight Forge is now in beta!</Title>
                     <Text>All of the ideas I wanted to implement have been added, including all ten tribes and five
-                        acessories. Hooray!</Text>
+                        accessories. Hooray!</Text>
                     <Text>If you like Flight Forge, please share it with other people who might like it! I worked really
                         hard on it and I want lots of people to be able to use it.</Text>
-                    <Text>As always, if you find any bugs or frustations or have any suggestions, click the "Bug Report"
+                    <Text>As always, if you find any bugs or frustrations or have any suggestions, click the "Bug Report"
                         button in the menu to let me know.</Text>
                     <Text>Thanks to everyone who tested the alpha and gave me feedback!</Text>
                 </Stack>
