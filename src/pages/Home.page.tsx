@@ -100,7 +100,7 @@ export function HomePage() {
     const [lastSave, setLastSave] = useState<Date | null>(null);
     const [timeDiff, setTimeDiff] = useState<number | null>(null);
     const [dragonIndex, setDragonIndex] = useState<number>(0);
-    const latestUpdate = 2;
+    const latestUpdate = 3;
 
     const seenUpdate = () => {
         if (hideUpdateIndicatorSettingChecked) return true;
@@ -822,6 +822,10 @@ export function HomePage() {
             <Modal opened={updatesModalOpened} onClose={closeUpdatesModal} title="Updates" centered>
                 {/* TODO: this but better */}
                 <Stack>
+                    <Text size="sm">Update 3: September 20, 2025</Text>
+                    <Title order={3}>Beta 4 Updates</Title>
+                    <Text>Various grammar issues have been fixed. Thanks to Kiki for the bug report!</Text>
+
                     <Text size="sm">Update 2: September 13, 2025</Text>
                     <Title order={3}>Beta 3 Updates</Title>
                     <Text>You can now choose to copy JSON as either minimized or beautified. Minimized removes all
