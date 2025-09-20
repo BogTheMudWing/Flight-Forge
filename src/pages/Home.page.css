@@ -1,80 +1,80 @@
 .header {
-  @media screen and (max-width: 991px) {
-    >Text {
-      display: none;
+    @media screen and (max-width: 991px) {
+        > Text {
+            display: none;
+        }
     }
-  }
-  
-  @media screen and (max-width: 630px) {
-    top: auto;
-    bottom: 0;
-  }
+
+    @media screen and (max-width: 630px) {
+        top: auto;
+        bottom: 0;
+    }
 }
 
 .layout-grid {
-  @media screen and (max-height: 630px) {
-    grid-template-rows: var(--image-size-mobile) auto;
-  }
-  @media screen and (max-height: 500px) {
-    grid-template-rows: 0 auto;
-  }
+    @media screen and (max-height: 630px) {
+        grid-template-rows: var(--image-size-mobile) auto;
+    }
+    @media screen and (max-height: 500px) {
+        grid-template-rows: 0 auto;
+    }
 }
 
 .main {
-  @media screen and (max-width: 630px) {
-    padding-top: 0;
-    padding-bottom: 60px;
-  }
+    @media screen and (max-width: 630px) {
+        padding-top: 0;
+        padding-bottom: 60px;
+    }
 }
 
 .header-info {
-  @media screen and (max-width: 630px) {
-    display: none;
-  }
+    @media screen and (max-width: 630px) {
+        display: none;
+    }
 }
 
 .header-button {
-  margin: 10px;
+    margin: 10px;
 
-  @media screen and (max-width: 630px) {
-    flex-grow: 1;
-    justify-content: space-between;
-  }
+    @media screen and (max-width: 630px) {
+        flex-grow: 1;
+        justify-content: space-between;
+    }
 }
 
 .collection-buttons {
-  @media screen and (max-width: 630px) {
-    order: -1;
-  }
-  flex-wrap: wrap;
+    @media screen and (max-width: 630px) {
+        order: -1;
+    }
+    flex-wrap: wrap;
 }
 
 .configurator-container {
-  width: 100%;
-  height: 100%;
-  max-height: 500px;
+    width: 100%;
+    height: 100%;
+    max-height: 500px;
 
-  @media screen and (max-width: 991px) {
-    height: auto;
-  }
+    @media screen and (max-width: 991px) {
+        height: auto;
+    }
 }
 
 .imageArea {
-  flex-direction: column;
-  justify-content: center;
-  align-self: flex-start;
-  @media screen and (max-width: 991px) {
-    gap: 10px;
-    flex-direction: row;
-  }
+    flex-direction: column;
+    justify-content: center;
+    align-self: flex-start;
+    @media screen and (max-width: 991px) {
+        gap: 10px;
+        flex-direction: row;
+    }
 }
 
 .styleControl {
-  @media screen and (max-width: 991px) {
-    height: min-content;
-    align-self: center;
-  }
-  @media screen and (max-height: 500px) {
-    display: none;
-  }
+    @media screen and (max-width: 991px) {
+        height: min-content;
+        align-self: center;
+    }
+    @media screen and (max-height: 500px) {
+        display: none;
+    }
 }

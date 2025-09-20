@@ -1,957 +1,1034 @@
-import { JSX, useEffect, useState } from 'react';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { fab } from '@fortawesome/free-brands-svg-icons';
+import {JSX, useEffect, useState} from 'react';
+import {library} from '@fortawesome/fontawesome-svg-core';
+import {fab} from '@fortawesome/free-brands-svg-icons';
 /* import all the icons in Free Solid, Free Regular, and Brands styles */
-import { faArrowUpRightFromSquare, faBan, faBars, faBug, faCheck, faCircleInfo, faClone, faCode, faCopy, faDownload, faEllipsis, faExpand, faFileExport, faGear, faHome, faMinimize, faNewspaper, faPlus, faRotateLeft, fas, faTrash, faUpload, faUsersRectangle } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { isLeft } from 'fp-ts/lib/Either';
+import {
+    faArrowUpRightFromSquare,
+    faBan,
+    faBars,
+    faBug,
+    faCheck,
+    faCircleInfo,
+    faClone,
+    faCode,
+    faCopy,
+    faDownload,
+    faEllipsis,
+    faExpand,
+    faFileExport,
+    faGear,
+    faHome,
+    faMinimize,
+    faNewspaper,
+    faPlus,
+    faRotateLeft,
+    fas,
+    faTrash,
+    faUpload,
+    faUsersRectangle
+} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {isLeft} from 'fp-ts/lib/Either';
 import * as t from 'io-ts';
-import { PathReporter } from 'io-ts/PathReporter';
-import { ActionIcon, Anchor, AppShell, Avatar, Button, Card, Center, ColorSwatch, Container, CopyButton, FileButton, Flex, Group, Image, Indicator, JsonInput, List, Menu, Modal, SegmentedControl, SimpleGrid, Space, Stack, Switch, Text, TextInput, Title, Tooltip, useMantineColorScheme } from '@mantine/core';
-import { useClipboard, useDisclosure } from '@mantine/hooks';
-import { notifications, Notifications } from '@mantine/notifications';
+import {PathReporter} from 'io-ts/PathReporter';
+import {
+    ActionIcon,
+    Anchor,
+    AppShell,
+    Avatar,
+    Button,
+    Card,
+    Center,
+    ColorSwatch,
+    Container,
+    FileButton,
+    Flex,
+    Group,
+    Image,
+    Indicator,
+    JsonInput,
+    Menu,
+    Modal,
+    SegmentedControl,
+    SimpleGrid,
+    Space,
+    Stack,
+    Switch,
+    Text,
+    TextInput,
+    Title,
+    Tooltip,
+    useMantineColorScheme
+} from '@mantine/core';
+import {useClipboard, useDisclosure} from '@mantine/hooks';
+import {notifications, Notifications} from '@mantine/notifications';
 import ImagePreview from '@/components/ImagePreview/ImagePreview';
-import notImplemented, { myJoin } from '../components/AppUtils/AppUtils';
-import { Collection, defaultCollection } from '../components/Collection/Collection';
+import {myJoin} from '@/components/AppUtils/AppUtils';
+import {Collection, defaultCollection} from '@/components/Collection/Collection';
 import Configurator from '../components/Configurator/Configurator';
-import { defaultDragon, Dragon } from '../components/Dragon/Dragon';
+import {defaultDragon, Dragon} from '@/components/Dragon/Dragon';
 import icon from '../images/icon.png';
-import Telemetry, { allowTelemetry, denyTelemetry, isTelemetryEnabled, recordTelemetry, recordTelemetryEvent } from '@/components/Telemetry/Telemetry';
+import Telemetry, {
+    allowTelemetry,
+    denyTelemetry,
+    isTelemetryEnabled,
+    recordTelemetry,
+    recordTelemetryEvent
+} from '@/components/Telemetry/Telemetry';
 import './Home.page.css'
-import { exportImage } from '@/components/Exporter/Exporter';
-import { styleInfo, StylePackInfo } from '@/components/StyleHandler';
+import {exportImage} from '@/components/Exporter/Exporter';
+import {styleInfo, StylePackInfo} from '@/components/StyleHandler';
 // Style Info
 
 
 library.add(fas, fab);
 
 export function HomePage() {
-  const { setColorScheme } = useMantineColorScheme();
-  const [settingsModalOpened, { open: openSettingsModal, close: closeSettingsModal }] =
-    useDisclosure(false);
-  const [jsonModalOpened, { open: openJsonModal, close: closeJsonModal }] = useDisclosure(false);
-  const [welcomeModalOpened, { open: openWelcomeModal, close: closeWelcomeModal }] =
-    useDisclosure(true);
-  const [updatesModalOpened, { open: openUpdatesModal, close: closeUpdatesModal }] = useDisclosure(false);
-  const [aboutModalOpened, { open: openAboutModal, close: closeAboutModal }] = useDisclosure(false);
-  const [creditsModalOpened, { open: openCreditsModal, close: closeCreditsModal }] = useDisclosure(false);
-  const [configuratorPage, setConfiguratorPage] = useState<number>(0);
-  const [collectionFile, setCollectionFile] = useState<File | null>(null);
-  const [collection, setCollection] = useState<t.TypeOf<typeof Collection>>(defaultCollection);
-  const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(collection, null, 2))}`;
-  const [lastSave, setLastSave] = useState<Date | null>(null);
-  const [timeDiff, setTimeDiff] = useState<number | null>(null);
-  const [dragonIndex, setDragonIndex] = useState<number>(0);
-  const latestUpdate = 2;
+    const {setColorScheme} = useMantineColorScheme();
+    const [settingsModalOpened, {open: openSettingsModal, close: closeSettingsModal}] =
+        useDisclosure(false);
+    const [jsonModalOpened, {open: openJsonModal, close: closeJsonModal}] = useDisclosure(false);
+    const [welcomeModalOpened, {open: openWelcomeModal, close: closeWelcomeModal}] =
+        useDisclosure(true);
+    const [updatesModalOpened, {open: openUpdatesModal, close: closeUpdatesModal}] = useDisclosure(false);
+    const [aboutModalOpened, {open: openAboutModal, close: closeAboutModal}] = useDisclosure(false);
+    const [creditsModalOpened, {open: openCreditsModal, close: closeCreditsModal}] = useDisclosure(false);
+    const [configuratorPage, setConfiguratorPage] = useState<number>(0);
+    const [collectionFile, setCollectionFile] = useState<File | null>(null);
+    const [collection, setCollection] = useState<t.TypeOf<typeof Collection>>(defaultCollection);
+    const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(collection, null, 2))}`;
+    const [lastSave, setLastSave] = useState<Date | null>(null);
+    const [timeDiff, setTimeDiff] = useState<number | null>(null);
+    const [dragonIndex, setDragonIndex] = useState<number>(0);
+    const latestUpdate = 2;
 
-  const seenUpdate = () => {
-    if (hideUpdateIndicatorSettingChecked) return true;
-    let lastUpdateSeen = 0;
-    const storedLastUpdate = window.localStorage.getItem("lastUpdateSeen");
-    if (storedLastUpdate == null) {
-      setUpdate();
-      return true;
+    const seenUpdate = () => {
+        if (hideUpdateIndicatorSettingChecked) return true;
+        let lastUpdateSeen = 0;
+        const storedLastUpdate = window.localStorage.getItem("lastUpdateSeen");
+        if (storedLastUpdate == null) {
+            setUpdate();
+            return true;
+        }
+        lastUpdateSeen = Number.parseInt(storedLastUpdate);
+        return !(lastUpdateSeen < latestUpdate);
     }
-    lastUpdateSeen = Number.parseInt(storedLastUpdate);
-    return !(lastUpdateSeen < latestUpdate);
-  }
 
-  function setUpdate() {
-    window.localStorage.setItem("lastUpdateSeen", latestUpdate.toString());
-  }
+    function setUpdate() {
+        window.localStorage.setItem("lastUpdateSeen", latestUpdate.toString());
+    }
 
-  // Undo on Ctrl + Z
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.ctrlKey && event.key === "z") { // if Ctrl and Z
-        event.preventDefault(); // Prevent default browser behavior
-        undo(); // Undo
-      }
+    // Undo on Ctrl + Z
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.ctrlKey && event.key === "z") { // if Ctrl and Z
+                event.preventDefault(); // Prevent default browser behavior
+                undo(); // Undo
+            }
+        };
+
+        // Add listener
+        window.addEventListener("keydown", handleKeyDown);
+
+        const beforeUnload = (event: BeforeUnloadEvent) => {
+            if (navigator.userActivation.hasBeenActive) {
+                event.preventDefault();
+            }
+        }
+
+        window.addEventListener("beforeunload", beforeUnload);
+
+    }, []);
+
+    // Read and parse collectionFile
+    useEffect(() => {
+        // Make sure it exists
+        if (collectionFile) {
+            // We use a FileReader to read the file
+            const fileReader = new FileReader();
+            fileReader.onload = () => {
+                // Get the content as string
+                const fileContent: string = fileReader.result as string;
+                // Parse the string into JSON
+                const jsonData: JSON = JSON.parse(fileContent);
+                // Create a Collection from the JSON
+                const decoded = Collection.decode(jsonData);
+                // If isLeft is true, there was a problem.
+                if (isLeft(decoded)) {
+                    // Notify user
+                    notifications.show({
+                        color: 'red',
+                        withBorder: true,
+                        title: 'There was a problem opening that file.',
+                        message: 'Could not validate data: '.concat(PathReporter.report(decoded).join('\n')),
+                    });
+                } else {
+                    // Everything went well, store as collection
+                    const decodedCollection: t.TypeOf<typeof Collection> = decoded.right;
+                    // Set state
+                    setCollection(decodedCollection);
+                    // Notify user that all is well
+                    notifications.show({
+                        color: 'green',
+                        withBorder: true,
+                        title: 'Collection opened',
+                        message: 'Opened collection with '
+                            .concat(decodedCollection.dragons.length.toString())
+                            .concat(' dragons.'),
+                    });
+                    setDragonIndex(0);
+                    setDragon(decodedCollection.dragons[0]);
+                }
+            };
+            // Run all that stuff
+            fileReader.readAsText(collectionFile);
+        }
+    }, [collectionFile]);
+
+    // Calculate the time difference in minutes
+    useEffect(() => {
+        if (lastSave != null) {
+            const interval = setInterval(() => {
+                const diff = Math.round((new Date().getTime() - lastSave.getTime()) / 60000);
+                setTimeDiff(diff);
+            }, 60000); // Update every minute
+
+            return () => clearInterval(interval); // Clean up on component unmount or lastSave change
+        }
+    }, [lastSave]); // Only re-run when lastSave changes
+
+    // Used when creating a new dragon
+    const emptyDragon: t.TypeOf<typeof Dragon> = {
+        tribe: [],
+        bodyParts: {
+            head: '',
+            body: '',
+            wings: '',
+            legs: '',
+            tail: '',
+        },
+        age: -1,
+        gender: '',
+        primaryColor: '#ffffff',
+        secondaryColor: '#ffffff',
+        underscalesColor: '#ffffff',
+        membraneColor1: '#ffffff',
+        membraneColor2: '#ffffff',
+        eyeColor: '#ffffff',
+        spikesColor: '#ffffff',
+        name: '',
+        pronouns: '',
+        relations: [],
+        locations: [],
+        traits: [
+            {
+                name: 'Intelligence',
+                rating: 0,
+            },
+            {
+                name: 'Charisma',
+                rating: 0,
+            },
+            {
+                name: 'Speed',
+                rating: 0,
+            },
+            {
+                name: 'Strength',
+                rating: 0,
+            },
+            {
+                name: 'Teamwork',
+                rating: 0,
+            },
+            {
+                name: 'Organization',
+                rating: 0,
+            },
+            {
+                name: 'Perception',
+                rating: 0,
+            },
+            {
+                name: 'Stealth',
+                rating: 0,
+            },
+            {
+                name: 'Agility',
+                rating: 0,
+            },
+            {
+                name: 'Leadership',
+                rating: 0,
+            },
+            {
+                name: 'Independence',
+                rating: 0,
+            },
+            {
+                name: 'Empathy',
+                rating: 0,
+            },
+        ],
+        health: '',
+        occupation: '',
+        size: 50,
+        accessories: [],
+        creator: '',
+        builder: '',
+        style: 'developer',
     };
 
-    // Add listener
-    window.addEventListener("keydown", handleKeyDown);
-
-    const beforeUnload = (event: BeforeUnloadEvent) => {
-      if (navigator.userActivation.hasBeenActive) {
-        event.preventDefault();
-      }
+    function save() {
+        recordTelemetry("dragonCountInCollection", collection.dragons.length);
+        setLastSave(new Date());
+        setTimeDiff(0);
     }
 
-    window.addEventListener("beforeunload", beforeUnload);
+    // setDragon should not be used directly. setHistory should be used instead, which allows the undo function.
+    const [dragon, setDragon] = useState<t.TypeOf<typeof Dragon>>(defaultDragon);
+    const [history, setHistory] = useState<t.TypeOf<typeof Dragon>[]>([]);
 
-  }, []);
+    /**
+     * Change the active dragon and save the current one in undo history.
+     * @param newDragon the modified Dragon
+     */
+    const setDragonWithHistory: React.Dispatch<React.SetStateAction<t.TypeOf<typeof Dragon>>> = (
+        newDragon
+    ) => {
+        setDragon((prevDragon: t.TypeOf<typeof Dragon>) => {
+            const resolvedNewDragon =
+                typeof newDragon === 'function'
+                    ? (newDragon as (prev: t.TypeOf<typeof Dragon>) => t.TypeOf<typeof Dragon>)(prevDragon)
+                    : newDragon;
 
-  // Read and parse collectionFile
-  useEffect(() => {
-    // Make sure it exists
-    if (collectionFile) {
-      // We use a FileReader to read the file
-      const fileReader = new FileReader();
-      fileReader.onload = () => {
-        // Get the content as string
-        const fileContent: string = fileReader.result as string;
-        // Parse the string into JSON
-        const jsonData: JSON = JSON.parse(fileContent);
-        // Create a Collection from the JSON
-        const decoded = Collection.decode(jsonData);
-        // If isLeft is true, there was a problem.
-        if (isLeft(decoded)) {
-          // Notify user
-          notifications.show({
-            color: 'red',
-            withBorder: true,
-            title: 'There was a problem opening that file.',
-            message: 'Could not validate data: '.concat(PathReporter.report(decoded).join('\n')),
-          });
+            setHistory((prevHistory) => [...prevHistory, prevDragon]);
+            const newCollection = collection;
+            newCollection.dragons.splice(dragonIndex, 1, resolvedNewDragon);
+            setCollection(newCollection);
+            return resolvedNewDragon;
+        });
+    };
+
+    /**
+     * Change the active dragon to the previous saved step.
+     */
+    function undo(): void {
+        setHistory((prevHistory) => {
+            if (prevHistory.length === 0) {
+                return prevHistory;
+            }
+
+            const newHistory = [...prevHistory];
+            const lastDragon = newHistory.pop()!;
+            setDragon(lastDragon);
+            return newHistory;
+        });
+    }
+
+    const [json, setJson] = useState<string>('{"error":"This should not be empty!!"}');
+    const clipboard = useClipboard({timeout: 2000});
+
+    /**
+     * Reset configurator and close welcome modal
+     */
+    function loadNew(): void {
+        reset();
+        closeWelcomeModal();
+    }
+
+    /**
+     * Load new empty dragon and reset configurator. If you also want to close the welcome modal, use loadNew().
+     */
+    function reset(): void {
+        setDragon(emptyDragon);
+        const newCollection = collection;
+        newCollection.dragons.push(emptyDragon);
+        setCollection(newCollection);
+        setDragonIndex(newCollection.dragons.indexOf(emptyDragon));
+        setConfiguratorPage(0);
+    }
+
+    /**
+     * Turn the active dragon into JSON and open it in the JSON editor.
+     */
+    function openJson(): void {
+        setJson(JSON.stringify(dragon, null, 2));
+        openJsonModal();
+    }
+
+    /**
+     * Take the text in the JSON editor and set it as the active dragon.
+     */
+    function applyJson(): void {
+        setDragonWithHistory(JSON.parse(json));
+        closeJsonModal();
+    }
+
+    /**
+     * Load a given dragon and close the welcome modal
+     * @param dragonToLoad the dragon to load as the active dragon
+     */
+    function loadDragon(dragonToLoad: t.TypeOf<typeof Dragon>): void {
+        setDragonIndex(collection.dragons.indexOf(dragonToLoad));
+        setDragon(dragonToLoad);
+        closeWelcomeModal();
+    }
+
+    /**
+     * Remove a dragon from the loaded collection
+     * @param dragonToDelete the dragon to remove from the collect
+     */
+    function deleteDragon(dragonToDelete: t.TypeOf<typeof Dragon>): void {
+        const index: number = collection.dragons.indexOf(dragonToDelete);
+        if (index === -1) {
+            // This shouldn't happen, but if the dragon is not found, notify user.
+            notifications.show({
+                color: 'red',
+                title: 'Error',
+                message: 'That dragon was not found in the collection.',
+            });
         } else {
-          // Everything went well, store as collection
-          const decodedCollection: t.TypeOf<typeof Collection> = decoded.right;
-          // Set state
-          setCollection(decodedCollection);
-          // Notify user that all is well
-          notifications.show({
-            color: 'green',
-            withBorder: true,
-            title: 'Collection opened',
-            message: 'Opened collection with '
-              .concat(decodedCollection.dragons.length.toString())
-              .concat(' dragons.'),
-          });
-          setDragonIndex(0);
-          setDragon(decodedCollection.dragons[0]);
+            if (dragonToDelete == dragon) {
+                loadNew();
+            }
+            setCollection((prev) => ({
+                ...prev,
+                dragons: collection.dragons.filter((item) => item.name !== dragonToDelete.name),
+            }));
         }
-      };
-      // Run all that stuff
-      fileReader.readAsText(collectionFile);
-    }
-  }, [collectionFile]);
-
-  // Calculate the time difference in minutes
-  useEffect(() => {
-    if (lastSave != null) {
-      const interval = setInterval(() => {
-        const diff = Math.round((new Date().getTime() - lastSave.getTime()) / 60000);
-        setTimeDiff(diff);
-      }, 60000); // Update every minute
-
-      return () => clearInterval(interval); // Clean up on component unmount or lastSave change
-    }
-  }, [lastSave]); // Only re-run when lastSave changes
-
-  // Used when creating a new dragon
-  const emptyDragon: t.TypeOf<typeof Dragon> = {
-    tribe: [],
-    bodyParts: {
-      head: '',
-      body: '',
-      wings: '',
-      legs: '',
-      tail: '',
-    },
-    age: -1,
-    gender: '',
-    primaryColor: '#ffffff',
-    secondaryColor: '#ffffff',
-    underscalesColor: '#ffffff',
-    membraneColor1: '#ffffff',
-    membraneColor2: '#ffffff',
-    eyeColor: '#ffffff',
-    spikesColor: '#ffffff',
-    name: '',
-    pronouns: '',
-    relations: [],
-    locations: [],
-    traits: [
-      {
-        name: 'Intelligence',
-        rating: 0,
-      },
-      {
-        name: 'Charisma',
-        rating: 0,
-      },
-      {
-        name: 'Speed',
-        rating: 0,
-      },
-      {
-        name: 'Strength',
-        rating: 0,
-      },
-      {
-        name: 'Teamwork',
-        rating: 0,
-      },
-      {
-        name: 'Organization',
-        rating: 0,
-      },
-      {
-        name: 'Perception',
-        rating: 0,
-      },
-      {
-        name: 'Stealth',
-        rating: 0,
-      },
-      {
-        name: 'Agility',
-        rating: 0,
-      },
-      {
-        name: 'Leadership',
-        rating: 0,
-      },
-      {
-        name: 'Independence',
-        rating: 0,
-      },
-      {
-        name: 'Empathy',
-        rating: 0,
-      },
-    ],
-    health: '',
-    occupation: '',
-    size: 50,
-    accessories: [],
-    creator: '',
-    builder: '',
-    style: 'developer',
-  };
-
-  function save() {
-    recordTelemetry("dragonCountInCollection", collection.dragons.length);
-    setLastSave(new Date());
-    setTimeDiff(0);
-  }
-
-  // setDragon should not be used directly. setHistory should be used instead, which allows the undo function.
-  const [dragon, setDragon] = useState<t.TypeOf<typeof Dragon>>(defaultDragon);
-  const [history, setHistory] = useState<t.TypeOf<typeof Dragon>[]>([]);
-
-  /**
-   * Change the active dragon and save the current one in undo history.
-   * @param newDragon the modified Dragon
-   */
-  const setDragonWithHistory: React.Dispatch<React.SetStateAction<t.TypeOf<typeof Dragon>>> = (
-    newDragon
-  ) => {
-    setDragon((prevDragon: t.TypeOf<typeof Dragon>) => {
-      const resolvedNewDragon =
-        typeof newDragon === 'function'
-          ? (newDragon as (prev: t.TypeOf<typeof Dragon>) => t.TypeOf<typeof Dragon>)(prevDragon)
-          : newDragon;
-
-      setHistory((prevHistory) => [...prevHistory, prevDragon]);
-      const newCollection = collection;
-      newCollection.dragons.splice(dragonIndex, 1, resolvedNewDragon);
-      setCollection(newCollection);
-      return resolvedNewDragon;
-    });
-  };
-
-  /**
-   * Change the active dragon to the previous saved step.
-   */
-  function undo(): void {
-    setHistory((prevHistory) => {
-      if (prevHistory.length === 0) {
-        return prevHistory;
-      }
-
-      const newHistory = [...prevHistory];
-      const lastDragon = newHistory.pop()!;
-      setDragon(lastDragon);
-      return newHistory;
-    });
-  }
-
-  const [json, setJson] = useState<string>('{"error":"This should not be empty!!"}');
-  const clipboard = useClipboard({ timeout: 2000 });
-
-  /**
-   * Reset configurator and close welcome modal
-   */
-  function loadNew(): void {
-    reset();
-    closeWelcomeModal();
-  }
-
-  /**
-   * Load new empty dragon and reset configurator. If you also want to close the welcome modal, use loadNew().
-   */
-  function reset(): void {
-    setDragon(emptyDragon);
-    const newCollection = collection;
-    newCollection.dragons.push(emptyDragon);
-    setCollection(newCollection);
-    setDragonIndex(newCollection.dragons.indexOf(emptyDragon));
-    setConfiguratorPage(0);
-  }
-
-  /**
-   * Turn the active dragon into JSON and open it in the JSON editor.
-   */
-  function openJson(): void {
-    setJson(JSON.stringify(dragon, null, 2));
-    openJsonModal();
-  }
-
-  /**
-   * Take the text in the JSON editor and set it as the active dragon.
-   */
-  function applyJson(): void {
-    setDragonWithHistory(JSON.parse(json));
-    closeJsonModal();
-  }
-
-  /**
-   * Load a given dragon and close the welcome modal
-   * @param dragonToLoad the dragon to load as the active dragon
-   */
-  function loadDragon(dragonToLoad: t.TypeOf<typeof Dragon>): void {
-    setDragonIndex(collection.dragons.indexOf(dragonToLoad));
-    setDragon(dragonToLoad);
-    closeWelcomeModal();
-  }
-
-  /**
-   * Remove a dragon from the loaded collection
-   * @param dragonToDelete the dragon to remove from the collect
-   */
-  function deleteDragon(dragonToDelete: t.TypeOf<typeof Dragon>): void {
-    const index: number = collection.dragons.indexOf(dragonToDelete);
-    if (index === -1) {
-      // This shouldn't happen, but if the dragon is not found, notify user.
-      notifications.show({
-        color: 'red',
-        title: 'Error',
-        message: 'That dragon was not found in the collection.',
-      });
-    } else {
-      if (dragonToDelete == dragon) {
-        loadNew();
-      }
-      setCollection((prev) => ({
-        ...prev,
-        dragons: collection.dragons.filter((item) => item.name !== dragonToDelete.name),
-      }));
-    }
-  }
-
-  /**
-   * Duplicates a dragon in the current collection.
-   * @param dragonToDuplicate the dragon in the collection to duplicate
-   */
-  function duplicateDragon(dragonToDuplicate: t.TypeOf<typeof Dragon>): void {
-    const index: number = collection.dragons.indexOf(dragonToDuplicate);
-    const newDragon = structuredClone(dragonToDuplicate);
-    newDragon.name = newDragon.name.concat(' copy');
-    if (index === -1) {
-      // This shouldn't happen, but if the dragon is not found, notify user.
-      notifications.show({
-        color: 'red',
-        title: 'Error',
-        message: 'That dragon was not found in the collection.',
-      });
-    } else {
-      // Create a copy of the collection of dragons
-      const newItems = collection.dragons;
-      // Add the dragon to duplicate just after itself
-      newItems.splice(index + 1, 0, newDragon);
-      // Save changes to state
-      setCollection((prev) => ({ ...prev, dragons: newItems }));
-    }
-  }
-
-  /**
-   * Generate dragon cards for welcome modal
-   * @returns elements representing the dragons in the collection for the welcome modal
-   */
-  function generateCards(): JSX.Element[] {
-    const elements: JSX.Element[] = [];
-
-    collection.dragons.forEach((dragonInCollection: t.TypeOf<typeof Dragon>) => {
-      // Name
-      let name: string = dragonInCollection.name;
-      if (name === undefined || name === null || name === '') {
-        name = 'Unnamed';
-      }
-
-      // Age
-      const age: number | undefined = dragonInCollection.age;
-      let ageString: string;
-      if (age === undefined || age === null || age < 0) {
-        ageString = '';
-      } else {
-        ageString = age.toString().concat('-year-old ');
-      }
-
-      // Gender
-      let gender: string = dragonInCollection.gender;
-      if (gender === undefined || gender === null || gender === '') {
-        gender = '';
-      } else {
-        gender = gender.concat(' ');
-      }
-
-      // Tribes
-      const tribes: string[] = dragonInCollection.tribe;
-      let tribeString: string;
-      if (tribes === undefined || tribes === null || tribes.length === 0) {
-        tribeString = 'Dragon';
-      } else {
-        tribeString = myJoin(tribes, '/').concat('Wing');
-      }
-
-      // Build it!
-      elements.push(
-        <Card shadow="sm" withBorder>
-          <Group justify='space-between' align='top' fw={500} mah={'2.5em'} style={{ overflow: 'hidden' }}>
-            <Text mb="xs">
-              {name}
-            </Text>
-            <Group gap={'xs'} mb="xs">
-              <ColorSwatch size='18' color={dragonInCollection.primaryColor} />
-              <ColorSwatch size='18' color={dragonInCollection.secondaryColor} />
-              <ColorSwatch size='18' color={dragonInCollection.underscalesColor} />
-              <ColorSwatch size='18' color={dragonInCollection.membraneColor1} />
-              <ColorSwatch size='18' color={dragonInCollection.membraneColor2} />
-            </Group>
-          </Group>
-
-          <Group justify='space-between'>
-            <Text size="sm" c="dimmed">
-              {ageString.concat(gender).concat(tribeString)}
-            </Text>
-            <Text size="sm" c="dimmed">
-              {dragonInCollection.style} style
-            </Text>
-          </Group>
-
-
-          <Flex mt="md" gap="md">
-            <Button onClick={() => loadDragon(dragonInCollection)} fullWidth variant="light">
-              Open
-            </Button>
-            <Menu shadow="md" width={200} transitionProps={{ transition: 'pop', duration: 200 }}>
-              <Menu.Target>
-                <ActionIcon aria-label="Options" variant="light" size={36}>
-                  <FontAwesomeIcon icon={faEllipsis} />
-                </ActionIcon>
-              </Menu.Target>
-
-              <Menu.Dropdown>
-                <Menu.Item
-                  onClick={() => duplicateDragon(dragonInCollection)}
-                  leftSection={<FontAwesomeIcon icon={faClone} size="sm" />}
-                >
-                  Duplicate
-                </Menu.Item>
-                <Menu.Item
-                  onClick={() => deleteDragon(dragonInCollection)}
-                  leftSection={<FontAwesomeIcon icon={faTrash} size="sm" />}
-                >
-                  Delete
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
-          </Flex>
-        </Card>
-      );
-    });
-
-    return elements;
-  }
-
-  function doExport() {
-    let imagePreview: HTMLElement | null = document.getElementById('image-preview');
-    if (imagePreview == null) {
-      return;
-    }
-    let images = imagePreview.children;
-    recordTelemetryEvent("export");
-    exportImage(images, dragon.name, dragon.membraneColor1, dragon.membraneColor2);
-  }
-
-  const [lightModeSettingChecked, setlightModeSettingChecked] = useState(useMantineColorScheme().colorScheme === 'light');
-  const [telemetrySettingChecked, setTelemetrySettingChecked] = useState(isTelemetryEnabled());
-  const [hideUpdateIndicatorSettingChecked, setHideUpdateIndicatorSettingChecked] = useState(window.localStorage.getItem("hideUpdateIndicator") === 'true');
-
-  function uploadStylePack(payload: File | null): void {
-    notImplemented();
-  }
-
-  function openUpdates(): void {
-    setUpdate();
-    openUpdatesModal();
-  }
-
-  const styleAllowedWithCurrentTribes = (style: string) => {
-    let info = styleInfo(style);
-    if (info == null) return false;
-
-    const includedTribes: string[] = info.includedTribes;
-    let matches = 0;
-    for (let i = 0; i < dragon.tribe.length; i++) {
-      const tribe = dragon.tribe[i];
-      for (let j = 0; j < includedTribes.length; j++) {
-        const element = includedTribes[j];
-        if (tribe == element) matches++;
-      }
     }
 
-    return (matches == dragon.tribe.length);
-  }
-
-  function stylePackCredits(styleInfo: t.TypeOf<typeof StylePackInfo> | null) {
-    const elements = [];
-    if (styleInfo == null) return;
-    elements.push(<Title order={3}>{styleInfo.name}</Title>)
-    elements.push(<Text>{styleInfo.description}</Text>)
-
-    const creatorElements = [];
-    for (let i = 0; i < styleInfo.creators.length; i++) {
-      const creator = styleInfo.creators[i];
-      creatorElements.push(
-        <Group>
-          <Avatar src={creator.imageUrl} />
-          <Stack gap={0}>
-            <Text fw={'bold'}>{creator.name}</Text>
-            <Anchor href={creator.link} target='new'>
-              <Text>{creator.link} <FontAwesomeIcon icon={faArrowUpRightFromSquare} /></Text>
-            </Anchor>
-          </Stack>
-        </Group>
-      )
+    /**
+     * Duplicates a dragon in the current collection.
+     * @param dragonToDuplicate the dragon in the collection to duplicate
+     */
+    function duplicateDragon(dragonToDuplicate: t.TypeOf<typeof Dragon>): void {
+        const index: number = collection.dragons.indexOf(dragonToDuplicate);
+        const newDragon = structuredClone(dragonToDuplicate);
+        newDragon.name = newDragon.name.concat(' copy');
+        if (index === -1) {
+            // This shouldn't happen, but if the dragon is not found, notify user.
+            notifications.show({
+                color: 'red',
+                title: 'Error',
+                message: 'That dragon was not found in the collection.',
+            });
+        } else {
+            // Create a copy of the collection of dragons
+            const newItems = collection.dragons;
+            // Add the dragon to duplicate just after itself
+            newItems.splice(index + 1, 0, newDragon);
+            // Save changes to state
+            setCollection((prev) => ({...prev, dragons: newItems}));
+        }
     }
-    elements.push(creatorElements);
-    return elements;
-  }
 
-  return (
-    <>
-      <Notifications />
+    /**
+     * Generate dragon cards for welcome modal
+     * @returns elements representing the dragons in the collection for the welcome modal
+     */
+    function generateCards(): JSX.Element[] {
+        const elements: JSX.Element[] = [];
 
-      <Modal
-        opened={settingsModalOpened}
-        onClose={closeSettingsModal}
-        centered
-        size="auto"
-        title="App Settings"
-      >
-        <Stack>
-          <Switch
-            checked={useMantineColorScheme().colorScheme === 'light'}
-            onChange={(event) => {
-              const light: boolean = event.currentTarget.checked;
-              if (light) {
-                setColorScheme('light');
-              } else {
-                setColorScheme('dark');
-              }
-              setlightModeSettingChecked(event.currentTarget.checked);
-            }}
-            label="Use light theme"
-            description="If disabled, the app will use the dark theme."
-          />
-          <Switch
-            checked={telemetrySettingChecked}
-            onChange={(event) => {
-              const allow: boolean = event.currentTarget.checked;
-              if (allow) {
-                allowTelemetry(true);
-                event.currentTarget.checked = true;
-              } else {
-                denyTelemetry(true);
-                event.currentTarget.checked = false;
-              }
-              setTelemetrySettingChecked(event.currentTarget.checked);
-            }}
-            label="Allow telemetry"
-            description="If enabled, anonymous usage data will be sent to the developer."
-          />
-          <Switch
-            checked={hideUpdateIndicatorSettingChecked}
-            onChange={(event) => {
-              const checked: boolean = event.currentTarget.checked;
-              setHideUpdateIndicatorSettingChecked(checked);
-            }}
-            label="Hide unread update indicator"
-            description="If enabled, no indicator will be shown when there is a new update."
-          />
-        </Stack>
-      </Modal>
+        collection.dragons.forEach((dragonInCollection: t.TypeOf<typeof Dragon>) => {
+            // Name
+            let name: string = dragonInCollection.name;
+            if (name === undefined || name === null || name === '') {
+                name = 'Unnamed';
+            }
 
-      <Modal opened={jsonModalOpened} onClose={closeJsonModal} centered size="lg" title="JSON Data">
-        <Stack>
-          <JsonInput
-            id="json-input"
-            aria-label="JSON data input"
-            placeholder="There's nothing here"
-            validationError="Invalid JSON"
-            formatOnBlur
-            autosize
-            minRows={4}
-            value={json}
-            onChange={setJson}
-            maxRows={20}
-            styles={{
-              input: {
-                overflow: 'scroll',
-              },
-            }}
-          />
-          <Group justify="space-between">
-            <Button
-              leftSection={<FontAwesomeIcon icon={faBan} />}
-              onClick={closeJsonModal}
-              variant="light"
+            // Age
+            const age: number | undefined = dragonInCollection.age;
+            let ageString: string;
+            if (age === undefined || age === null || age < 0) {
+                ageString = '';
+            } else {
+                ageString = age.toString().concat('-year-old ');
+            }
+
+            // Gender
+            let gender: string = dragonInCollection.gender;
+            if (gender === undefined || gender === null || gender === '') {
+                gender = '';
+            } else {
+                gender = gender.concat(' ');
+            }
+
+            // Tribes
+            const tribes: string[] = dragonInCollection.tribe;
+            let tribeString: string;
+            if (tribes === undefined || tribes === null || tribes.length === 0) {
+                tribeString = 'Dragon';
+            } else {
+                tribeString = myJoin(tribes, '/').concat('Wing');
+            }
+
+            // Build it!
+            elements.push(
+                <Card shadow="sm" withBorder>
+                    <Group justify='space-between' align='top' fw={500} mah={'2.5em'} style={{overflow: 'hidden'}}>
+                        <Text mb="xs">
+                            {name}
+                        </Text>
+                        <Group gap={'xs'} mb="xs">
+                            <ColorSwatch size='18' color={dragonInCollection.primaryColor}/>
+                            <ColorSwatch size='18' color={dragonInCollection.secondaryColor}/>
+                            <ColorSwatch size='18' color={dragonInCollection.underscalesColor}/>
+                            <ColorSwatch size='18' color={dragonInCollection.membraneColor1}/>
+                            <ColorSwatch size='18' color={dragonInCollection.membraneColor2}/>
+                        </Group>
+                    </Group>
+
+                    <Group justify='space-between'>
+                        <Text size="sm" c="dimmed">
+                            {ageString.concat(gender).concat(tribeString)}
+                        </Text>
+                        <Text size="sm" c="dimmed">
+                            {dragonInCollection.style} style
+                        </Text>
+                    </Group>
+
+
+                    <Flex mt="md" gap="md">
+                        <Button onClick={() => loadDragon(dragonInCollection)} fullWidth variant="light">
+                            Open
+                        </Button>
+                        <Menu shadow="md" width={200} transitionProps={{transition: 'pop', duration: 200}}>
+                            <Menu.Target>
+                                <ActionIcon aria-label="Options" variant="light" size={36}>
+                                    <FontAwesomeIcon icon={faEllipsis}/>
+                                </ActionIcon>
+                            </Menu.Target>
+
+                            <Menu.Dropdown>
+                                <Menu.Item
+                                    onClick={() => duplicateDragon(dragonInCollection)}
+                                    leftSection={<FontAwesomeIcon icon={faClone} size="sm"/>}
+                                >
+                                    Duplicate
+                                </Menu.Item>
+                                <Menu.Item
+                                    onClick={() => deleteDragon(dragonInCollection)}
+                                    leftSection={<FontAwesomeIcon icon={faTrash} size="sm"/>}
+                                >
+                                    Delete
+                                </Menu.Item>
+                            </Menu.Dropdown>
+                        </Menu>
+                    </Flex>
+                </Card>
+            );
+        });
+
+        return elements;
+    }
+
+    function doExport() {
+        let imagePreview: HTMLElement | null = document.getElementById('image-preview');
+        if (imagePreview == null) {
+            return;
+        }
+        let images = imagePreview.children;
+        recordTelemetryEvent("export");
+        exportImage(images, dragon.name, dragon.membraneColor1, dragon.membraneColor2);
+    }
+
+    const [, setLightModeSettingChecked] = useState(useMantineColorScheme().colorScheme === 'light');
+    const [telemetrySettingChecked, setTelemetrySettingChecked] = useState(isTelemetryEnabled());
+    const [hideUpdateIndicatorSettingChecked, setHideUpdateIndicatorSettingChecked] = useState(window.localStorage.getItem("hideUpdateIndicator") === 'true');
+
+    function openUpdates(): void {
+        setUpdate();
+        openUpdatesModal();
+    }
+
+    const styleAllowedWithCurrentTribes = (style: string) => {
+        let info = styleInfo(style);
+        if (info == null) return false;
+
+        const includedTribes: string[] = info.includedTribes;
+        let matches = 0;
+        for (let i = 0; i < dragon.tribe.length; i++) {
+            const tribe = dragon.tribe[i];
+            for (let j = 0; j < includedTribes.length; j++) {
+                const element = includedTribes[j];
+                if (tribe == element) matches++;
+            }
+        }
+
+        return (matches == dragon.tribe.length);
+    }
+
+    function stylePackCredits(styleInfo: t.TypeOf<typeof StylePackInfo> | null) {
+        const elements = [];
+        if (styleInfo == null) return;
+        elements.push(<Title order={3}>{styleInfo.name}</Title>)
+        elements.push(<Text>{styleInfo.description}</Text>)
+
+        const creatorElements = [];
+        for (let i = 0; i < styleInfo.creators.length; i++) {
+            const creator = styleInfo.creators[i];
+            creatorElements.push(
+                <Group>
+                    <Avatar src={creator.imageUrl}/>
+                    <Stack gap={0}>
+                        <Text fw={'bold'}>{creator.name}</Text>
+                        <Anchor href={creator.link} target='new'>
+                            <Text>{creator.link} <FontAwesomeIcon icon={faArrowUpRightFromSquare}/></Text>
+                        </Anchor>
+                    </Stack>
+                </Group>
+            )
+        }
+        elements.push(creatorElements);
+        return elements;
+    }
+
+    return (
+        <>
+            <Notifications/>
+
+            <Modal
+                opened={settingsModalOpened}
+                onClose={closeSettingsModal}
+                centered
+                size="auto"
+                title="App Settings"
             >
-              Discard
-            </Button>
-            <Group>
-              <Tooltip label={clipboard.copied ? 'Copied' : 'Copy to clipboard'}>
-                <Menu transitionProps={{ transition: 'pop', duration: 150 }}>
-                  <Menu.Target>
-                    <ActionIcon variant='subtle' aria-label='Copy to clipboard'>
-                      {clipboard.copied ? <FontAwesomeIcon icon={faCheck} /> : <FontAwesomeIcon icon={faCopy} />}
-                    </ActionIcon>
-                  </Menu.Target>
-                  <Menu.Dropdown>
-                    <Menu.Item
-                      onClick={() => {
-                        try {
-                          const minimized = JSON.stringify(JSON.parse(json));
-                          clipboard.copy(minimized);
-                        } catch (e) {
-                          console.error('Invalid JSON:', e);
-                        }
-                      }}
-                      leftSection={<FontAwesomeIcon icon={faMinimize} />}
-                    >
-                      Copy minimized
-                      <Text size='xs' c={'dimmed'}>Reduces the number of characters used</Text>
-                    </Menu.Item>
-                    <Menu.Item onClick={() => clipboard.copy(json)} leftSection={<FontAwesomeIcon icon={faExpand} />}>
-                      Copy beautified
-                      <Text size='xs' c={'dimmed'}>Easier to read and edit</Text>
-                    </Menu.Item>
-                  </Menu.Dropdown>
-                </Menu>
-              </Tooltip>
-              <Button leftSection={<FontAwesomeIcon icon={faCheck} />} onClick={applyJson}>
-                Apply
-              </Button>
-            </Group>
-          </Group>
-        </Stack>
-      </Modal>
+                <Stack>
+                    <Switch
+                        checked={useMantineColorScheme().colorScheme === 'light'}
+                        onChange={(event) => {
+                            const light: boolean = event.currentTarget.checked;
+                            if (light) {
+                                setColorScheme('light');
+                            } else {
+                                setColorScheme('dark');
+                            }
+                            setLightModeSettingChecked(event.currentTarget.checked);
+                        }}
+                        label="Use light theme"
+                        description="If disabled, the app will use the dark theme."
+                    />
+                    <Switch
+                        checked={telemetrySettingChecked}
+                        onChange={(event) => {
+                            const allow: boolean = event.currentTarget.checked;
+                            if (allow) {
+                                allowTelemetry();
+                                event.currentTarget.checked = true;
+                            } else {
+                                denyTelemetry();
+                                event.currentTarget.checked = false;
+                            }
+                            setTelemetrySettingChecked(event.currentTarget.checked);
+                        }}
+                        label="Allow telemetry"
+                        description="If enabled, anonymous usage data will be sent to the developer."
+                    />
+                    <Switch
+                        checked={hideUpdateIndicatorSettingChecked}
+                        onChange={(event) => {
+                            const checked: boolean = event.currentTarget.checked;
+                            setHideUpdateIndicatorSettingChecked(checked);
+                        }}
+                        label="Hide unread update indicator"
+                        description="If enabled, no indicator will be shown when there is a new update."
+                    />
+                </Stack>
+            </Modal>
 
-      <Modal
-        opened={welcomeModalOpened}
-        onClose={closeWelcomeModal}
-        centered
-        withCloseButton={true}
-        title={
-          <Group gap={'sm'} style={{ order: -2 }}>
-            <Image src={icon} h={'42px'} w={'42px'} />
-            <Title order={1}>Flight Forge</Title>
-          </Group>
-        }
-        size="xxl"
-      >
-        <Stack>
-          <Text style={{ order: -2 }}>
-            Flight Forge is a web application that allows you to build characters based on Wings of
-            Fire. Open or create a dragon to get started!
-          </Text>
-          <SimpleGrid cols={{ base: 1, sm: 3 }} className='dragon-list'>
-            {generateCards()}
-            <Card shadow="sm" withBorder>
-              <Text mb="xs" fw={500}>
-                Create New
-              </Text>
-
-              <Text size="sm" c="dimmed">
-                Start from scratch
-              </Text>
-
-              <Button
-                onClick={loadNew}
-                mt="md"
-                fullWidth
-                leftSection={<FontAwesomeIcon icon={faPlus} />}
-                variant="light"
-              >
-                New
-              </Button>
-            </Card>
-          </SimpleGrid>
-          <Flex gap="md" align="flex-end" className='collection-buttons'>
-            <TextInput
-              label="Collection name"
-              variant="filled"
-              value={collection.name}
-              onChange={(event) => {
-                setCollection((prev) => ({ ...prev, name: event.currentTarget.value }));
-              }}
-            />
-            <Group>
-              <FileButton onChange={setCollectionFile} accept="application/json">
-                {(props) => (
-                  <Button {...props} leftSection={<FontAwesomeIcon icon={faUpload} />}>
-                    {window.innerWidth <= 630 ? "Open" : "Open Collection"}
-                  </Button>
-                )}
-              </FileButton>
-              <Anchor href={dataStr} download={collection.name.concat('.json')} onClick={() => save()}>
-                <Button leftSection={<FontAwesomeIcon icon={faDownload} />}>{window.innerWidth <= 630 ? "Save" : "Save Collection"}</Button>
-              </Anchor>
-            </Group>
-          </Flex>
-        </Stack>
-      </Modal>
-
-      <Modal opened={aboutModalOpened} onClose={closeAboutModal} title="About" centered>
-        <Stack>
-          <Text>Flight Forge Version {import.meta.env.VITE_VERSION}</Text>
-          <Text>
-            Built by <Anchor href="https://blog.macver.org/about-me" target='new'>Bog The MudWing <FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor>.
-          </Text>
-          <Text>
-            This is free and open source software licensed MIT and available on{' '}
-            <Anchor href="https://code.macver.org/Bog/Flight-Forge" target='new'>Macver Code Athenaeum <FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor>.
-          </Text>
-          <Text>
-            Images are licensed <Anchor href='https://creativecommons.org/publicdomain/zero/1.0/' target='new'>CC0 1.0 <FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor> and can be used for any purpose without attribution.
-            <img
-              src="https://mirrors.creativecommons.org/presskit/icons/cc.svg"
-              alt=""
-              style={{ maxWidth: '1em', maxHeight: '1em', marginLeft: '.2em' }}
-            />
-            <img
-              src="https://mirrors.creativecommons.org/presskit/icons/zero.svg"
-              alt=""
-              style={{ maxWidth: '1em', maxHeight: '1em', marginLeft: '.2em' }}
-            />
-          </Text>
-          <Text><Anchor href={import.meta.env.VITE_PRIVACY_POLICY_URL} target="new">Privacy Policy<FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor></Text>
-          <Image src="https://blog.macver.org/content/images/size/w1600/2025/06/Wordmark-Color-5.png" />
-        </Stack>
-      </Modal>
-
-      <Modal opened={creditsModalOpened} onClose={closeCreditsModal} title="Credits" centered>
-        <Stack>
-          <Title order={2}>App</Title>
-          <Text>
-            Built by <Anchor href="https://blog.macver.org/about-me" target='new'>Bog The MudWing <FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor>.
-          </Text>
-          <Title order={2}>Style Packs</Title>
-          {stylePackCredits(styleInfo('debug'))}
-          {stylePackCredits(styleInfo('developer'))}
-        </Stack>
-      </Modal>
-
-      <Modal opened={updatesModalOpened} onClose={closeUpdatesModal} title="Updates" centered>
-      {/* TODO: this but better */}
-        <Stack>
-          <Text size="sm">Update 2: September 13, 2025</Text>
-          <Title order={3}>Beta 3 Updates</Title>
-          <Text>You can now choose to copy JSON as either minimized or beautified. Minimized removes all unecessary whitespace (spaces and line breaks) so that you can share the JSON with fewer characters. Beautified JSON is the format you see in the JSON editor, which is much easier to read.</Text>
-          <Text>You can now disable the unread update indicator. If you don't like having a little dot on the menu button whenever there's an update, you can turn it off in the settings.</Text>
-
-          <Text size="sm">Update 1: September 12, 2025</Text>
-          <Title order={3}>Flight Forge is now in beta!</Title>
-          <Text>All of the ideas I wanted to implement have been added, including all ten tribes and five acessories. Hooray!</Text>
-          <Text>If you like Flight Forge, please share it with other people who might like it! I worked really hard on it and I want lots of people to be able to use it.</Text>
-          <Text>As always, if you find any bugs or frustations or have any suggestions, click the "Bug Report" button in the menu to let me know.</Text>
-          <Text>Thanks to everyone who tested the alpha and gave me feedback!</Text>
-        </Stack>
-      </Modal>
-
-      {Telemetry()}
-
-      <AppShell
-        styles={{
-          header: { backgroundColor: 'var(--mantine-color-grape-light)' },
-          main: { display: 'flex' },
-        }}
-        padding="md"
-        header={{ height: 50 }}
-        className='shell'
-      >
-        <AppShell.Header h="auto" className='header'>
-          <Group p="xm">
-            <Group gap={'xs'} flex={1} className='header-info'>
-              <Image src={icon} h={'50px'} w={'50px'} sizes='sm'></Image>
-              <Stack gap="0">
-                <Title order={2}>Flight Forge</Title>
-                <Text size="sm">Version {import.meta.env.VITE_VERSION} © 2025 Bog The MudWing</Text>
-              </Stack>
-            </Group>
-            <Stack gap="0" display={(window.innerWidth <= 991) ? 'none' : 'auto'}>
-              <Text ta="right">Currently editing {dragon.name ? dragon.name : "unnamed"}</Text>
-              <Text ta="right" size='sm'>{lastSave != null && timeDiff != null ? (timeDiff < 2) ? "Last save was just now" : "Last save was " + timeDiff + " minutes ago." : "You have never saved this session"}</Text>
-            </Stack>
-            <Group className='header-button'>
-              <Space h="md" />
-              <Tooltip label={history.length > 0 ? 'Undo' : 'No undo steps'}>
-                <ActionIcon
-                  variant="subtle"
-                  aria-label="Undo"
-                  onClick={undo}
-                  disabled={history.length === 0}
-                >
-                  <FontAwesomeIcon icon={faRotateLeft} />
-                </ActionIcon>
-              </Tooltip>
-              <Tooltip label="Export">
-                <ActionIcon onClick={doExport} variant="subtle" aria-label="Export">
-                  <FontAwesomeIcon icon={faFileExport} />
-                </ActionIcon>
-              </Tooltip>
-              <Tooltip label="Download">
-                <Anchor href={dataStr} download={collection.name.concat('.json')} onClick={() => save()}>
-                  <ActionIcon variant="subtle" aria-label="Download">
-                    <FontAwesomeIcon icon={faDownload} />
-                  </ActionIcon>
-                </Anchor>
-              </Tooltip>
-              <Tooltip label="Home">
-                <ActionIcon onClick={openWelcomeModal} variant="subtle" aria-label="Home">
-                  <FontAwesomeIcon icon={faHome} />
-                </ActionIcon>
-              </Tooltip>
-              <Menu shadow="md" width={200} transitionProps={{ transition: 'pop', duration: 200 }}>
-                <Menu.Target>
-                  <Indicator disabled={seenUpdate()}>
-                    <ActionIcon variant="subtle" aria-label="Menu">
-                      <FontAwesomeIcon icon={faBars} />
-                    </ActionIcon>
-                  </Indicator>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Label>Editor</Menu.Label>
-                  <Menu.Item
-                    onClick={reset}
-                    leftSection={<FontAwesomeIcon icon={faPlus} size="sm" />}
-                  >
-                    New
-                  </Menu.Item>
-                  <Menu.Item
-                    onClick={openJson}
-                    leftSection={<FontAwesomeIcon icon={faCode} size="sm" />}
-                  >
-                    Raw data
-                  </Menu.Item>
-                  <Menu.Label>App</Menu.Label>
-                  <Menu.Item
-                    onClick={openSettingsModal}
-                    leftSection={<FontAwesomeIcon icon={faGear} size="sm" />}
-                  >
-                    Settings
-                  </Menu.Item>
-                  <Anchor href='https://code.macver.org/Bog/Flight-Forge/issues/new' target='new'>
-                    <Menu.Item
-                      leftSection={<FontAwesomeIcon icon={faBug} size="sm" />}
-                      rightSection={<FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' />}
-                    >
-                      Report bug
-                    </Menu.Item>
-                  </Anchor>
-                  <Indicator position='middle-start' disabled={seenUpdate()}>
-                    <Menu.Item
-                      onClick={openUpdates}
-                      leftSection={<FontAwesomeIcon icon={faNewspaper} size="sm" />}
-                    >
-                      Updates
-                    </Menu.Item>
-                  </Indicator>
-                  <Menu.Item
-                    onClick={openCreditsModal}
-                    leftSection={<FontAwesomeIcon icon={faUsersRectangle} size="sm" />}
-                  >
-                    Credits
-                  </Menu.Item>
-                  <Menu.Item
-                    onClick={openAboutModal}
-                    leftSection={<FontAwesomeIcon icon={faCircleInfo} size="sm" />}
-                  >
-                    About
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
-              <Space h="md" />
-            </Group>
-          </Group>
-        </AppShell.Header>
-
-        <AppShell.Main className='main'>
-          <SimpleGrid mt={'lg'} w="100%" cols={{ base: 1, md: 2 }} className={'layout-grid'}>
-            <Flex className='imageArea'>
-              <ImagePreview dragon={dragon} page={configuratorPage} style={dragon.style} />
-              <Stack className='styleControl'>
-                <SegmentedControl
-                  data={[
-                    {
-                      label: (
-                        <Tooltip
-                          disabled={styleAllowedWithCurrentTribes('developer')}
-                          label={"Only compatible with tribes " + styleInfo('developer')?.includedTribes.toString().replaceAll(',', ', ')}
+            <Modal opened={jsonModalOpened} onClose={closeJsonModal} centered size="lg" title="JSON Data">
+                <Stack>
+                    <JsonInput
+                        id="json-input"
+                        aria-label="JSON data input"
+                        placeholder="There's nothing here"
+                        validationError="Invalid JSON"
+                        formatOnBlur
+                        autosize
+                        minRows={4}
+                        value={json}
+                        onChange={setJson}
+                        maxRows={20}
+                        styles={{
+                            input: {
+                                overflow: 'scroll',
+                            },
+                        }}
+                    />
+                    <Group justify="space-between">
+                        <Button
+                            leftSection={<FontAwesomeIcon icon={faBan}/>}
+                            onClick={closeJsonModal}
+                            variant="light"
                         >
-                          <span>Developer</span>
-                        </Tooltip>
-                      ),
-                      value: 'developer',
-                      disabled: !styleAllowedWithCurrentTribes('developer')
-                    },
-                    {
-                      label: (
-                        <Tooltip
-                          disabled={styleAllowedWithCurrentTribes('debug')}
-                          label={"Only compatible with tribes " + styleInfo('debug')?.includedTribes.toString().replaceAll(',', ', ')}
-                        >
-                          <span>Debug</span>
-                        </Tooltip>
-                      ),
-                      value: 'debug',
-                      disabled: !styleAllowedWithCurrentTribes('debug')
-                    },
-                  ]}
-                  value={dragon.style}
-                  onChange={(value) => {
-                    recordTelemetry('style', value);
-                    setDragon((prev) => ({ ...prev, style: value }));
-                  }}
-                  orientation={(window.innerWidth <= 991) ? 'vertical' : 'horizontal'}
-                />
-                <Center display={(window.innerWidth <= 991) ? 'none' : 'flex'}>
-                  {/* This only appears on desktop */}
-                  <Group>
-                    <Anchor href='https://code.macver.org/Bog/Flight-Forge/src/branch/main/docs/ARTWORK.md' target='new'><Text size='sm' c="dimmed">Interested in creating a style pack? <FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Text></Anchor>
-                  </Group>
-                </Center>
-              </Stack>
-            </Flex>
-            <Container className='configurator-container'>
-              <Configurator
-                dragon={dragon}
-                previewDragon={setDragon}
-                setDragon={setDragonWithHistory}
-                collection={collection}
-                dataStr={dataStr}
-                page={configuratorPage}
-                setPage={setConfiguratorPage}
-                setLastSave={save}
-                doExport={doExport}
-              />
-            </Container>
-          </SimpleGrid>
-        </AppShell.Main>
-      </AppShell>
-    </>
-  );
+                            Discard
+                        </Button>
+                        <Group>
+                            <Tooltip label={clipboard.copied ? 'Copied' : 'Copy to clipboard'}>
+                                <Menu transitionProps={{transition: 'pop', duration: 150}}>
+                                    <Menu.Target>
+                                        <ActionIcon variant='subtle' aria-label='Copy to clipboard'>
+                                            {clipboard.copied ? <FontAwesomeIcon icon={faCheck}/> :
+                                                <FontAwesomeIcon icon={faCopy}/>}
+                                        </ActionIcon>
+                                    </Menu.Target>
+                                    <Menu.Dropdown>
+                                        <Menu.Item
+                                            onClick={() => {
+                                                try {
+                                                    const minimized = JSON.stringify(JSON.parse(json));
+                                                    clipboard.copy(minimized);
+                                                } catch (e) {
+                                                    console.error('Invalid JSON:', e);
+                                                }
+                                            }}
+                                            leftSection={<FontAwesomeIcon icon={faMinimize}/>}
+                                        >
+                                            Copy minimized
+                                            <Text size='xs' c={'dimmed'}>Reduces the number of characters used</Text>
+                                        </Menu.Item>
+                                        <Menu.Item onClick={() => clipboard.copy(json)}
+                                                   leftSection={<FontAwesomeIcon icon={faExpand}/>}>
+                                            Copy beautified
+                                            <Text size='xs' c={'dimmed'}>Easier to read and edit</Text>
+                                        </Menu.Item>
+                                    </Menu.Dropdown>
+                                </Menu>
+                            </Tooltip>
+                            <Button leftSection={<FontAwesomeIcon icon={faCheck}/>} onClick={applyJson}>
+                                Apply
+                            </Button>
+                        </Group>
+                    </Group>
+                </Stack>
+            </Modal>
+
+            <Modal
+                opened={welcomeModalOpened}
+                onClose={closeWelcomeModal}
+                centered
+                withCloseButton={true}
+                title={
+                    <Group gap={'sm'} style={{order: -2}}>
+                        <Image src={icon} h={'42px'} w={'42px'}/>
+                        <Title order={1}>Flight Forge</Title>
+                    </Group>
+                }
+                size="xxl"
+            >
+                <Stack>
+                    <Text style={{order: -2}}>
+                        Flight Forge is a web application that allows you to build characters based on Wings of
+                        Fire. Open or create a dragon to get started!
+                    </Text>
+                    <SimpleGrid cols={{base: 1, sm: 3}} className='dragon-list'>
+                        {generateCards()}
+                        <Card shadow="sm" withBorder>
+                            <Text mb="xs" fw={500}>
+                                Create New
+                            </Text>
+
+                            <Text size="sm" c="dimmed">
+                                Start from scratch
+                            </Text>
+
+                            <Button
+                                onClick={loadNew}
+                                mt="md"
+                                fullWidth
+                                leftSection={<FontAwesomeIcon icon={faPlus}/>}
+                                variant="light"
+                            >
+                                New
+                            </Button>
+                        </Card>
+                    </SimpleGrid>
+                    <Flex gap="md" align="flex-end" className='collection-buttons'>
+                        <TextInput
+                            label="Collection name"
+                            variant="filled"
+                            value={collection.name}
+                            onChange={(event) => {
+                                setCollection((prev) => ({...prev, name: event.currentTarget.value}));
+                            }}
+                        />
+                        <Group>
+                            <FileButton onChange={setCollectionFile} accept="application/json">
+                                {(props) => (
+                                    <Button {...props} leftSection={<FontAwesomeIcon icon={faUpload}/>}>
+                                        {window.innerWidth <= 630 ? "Open" : "Open Collection"}
+                                    </Button>
+                                )}
+                            </FileButton>
+                            <Anchor href={dataStr} download={collection.name.concat('.json')} onClick={() => save()}>
+                                <Button leftSection={<FontAwesomeIcon
+                                    icon={faDownload}/>}>{window.innerWidth <= 630 ? "Save" : "Save Collection"}</Button>
+                            </Anchor>
+                        </Group>
+                    </Flex>
+                </Stack>
+            </Modal>
+
+            <Modal opened={aboutModalOpened} onClose={closeAboutModal} title="About" centered>
+                <Stack>
+                    <Text>Flight Forge Version {import.meta.env.VITE_VERSION}</Text>
+                    <Text>
+                        Built by <Anchor href="https://blog.macver.org/about-me" target='new'>Bog The
+                        MudWing <FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs'/></Anchor>.
+                    </Text>
+                    <Text>
+                        This is free and open source software licensed MIT and available on{' '}
+                        <Anchor href="https://code.macver.org/Bog/Flight-Forge" target='new'>Macver Code
+                            Athenaeum <FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs'/></Anchor>.
+                    </Text>
+                    <Text>
+                        Images are licensed <Anchor href='https://creativecommons.org/publicdomain/zero/1.0/'
+                                                    target='new'>CC0 1.0 <FontAwesomeIcon
+                        icon={faArrowUpRightFromSquare} size='xs'/></Anchor> and can be used for any purpose without
+                        attribution.
+                        <img
+                            src="https://mirrors.creativecommons.org/presskit/icons/cc.svg"
+                            alt=""
+                            style={{maxWidth: '1em', maxHeight: '1em', marginLeft: '.2em'}}
+                        />
+                        <img
+                            src="https://mirrors.creativecommons.org/presskit/icons/zero.svg"
+                            alt=""
+                            style={{maxWidth: '1em', maxHeight: '1em', marginLeft: '.2em'}}
+                        />
+                    </Text>
+                    <Text><Anchor href={import.meta.env.VITE_PRIVACY_POLICY_URL} target="new">Privacy
+                        Policy<FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs'/></Anchor></Text>
+                    <Image src="https://blog.macver.org/content/images/size/w1600/2025/06/Wordmark-Color-5.png"/>
+                </Stack>
+            </Modal>
+
+            <Modal opened={creditsModalOpened} onClose={closeCreditsModal} title="Credits" centered>
+                <Stack>
+                    <Title order={2}>App</Title>
+                    <Text>
+                        Built by <Anchor href="https://blog.macver.org/about-me" target='new'>Bog The
+                        MudWing <FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs'/></Anchor>.
+                    </Text>
+                    <Title order={2}>Style Packs</Title>
+                    {stylePackCredits(styleInfo('debug'))}
+                    {stylePackCredits(styleInfo('developer'))}
+                </Stack>
+            </Modal>
+
+            <Modal opened={updatesModalOpened} onClose={closeUpdatesModal} title="Updates" centered>
+                {/* TODO: this but better */}
+                <Stack>
+                    <Text size="sm">Update 2: September 13, 2025</Text>
+                    <Title order={3}>Beta 3 Updates</Title>
+                    <Text>You can now choose to copy JSON as either minimized or beautified. Minimized removes all
+                        unecessary whitespace (spaces and line breaks) so that you can share the JSON with fewer
+                        characters. Beautified JSON is the format you see in the JSON editor, which is much easier to
+                        read.</Text>
+                    <Text>You can now disable the unread update indicator. If you don't like having a little dot on the
+                        menu button whenever there's an update, you can turn it off in the settings.</Text>
+
+                    <Text size="sm">Update 1: September 12, 2025</Text>
+                    <Title order={3}>Flight Forge is now in beta!</Title>
+                    <Text>All of the ideas I wanted to implement have been added, including all ten tribes and five
+                        acessories. Hooray!</Text>
+                    <Text>If you like Flight Forge, please share it with other people who might like it! I worked really
+                        hard on it and I want lots of people to be able to use it.</Text>
+                    <Text>As always, if you find any bugs or frustations or have any suggestions, click the "Bug Report"
+                        button in the menu to let me know.</Text>
+                    <Text>Thanks to everyone who tested the alpha and gave me feedback!</Text>
+                </Stack>
+            </Modal>
+
+            {Telemetry()}
+
+            <AppShell
+                styles={{
+                    header: {backgroundColor: 'var(--mantine-color-grape-light)'},
+                    main: {display: 'flex'},
+                }}
+                padding="md"
+                header={{height: 50}}
+                className='shell'
+            >
+                <AppShell.Header h="auto" className='header'>
+                    <Group p="xm">
+                        <Group gap={'xs'} flex={1} className='header-info'>
+                            <Image src={icon} h={'50px'} w={'50px'} sizes='sm'></Image>
+                            <Stack gap="0">
+                                <Title order={2}>Flight Forge</Title>
+                                <Text size="sm">Version {import.meta.env.VITE_VERSION} © 2025 Bog The MudWing</Text>
+                            </Stack>
+                        </Group>
+                        <Stack gap="0" display={(window.innerWidth <= 991) ? 'none' : 'auto'}>
+                            <Text ta="right">Currently editing {dragon.name ? dragon.name : "unnamed"}</Text>
+                            <Text ta="right"
+                                  size='sm'>{lastSave != null && timeDiff != null ? (timeDiff < 2) ? "Last save was just now" : "Last save was " + timeDiff + " minutes ago." : "You have never saved this session"}</Text>
+                        </Stack>
+                        <Group className='header-button'>
+                            <Space h="md"/>
+                            <Tooltip label={history.length > 0 ? 'Undo' : 'No undo steps'}>
+                                <ActionIcon
+                                    variant="subtle"
+                                    aria-label="Undo"
+                                    onClick={undo}
+                                    disabled={history.length === 0}
+                                >
+                                    <FontAwesomeIcon icon={faRotateLeft}/>
+                                </ActionIcon>
+                            </Tooltip>
+                            <Tooltip label="Export">
+                                <ActionIcon onClick={doExport} variant="subtle" aria-label="Export">
+                                    <FontAwesomeIcon icon={faFileExport}/>
+                                </ActionIcon>
+                            </Tooltip>
+                            <Tooltip label="Download">
+                                <Anchor href={dataStr} download={collection.name.concat('.json')}
+                                        onClick={() => save()}>
+                                    <ActionIcon variant="subtle" aria-label="Download">
+                                        <FontAwesomeIcon icon={faDownload}/>
+                                    </ActionIcon>
+                                </Anchor>
+                            </Tooltip>
+                            <Tooltip label="Home">
+                                <ActionIcon onClick={openWelcomeModal} variant="subtle" aria-label="Home">
+                                    <FontAwesomeIcon icon={faHome}/>
+                                </ActionIcon>
+                            </Tooltip>
+                            <Menu shadow="md" width={200} transitionProps={{transition: 'pop', duration: 200}}>
+                                <Menu.Target>
+                                    <Indicator disabled={seenUpdate()}>
+                                        <ActionIcon variant="subtle" aria-label="Menu">
+                                            <FontAwesomeIcon icon={faBars}/>
+                                        </ActionIcon>
+                                    </Indicator>
+                                </Menu.Target>
+                                <Menu.Dropdown>
+                                    <Menu.Label>Editor</Menu.Label>
+                                    <Menu.Item
+                                        onClick={reset}
+                                        leftSection={<FontAwesomeIcon icon={faPlus} size="sm"/>}
+                                    >
+                                        New
+                                    </Menu.Item>
+                                    <Menu.Item
+                                        onClick={openJson}
+                                        leftSection={<FontAwesomeIcon icon={faCode} size="sm"/>}
+                                    >
+                                        Raw data
+                                    </Menu.Item>
+                                    <Menu.Label>App</Menu.Label>
+                                    <Menu.Item
+                                        onClick={openSettingsModal}
+                                        leftSection={<FontAwesomeIcon icon={faGear} size="sm"/>}
+                                    >
+                                        Settings
+                                    </Menu.Item>
+                                    <Anchor href='https://code.macver.org/Bog/Flight-Forge/issues/new' target='new'>
+                                        <Menu.Item
+                                            leftSection={<FontAwesomeIcon icon={faBug} size="sm"/>}
+                                            rightSection={<FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs'/>}
+                                        >
+                                            Report bug
+                                        </Menu.Item>
+                                    </Anchor>
+                                    <Indicator position='middle-start' disabled={seenUpdate()}>
+                                        <Menu.Item
+                                            onClick={openUpdates}
+                                            leftSection={<FontAwesomeIcon icon={faNewspaper} size="sm"/>}
+                                        >
+                                            Updates
+                                        </Menu.Item>
+                                    </Indicator>
+                                    <Menu.Item
+                                        onClick={openCreditsModal}
+                                        leftSection={<FontAwesomeIcon icon={faUsersRectangle} size="sm"/>}
+                                    >
+                                        Credits
+                                    </Menu.Item>
+                                    <Menu.Item
+                                        onClick={openAboutModal}
+                                        leftSection={<FontAwesomeIcon icon={faCircleInfo} size="sm"/>}
+                                    >
+                                        About
+                                    </Menu.Item>
+                                </Menu.Dropdown>
+                            </Menu>
+                            <Space h="md"/>
+                        </Group>
+                    </Group>
+                </AppShell.Header>
+
+                <AppShell.Main className='main'>
+                    <SimpleGrid mt={'lg'} w="100%" cols={{base: 1, md: 2}} className={'layout-grid'}>
+                        <Flex className='imageArea'>
+                            <ImagePreview dragon={dragon} page={configuratorPage} style={dragon.style}/>
+                            <Stack className='styleControl'>
+                                <SegmentedControl
+                                    data={[
+                                        {
+                                            label: (
+                                                <Tooltip
+                                                    disabled={styleAllowedWithCurrentTribes('developer')}
+                                                    label={"Only compatible with tribes " + styleInfo('developer')?.includedTribes.toString().replaceAll(',', ', ')}
+                                                >
+                                                    <span>Developer</span>
+                                                </Tooltip>
+                                            ),
+                                            value: 'developer',
+                                            disabled: !styleAllowedWithCurrentTribes('developer')
+                                        },
+                                        {
+                                            label: (
+                                                <Tooltip
+                                                    disabled={styleAllowedWithCurrentTribes('debug')}
+                                                    label={"Only compatible with tribes " + styleInfo('debug')?.includedTribes.toString().replaceAll(',', ', ')}
+                                                >
+                                                    <span>Debug</span>
+                                                </Tooltip>
+                                            ),
+                                            value: 'debug',
+                                            disabled: !styleAllowedWithCurrentTribes('debug')
+                                        },
+                                    ]}
+                                    value={dragon.style}
+                                    onChange={(value) => {
+                                        recordTelemetry('style', value);
+                                        setDragon((prev) => ({...prev, style: value}));
+                                    }}
+                                    orientation={(window.innerWidth <= 991) ? 'vertical' : 'horizontal'}
+                                />
+                                <Center display={(window.innerWidth <= 991) ? 'none' : 'flex'}>
+                                    {/* This only appears on desktop */}
+                                    <Group>
+                                        <Anchor
+                                            href='https://code.macver.org/Bog/Flight-Forge/src/branch/main/docs/ARTWORK.md'
+                                            target='new'><Text size='sm' c="dimmed">Interested in creating a style
+                                            pack? <FontAwesomeIcon icon={faArrowUpRightFromSquare}
+                                                                   size='xs'/></Text></Anchor>
+                                    </Group>
+                                </Center>
+                            </Stack>
+                        </Flex>
+                        <Container className='configurator-container'>
+                            <Configurator
+                                dragon={dragon}
+                                previewDragon={setDragon}
+                                setDragon={setDragonWithHistory}
+                                collection={collection}
+                                dataStr={dataStr}
+                                page={configuratorPage}
+                                setPage={setConfiguratorPage}
+                                setLastSave={save}
+                                doExport={doExport}
+                            />
+                        </Container>
+                    </SimpleGrid>
+                </AppShell.Main>
+            </AppShell>
+        </>
+    );
 }

@@ -1,9 +1,9 @@
-import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Group, Button, Dialog, Text, Progress, Stack, Anchor } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { init, track } from "@plausible-analytics/tracker";
-import { useEffect, useState } from "react";
+import {faArrowUpRightFromSquare} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {Anchor, Button, Dialog, Group, Progress, Stack, Text} from "@mantine/core";
+import {useDisclosure} from "@mantine/hooks";
+import {init, track} from "@plausible-analytics/tracker";
+import {useEffect, useState} from "react";
 
 let telemetryEnabled = false;
 
@@ -20,7 +20,7 @@ export function recordTelemetryEvent(event: string) {
     if (plausibleUrl == undefined) return;
 
     // Otherwise, send data
-    track("test", {});
+    track(event, {});
 }
 
 export function recordTelemetry(event: string, value: any) {
@@ -36,13 +36,13 @@ export function recordTelemetry(event: string, value: any) {
     track("test", { props: data });
 }
 
-export function allowTelemetry(doSetCookie: boolean) {
+export function allowTelemetry() {
     window.localStorage.setItem("telemetry", 'true');
     telemetryEnabled = true;
     localStorage.plausible_ignore = "false";
 }
 
-export function denyTelemetry(doSetCookie: boolean) {
+export function denyTelemetry() {
     window.localStorage.setItem("telemetry", 'false');
     telemetryEnabled = false;
     localStorage.plausible_ignore = "false";
@@ -50,25 +50,24 @@ export function denyTelemetry(doSetCookie: boolean) {
 
 export default function Telemetry() {
 
-    const [opened, { toggle, close }] = useDisclosure(true);
+    const [opened, {close}] = useDisclosure(true);
     const [value, setValue] = useState(100);
 
     function decreaseProgress(time: number, amount: number) {
         setTimeout(() => {
             setValue((prev) => {
-                const newValue = prev - amount;
-                return newValue;
+                return prev - amount;
             });
         }, time);
     }
 
     const denyAndClose = () => {
-        denyTelemetry(true);
+        denyTelemetry();
         close();
     }
 
     const acceptAndClose = () => {
-        allowTelemetry(true);
+        allowTelemetry();
         close();
     }
 
@@ -78,7 +77,7 @@ export default function Telemetry() {
         let plausibleUrl: string | undefined = import.meta.env.VITE_PLAUSIBLE_URL;
         // If undefined, do nothing.
         if (plausibleUrl == undefined) {
-            denyTelemetry(false);
+            denyTelemetry();
             return;
         }
 
@@ -86,7 +85,7 @@ export default function Telemetry() {
         let privacyPolicyUrl: string | undefined = import.meta.env.VITE_PRIVACY_POLICY_URL;
         // If undefined, do nothing.
         if (privacyPolicyUrl == undefined) {
-            denyTelemetry(false);
+            denyTelemetry();
             return;
         }
 
@@ -102,9 +101,9 @@ export default function Telemetry() {
         if (cookie != null) {
             close();
             if (cookie == "true") {
-                allowTelemetry(true);
+                allowTelemetry();
             } else {
-                allowTelemetry(false);
+                allowTelemetry();
             }
             return;
         }
@@ -125,15 +124,19 @@ export default function Telemetry() {
     }, []);
 
     return (
-        <Dialog opened={opened} onClose={close} size="md" radius="md" shadow="0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)">
+        <Dialog opened={opened} onClose={close} size="md" radius="md"
+                shadow="0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)">
             <Stack>
-                <Progress value={value} transitionDuration={100} />
+                <Progress value={value} transitionDuration={100}/>
                 <Stack gap={0}>
                     <Text size="sm">
                         Allow anonymous telemetry? Data is collected for the curiosity of the developer of Flight Forge.
                     </Text>
                     <Text size="xs">
-                        "Don't share data" will be assumed if no option is chosen. By clicking "Share data", you acknowledge that you accept the <Anchor href={import.meta.env.VITE_PRIVACY_POLICY_URL} target="new">Privacy Policy<FontAwesomeIcon icon={faArrowUpRightFromSquare} size='xs' /></Anchor>.
+                        "Don't share data" will be assumed if no option is chosen. By clicking "Share data", you
+                        acknowledge that you accept the <Anchor href={import.meta.env.VITE_PRIVACY_POLICY_URL}
+                                                                target="new">Privacy Policy<FontAwesomeIcon
+                        icon={faArrowUpRightFromSquare} size='xs'/></Anchor>.
                     </Text>
                 </Stack>
                 <Group justify="space-between" grow>
